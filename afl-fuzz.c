@@ -892,7 +892,7 @@ int select_algorithm(int extras) {
   double range_sele = (double)probability_now[swarm_now][operator_number - 1];
   double sele = ((double)(random() % 1000000) * 0.000001 * range_sele);
 
-if(use_inter_trial > 0)
+if(use_inter_trial != 0)
 {
   for (i_puppet = 0; i_puppet < operator_number; i_puppet++)
   {
