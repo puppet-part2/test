@@ -188,12 +188,14 @@ int select_bytelen(void) {
 
 void dict2dhash_dictcount(void)
 {
+  u32 countttt = 0;
   for(int i = 0; i < 4096; i++)
   {
     dict2d_cur = dict2d_hash[i];
     dict2d_prev = dict2d_hash[i];
     while(dict2d_cur != NULL)
     {
+      countttt += 1;
       dict2d_cur->usenum = 0;
       dict1d_cur = dict2d_cur->subdata;
       dict1d = dict2d_cur->subdata;
@@ -268,6 +270,7 @@ void dict2dhash_dictcount(void)
       dict2d_cur = dict2d_cur->next;
     }
   }
+  SAYF("dict count: %u\n", countttt);
 }
 
 
