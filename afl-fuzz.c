@@ -566,6 +566,7 @@ u64 total_pacemaker_time = 0;
 u64 total_puppet_find = 0;
 u64 temp_puppet_find = 0;
 u64 most_time_key = 0;
+int use_inter_trial = 0;
 u64 most_time_puppet = 0;
 u64 old_hit_count = 0;
 int SPLICE_CYCLES_puppet;
@@ -891,11 +892,25 @@ int select_algorithm(int extras) {
   double range_sele = (double)probability_now[swarm_now][operator_number - 1];
   double sele = ((double)(random() % 1000000) * 0.000001 * range_sele);
 
+if(use_inter_trial > 0)
+{
   for (i_puppet = 0; i_puppet < operator_number; i_puppet++)
   {
           if (sele < probability_now[swarm_now][i_puppet])
             break;
   }
+}
+else{
+  i_puppet = 16;
+  while(i_puppet == 16){
+    for (i_puppet = 0; i_puppet < operator_number; i_puppet++)
+    {
+            if (sele < probability_now[swarm_now][i_puppet])
+              break;
+    }
+  }
+}
+
   if ((i_puppet-1 >= 0 && sele < probability_now[swarm_now][i_puppet-1]) || (i_puppet + 1 < operator_num && sele > probability_now[swarm_now][i_puppet +  1]))
     FATAL("error select_algorithm");
   return i_puppet;
@@ -12398,6 +12413,8 @@ static u8 pilot_fuzzing(char** argv) {
 
 
 case 16:{  //herehere
+        if(use_inter_trial == 0)
+            break;
         if(temp_len <= 4)
             break;
         u32 seed[2];
@@ -17511,6 +17528,8 @@ static u8 core_fuzzing(char** argv) {
 
 
 case 16:{  //herehere
+        if(use_inter_trial == 0)
+            break;
         if(temp_len <= 4)
             break;
 
@@ -20337,6 +20356,12 @@ int main(int argc, char** argv) {
       limit_time_puppet = limit_time_puppet2;
       SAYF("default limit_time_puppet %llu\n",limit_time_puppet);
   }
+        for(int tmpiii = 0; tmpiii< 4096; tmpiii++)
+        {
+          dict2d_hash[tmpiii] = NULL;
+          distill_hash[tmpiii] = NULL;
+          //tmp_distill_hash[tmpiii] = NULL;
+        }
 
 
   while ((opt = getopt(argc, argv, "+i:o:f:m:t:G:V:T:L:dnCB:S:M:x:Q")) > 0)
@@ -20508,6 +20533,7 @@ int main(int argc, char** argv) {
         break;
 
       case 'G':{
+        use_inter_trial = 1;
         u8 *dict_path = optarg;
         SAYF("dict path: %s\n", dict_path);
         FILE *fp = fopen(dict_path, "r");
