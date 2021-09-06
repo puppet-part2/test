@@ -20342,6 +20342,8 @@ int main(int argc, char** argv) {
   u8  *extras_dir = 0;
   u8  mem_limit_given = 0;
   u8  exit_1 = !!getenv("AFL_BENCH_JUST_ONE");
+  u8 *extras_dir[4];
+  u8 extras_dir_cnt = 0;
   char** use_argv;
 
   struct timeval tv;
@@ -20428,8 +20430,18 @@ int main(int argc, char** argv) {
 
       case 'x': /* dictionary */
 
+        /*
         if (extras_dir) FATAL("Multiple -x options not supported");
         extras_dir = optarg;
+        break;
+        */
+        if (extras_dir_cnt >= 4) {
+
+          FATAL("More than four -x options are not supported");
+
+        }
+
+        extras_dir[extras_dir_cnt++] = optarg;
         break;
 
       case 't': { /* timeout */
@@ -20886,9 +20898,20 @@ break;
   read_testcases();
   load_auto();
 
+  if (extras_dir_cnt) {
+
+    for (u8 i = 0; i < extras_dir_cnt; i++) {
+
+      load_extras(afl, extras_dir[i]);
+
+    }
+
+  }
+
+
   pivot_inputs();
 
-  if (extras_dir) load_extras(extras_dir);
+  //if (extras_dir) load_extras(extras_dir);
 
   if (!timeout_given) find_timeout();
 
