@@ -20362,6 +20362,7 @@ int main(int argc, char** argv) {
       if (limit_time_puppet2 < limit_time_puppet ) FATAL("limit_time overflow");
       limit_time_puppet = limit_time_puppet2;
       SAYF("default limit_time_puppet %llu\n",limit_time_puppet);
+      SAYF("inter trial no use  \n");
   }
         for(int tmpiii = 0; tmpiii< 4096; tmpiii++)
         {
