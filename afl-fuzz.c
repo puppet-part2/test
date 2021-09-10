@@ -133,7 +133,7 @@ static struct start_byte *dict2d_hash[4096];
 static struct start_byte *distill_hash[4096];
 //static struct start_byte2 *tmp_distill_hash[4096];
 
-#define dictcount  4
+#define dictcount  3
 #define use_favorite_list 0.05
 #define favorite_list_len  8192
 u64 favorite_list[favorite_list_len][5000];
@@ -875,22 +875,21 @@ enum {
 
 
 
-
 int select_algorithm(int extras) {
 
   int i_puppet;
   //double total_puppet = 0.0;
   //srandom(time(NULL));
 
-    u32 seed[2];
-    ck_read(dev_urandom_fd, &seed, sizeof(seed), "/dev/urandom");
-    srandom(seed[0]);
+    //u32 seed[2];
+    //ck_read(dev_urandom_fd, &seed, sizeof(seed), "/dev/urandom");
+    //srandom(seed[0]);
 
-  int operator_number = operator_num;
-  if (start_distill == 0) operator_number = operator_number - 3;
-  else if (extras < 2) operator_number = operator_number - 2;
-  double range_sele = (double)probability_now[swarm_now][operator_number - 1];
-  double sele = ((double)(random() % 1000000) * 0.000001 * range_sele);
+  //int operator_number = operator_num;
+  //if (start_distill == 0) operator_number = operator_number - 3;
+  //else if (extras < 2) operator_number = operator_number - 2;
+  //double range_sele = (double)probability_now[swarm_now][operator_number - 1];
+  //double sele = ((double)(random() % 1000000) * 0.000001 * range_sele);
 /*
 if(use_inter_trial != 0)
 {
@@ -912,17 +911,29 @@ else{
 
   }
 }*/
-  for (i_puppet = 0; i_puppet < operator_number; i_puppet++)
+if(use_inter_trial != 0){
+  for (i_puppet = 0; i_puppet < operator_num; i_puppet++)
   {
           if (sele < probability_now[swarm_now][i_puppet])
             break;
   }
-
-  if ((i_puppet-1 >= 0 && sele < probability_now[swarm_now][i_puppet-1]) || (i_puppet + 1 < operator_num && sele > probability_now[swarm_now][i_puppet +  1]))
-    FATAL("error select_algorithm");
-  return i_puppet;
+}
+else{
+    for (i_puppet = 0; i_puppet < operator_num; i_puppet++)
+  {
+          if (sele < probability_now[swarm_now][i_puppet])
+            break;
+  }
+  if (i_puppet == 16)
+  {
+    i_puppet = rand() % 3 + 17;
+  }
 }
 
+  //if ((i_puppet-1 >= 0 && sele < probability_now[swarm_now][i_puppet-1]) || (i_puppet + 1 < operator_num && sele > probability_now[swarm_now][i_puppet +  1]))
+  //  FATAL("error select_algorithm");
+  return i_puppet;
+}
 
 
 
@@ -5267,26 +5278,7 @@ EXP_ST u8 common_fuzz_stuff(char** argv, u8* out_buf, u32 len, struct loghistory
 
 u64 cur_time_lyu = get_cur_time();
 
-if( (cur_time_lyu - start_time2) > 3600000 )
-{
-  start_time2 = get_cur_time();
-  FILE *fddd = NULL;
-  //out_dir
-  char *newname = (char *) ck_alloc_nozero(strlen(out_dir) + 10);
-  strcpy(newname, out_dir);
-  strcat(newname, "/queuenum\0");
-  fddd = fopen( newname ,"a");
-  fprintf(fddd,"%d", (int)(queued_paths));
-  fprintf(fddd,"\n");
-  fclose(fddd);
-  char *newname2 = (char *) ck_alloc_nozero(strlen(out_dir) + 10);
-  strcpy(newname2, out_dir);
-  strcat(newname2, "/crashnum\0");
-  fddd = fopen( newname2,"a");
-  fprintf(fddd,"%d", (int)(unique_crashes));
-  fprintf(fddd,"\n");
-  fclose(fddd);
-}
+
 
 
   if (post_handler) {
@@ -19143,30 +19135,7 @@ static u8 fuzz_one(char** argv) {
     //else
     u64 cur_time_lyu = get_cur_time();
 
-/*
-if( (cur_time_lyu - start_time2) > 7200000 )
-{
-  start_time2 = get_cur_time();
-  FILE *fddd = NULL;
-  //out_dir
-  char *newname = (char *) ck_alloc_nozero(strlen(out_dir) + 10);
-  strcpy(newname, out_dir);
-  strcat(newname, "/queuenum\0");
-  fddd = fopen( newname ,"a");
-  fprintf(fddd,"%d", (int)(queued_paths));
-  fprintf(fddd,"\n");
-  fclose(fddd);
-  char *newname2 = (char *) ck_alloc_nozero(strlen(out_dir) + 10);
-  strcpy(newname2, out_dir);
-  strcat(newname2, "/crashnum\0");
-  fddd = fopen( newname2,"a");
-  fprintf(fddd,"%d", (int)(unique_crashes));
-  fprintf(fddd,"\n");
-  fclose(fddd);
 
-  
-}
-*/
 
 
     {
@@ -19175,53 +19144,6 @@ if( (cur_time_lyu - start_time2) > 7200000 )
         else if (key_module == 1)
             key_val_lv = core_fuzzing(argv);
 
-                        if ( lock_key == 0 && (cur_time_lyu - start_time ) % 7200000  <  2200000) //two hours
-                        {
-                            lock_key = 1;
-                            FILE *fddd = NULL;
-                            //out_dir
-                            char *newname = (char *) ck_alloc_nozero(strlen(out_dir) + 8);
-                            strcpy(newname, out_dir);
-                            strcat(newname, "/Lyulog\0");
-                            fddd = fopen( newname ,"a");
-                            fprintf(fddd,"%s","time(s): ");
-                            fprintf(fddd,"%d", (int)((cur_time_lyu - start_time )/1000));
-                            fprintf(fddd,"\n");
-                            fprintf(fddd,"%s","selected probability: ");
-                            for(int tmpmm = 0; tmpmm < operator_num; tmpmm++)
-                                fprintf(fddd,"%f  ", x_now[swarm_now][tmpmm]);
-                            fprintf(fddd,"\n");
-                            fprintf(fddd,"%s","G_best: ");
-                            for(int tmpmm = 0; tmpmm < operator_num; tmpmm++)
-                                fprintf(fddd,"%f  ", G_best[tmpmm]);
-                            fprintf(fddd,"\n");
-
-                            fprintf(fddd,"%s","operator_finds: ");
-                            for(int tmpmm = 0; tmpmm < operator_num; tmpmm++)
-                                fprintf(fddd,"%d  ", operator_finds_puppet[tmpmm]);
-                            fprintf(fddd,"\n");
-
-                            fprintf(fddd,"%s","operator_mutation: ");
-                            {  
-                            for(int tmpmm = 0; tmpmm < operator_num; tmpmm++){
-                                u64 tmptmpmutation = core_operator_cycles_puppet[tmpmm];
-                                for (int tmpnnn = 0; tmpnnn < swarm_num; tmpnnn++) 
-                                    tmptmpmutation = stage_cycles_puppet[tmpnnn][tmpmm];
-                                fprintf(fddd,"%d  ", tmptmpmutation);}
-                            fprintf(fddd,"\n");
-                            }
-
-                            fprintf(fddd,"%s","unique paths: ");
-                            fprintf(fddd,"%d", queued_paths);
-                            fprintf(fddd,"\n");
-
-                            fprintf(fddd,"%s","unique crashes: ");
-                            fprintf(fddd,"%d", unique_crashes);
-                            fprintf(fddd,"\n");
-
-                            fclose(fddd);
-
-                        }
 
         else if (key_module == 2)
         {
@@ -19229,10 +19151,7 @@ if( (cur_time_lyu - start_time2) > 7200000 )
             dict_incremental();
             selection_update_distill();
             start_distill = 1;
-            if ( (cur_time_lyu - start_time ) % 7200000  >  5200000  && lock_key == 1)
-            {
-                lock_key = 0;
-            }
+           
         }
             
     }
