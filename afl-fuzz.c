@@ -889,28 +889,8 @@ int select_algorithm(int extras) {
   //if (start_distill == 0) operator_number = operator_number - 3;
   //else if (extras < 2) operator_number = operator_number - 2;
   //double range_sele = (double)probability_now[swarm_now][operator_number - 1];
-  //double sele = ((double)(random() % 1000000) * 0.000001 * range_sele);
-/*
-if(use_inter_trial != 0)
-{
-  for (i_puppet = 0; i_puppet < operator_number; i_puppet++)
-  {
-          if (sele < probability_now[swarm_now][i_puppet])
-            break;
-  }
-}
-else{
+  double sele = ((double)(random() % 1000000) * 0.000001 );
 
-    for (i_puppet = 0; i_puppet < operator_number; i_puppet++)
-    {
-            if (sele < probability_now[swarm_now][i_puppet])
-              break;
-    }
-  if (i_puppet == 16)
-  {
-
-  }
-}*/
 if(use_inter_trial != 0){
   for (i_puppet = 0; i_puppet < operator_num; i_puppet++)
   {
