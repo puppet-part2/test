@@ -8,6 +8,6 @@ Then, run ```make format  &&  make presubmit``` to confirm newly added fuzzer EM
 ``` PYTHONPATH=. python3 $path_to_run_experiment.py -a  --experiment-config $path_to_experiment-config.yaml  --benchmarks $target_programs   --experiment-name  $experiment_name   --fuzzers ems $other_fuzzers ```
 
 
-initial_seed_sets.tar.gz: The all the initial seed sets used in our evaluation, containing 100 seeds, 10 seeds, and an empty seed. 
+initial_seed_sets.tar.gz: All the initial seed sets used in our evaluation, containing 100 seeds, 10 seeds, and an empty seed. 
 
 results_from_FuzzBench: The orignal results reported by FuzzBench in our evaluation. 
