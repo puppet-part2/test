@@ -129,12 +129,13 @@ struct change_byte{
 
 static struct start_byte *dict2d_cur, *dict2d_prev, *newdict2d_cur, *newdict2d_prev;
 static struct change_byte *dict1d, *dict1d_cur, *newdict1d, *newdict1d_cur, *dict1d_final;
-static struct start_byte *dict2d_hash[4096];
-static struct start_byte *distill_hash[4096];
-//static struct start_byte2 *tmp_distill_hash[4096];
+#define hashtablelen 8192
+static struct start_byte *dict2d_hash[hashtablelen];
+static struct start_byte *distill_hash[hashtablelen];
+//static struct start_byte2 *tmp_distill_hash[hashtablelen];
 
-#define dictcount  3
-#define use_favorite_list 0.05
+#define dictcount  8
+#define use_favorite_list 0.1
 #define favorite_list_len  8192
 u64 favorite_list[favorite_list_len][5000];
 u64 favorite_list_num[favorite_list_len];
@@ -147,7 +148,7 @@ u64 two_num = 0;
 u64 four_num = 0;
 u64 last_hit_cnt;
 int start_distill = 0;
-int lock_key = 0;
+//int lock_key = 0;
 double bytelen_prob[3];
 
 static s32 dev_urandom_fd = -1;       /* Persistent fd for /dev/urandom   */
@@ -168,8 +169,8 @@ int select_bytelen(void) {
     if (sele < bytelen_prob[i_puppet])
         break;
   }
-  if ((i_puppet -1 >= 0 && sele < bytelen_prob[i_puppet - 1]) || (i_puppet + 1 < 3 && sele > bytelen_prob[i_puppet + 1]) || i_puppet >= 3)
-    FATAL("error select_bytelen");
+  //if ((i_puppet -1 >= 0 && sele < bytelen_prob[i_puppet - 1]) || (i_puppet + 1 < 3 && sele > bytelen_prob[i_puppet + 1]) || i_puppet >= 3)
+  //  FATAL("error select_bytelen");
 
   switch (i_puppet)
   {
@@ -188,14 +189,12 @@ int select_bytelen(void) {
 
 void dict2dhash_dictcount(void)
 {
-  u32 countttt = 0;
-  for(int i = 0; i < 4096; i++)
+  for(int i = 0; i < hashtablelen; i++)
   {
     dict2d_cur = dict2d_hash[i];
     dict2d_prev = dict2d_hash[i];
     while(dict2d_cur != NULL)
     {
-      countttt += 1;
       dict2d_cur->usenum = 0;
       dict1d_cur = dict2d_cur->subdata;
       dict1d = dict2d_cur->subdata;
@@ -270,7 +269,6 @@ void dict2dhash_dictcount(void)
       dict2d_cur = dict2d_cur->next;
     }
   }
-  SAYF("dict count: %u\n", countttt);
 }
 
 
@@ -298,7 +296,7 @@ void dict_incremental(void)
         default:
             FATAL("error in incremental bytelen");
         }
-        dict2d_cur = distill_hash[lognow->indata %4096];
+        dict2d_cur = distill_hash[lognow->indata % hashtablelen];
         if(dict2d_cur)
         {
             dict2d_prev = dict2d_cur;
@@ -379,7 +377,7 @@ void dict_incremental(void)
             dict1d_cur->countnum = 1;
             dict1d_cur->next = NULL;
             dict2d_cur->subdata = dict1d_cur;
-            distill_hash[lognow->indata %4096] = dict2d_cur;
+            distill_hash[lognow->indata % hashtablelen] = dict2d_cur;
         }
         lognowprev = lognow;
         lognow = lognow->next;
@@ -388,7 +386,7 @@ void dict_incremental(void)
 
     loghead = NULL;
     lognow = NULL;
-    for(int i = 0; i < 4096; i++)
+    for(int i = 0; i < hashtablelen; i++)
     {
       dict2d_cur = distill_hash[i];
       while (dict2d_cur !=NULL)
@@ -474,42 +472,7 @@ void dict_incremental(void)
 
     }
 
-    /*
-    for(int i = 0; i < 4096; i++)
-    {
-      dict2d_cur = distill_hash[i];
-      dict2d_prev = distill_hash[i];
-      while(dict2d_cur != NULL)
-      {
-        dict2d_prev = dict2d_prev->next;
-        free(dict2d_cur);
-        dict2d_cur = dict2d_prev;
-      }
-      distill_hash[i] = NULL;
-    }
-    for(int i = 0; i < 4096; i++)
-    {
-      //herehere
-      dict2d_cur = tmp_distill_hash[i];
-      newdict2d_cur = distill_hash[i];
-      newdict2d_prev = distill_hash[i];
-      while (dict2d_cur != NULL)
-      {
-        if(dict2d_cur->use == 1)
-        {
-          if(distill_hash[i] == NULL)
-          {
-            newdict2d_cur = (struct start_byte*) ck_alloc(sizeof(struct start_byte));
-            newdict2d_cur->indata = dict2d_cur->indata;
-            newdict2d_cur->bytelen = dict2d_cur->bytelen;
-            newdict2d_cur->totalcount = 0;  
-            newdict2d_cur->subdata_count = 0;
-          }
-        }
-      }
-      
-    }
-    */
+
 }
 
 
@@ -518,7 +481,7 @@ void dict_incremental(void)
 
 void selection_update_distill(void){
     int i;
-    for (i=0; i < 4096; i++)
+    for (i=0; i < hashtablelen; i++)
     {
         dict2d_cur = distill_hash[i];
         while(dict2d_cur)
@@ -566,7 +529,6 @@ u64 total_pacemaker_time = 0;
 u64 total_puppet_find = 0;
 u64 temp_puppet_find = 0;
 u64 most_time_key = 0;
-int use_inter_trial = 0;
 u64 most_time_puppet = 0;
 u64 old_hit_count = 0;
 int SPLICE_CYCLES_puppet;
@@ -579,10 +541,11 @@ double w_now;
 int g_now = 0;
 int g_max = 5000;
 #define operator_num 20
-#define swarm_num 2
+#define swarm_num 5
 #define period_core  500000
 u64 tmp_core_time = 0;
 int swarm_now = 0 ;
+u32 afl_map_size = 0;
 double x_now[swarm_num][operator_num],
        L_best[swarm_num][operator_num],
        eff_best[swarm_num][operator_num],
@@ -619,8 +582,8 @@ double x_now[swarm_num][operator_num],
 #define STAGE_OverWriteExtra 18
 #define STAGE_InsertExtra 19
 
-#define period_pilot 100000
- double period_pilot_tmp = 10000.0;
+#define period_pilot 50000
+ double period_pilot_tmp = 5000.0;
 
 int key_lv = 0;
 
@@ -680,11 +643,7 @@ static s32 forksrv_pid,               /* PID of the fork server           */
 
 EXP_ST u8* trace_bits;                /* SHM with instrumentation bitmap  */
 
-EXP_ST u8  virgin_bits[MAP_SIZE],     /* Regions yet untouched by fuzzing */
-           virgin_tmout[MAP_SIZE],    /* Bits we haven't seen in tmouts   */
-           virgin_crash[MAP_SIZE];    /* Bits we haven't seen in crashes  */
 
-static u8  var_bytes[MAP_SIZE];       /* Bytes that appear to be variable */
 
 static s32 shm_id;                    /* ID of the SHM region             */
 
@@ -716,7 +675,7 @@ EXP_ST u64 total_crashes,             /* Total number of crashes          */
            unique_hangs,              /* Hangs with unique signatures     */
            total_execs,               /* Total execve() calls             */
            start_time,                /* Unix start time (ms)             */
-           start_time2,
+           //start_time2,
            last_path_time,            /* Time for most recent path (ms)   */
            last_crash_time,           /* Time for most recent crash (ms)  */
            last_hang_time,            /* Time for most recent hang (ms)   */
@@ -802,8 +761,7 @@ static struct queue_entry *queue,     /* Fuzzing queue (linked list)      */
                           *queue_top, /* Top of the list                  */
                           *q_prev100; /* Previous 100 marker              */
 
-static struct queue_entry*
-  top_rated[MAP_SIZE];                /* Top entries for bitmap bytes     */
+
 
 struct extra_data {
   u8* data;                           /* Dictionary token data            */
@@ -870,6 +828,34 @@ enum {
 
 
 
+EXP_ST u8*  virgin_bits;     /* Regions yet untouched by fuzzing */
+EXP_ST u8*  virgin_tmout;    /* Bits we haven't seen in tmouts   */
+EXP_ST u8*  virgin_crash;    /* Bits we haven't seen in crashes  */
+
+static u8*  var_bytes;       /* Bytes that appear to be variable */
+static struct queue_entry**
+  top_rated;                /* Top entries for bitmap bytes     */
+
+static void initialize_lto(void){
+  //EXP_ST u8  virgin_bits[afl_map_size],     /* Regions yet untouched by fuzzing */
+  //         virgin_tmout[afl_map_size],    /* Bits we haven't seen in tmouts   */
+  //         virgin_crash[afl_map_size];    /* Bits we haven't seen in crashes  */
+
+  //static u8  var_bytes[afl_map_size];       /* Bytes that appear to be variable */
+  //static struct queue_entry*
+  //top_rated[afl_map_size];                /* Top entries for bitmap bytes     */
+
+  virgin_bits = (u8*)calloc(afl_map_size, sizeof(u8));
+  virgin_tmout = (u8*)calloc(afl_map_size, sizeof(u8));
+  virgin_crash = (u8*)calloc(afl_map_size, sizeof(u8));
+  var_bytes = (u8*)calloc(afl_map_size, sizeof(u8));
+  top_rated = (struct queue_entry**)malloc(sizeof(struct queue_entry*)*afl_map_size);
+  for(u32 i_1 = 0; i_1 < afl_map_size; i_1++){
+    top_rated[i_1] = NULL;
+  }
+}
+
+
 
 
 
@@ -878,42 +864,38 @@ enum {
 int select_algorithm(int extras) {
 
   int i_puppet;
-  //double total_puppet = 0.0;
-  //srandom(time(NULL));
 
-    //u32 seed[2];
-    //ck_read(dev_urandom_fd, &seed, sizeof(seed), "/dev/urandom");
-    //srandom(seed[0]);
+  u32 seed[2];
+  ck_read(dev_urandom_fd, &seed, sizeof(seed), "/dev/urandom");
+  srandom(seed[0]);
 
-  //int operator_number = operator_num;
-  //if (start_distill == 0) operator_number = operator_number - 3;
-  //else if (extras < 2) operator_number = operator_number - 2;
-  //double range_sele = (double)probability_now[swarm_now][operator_number - 1];
-  double sele = ((double)(random() % 1000000) * 0.000001 );
+  int operator_number = operator_num;
+  if (start_distill == 0) operator_number = operator_number - 3;
+  else if (extras < 2) operator_number = operator_number - 2;
+  double range_sele = (double)probability_now[swarm_now][operator_number - 1];
+  double sele = ((double)(random() % 1000000) * 0.000001 * range_sele);
 
-if(use_inter_trial != 0){
-  for (i_puppet = 0; i_puppet < operator_num; i_puppet++)
-  {
-          if (sele < probability_now[swarm_now][i_puppet])
-            break;
+
+  if (sele <= probability_now[swarm_now][0])
+    return 0;
+  else{
+    int left = 0;
+    int right = operator_number - 1;
+    int middle = 0;
+    while (left <= right)
+    {
+      middle = (left + right) / 2;
+      if ( sele > probability_now[swarm_now][middle] )
+        left = middle + 1;
+      else if (sele <= probability_now[swarm_now][middle] && sele > probability_now[swarm_now][middle - 1])
+        return middle;
+      else{
+        right = middle - 1;
+      }
+    }
   }
 }
-else{
-    for (i_puppet = 0; i_puppet < operator_num; i_puppet++)
-  {
-          if (sele < probability_now[swarm_now][i_puppet])
-            break;
-  }
-  if (i_puppet == 16)
-  {
-    i_puppet = rand() % 3 + 17;
-  }
-}
 
-  //if ((i_puppet-1 >= 0 && sele < probability_now[swarm_now][i_puppet-1]) || (i_puppet + 1 < operator_num && sele > probability_now[swarm_now][i_puppet +  1]))
-  //  FATAL("error select_algorithm");
-  return i_puppet;
-}
 
 
 
@@ -1441,7 +1423,7 @@ EXP_ST void write_bitmap(void) {
 
   if (fd < 0) PFATAL("Unable to open '%s'", fname);
 
-  ck_write(fd, virgin_bits, MAP_SIZE, fname);
+  ck_write(fd, virgin_bits, afl_map_size, fname);
 
   close(fd);
   ck_free(fname);
@@ -1457,7 +1439,7 @@ EXP_ST void read_bitmap(u8* fname) {
 
   if (fd < 0) PFATAL("Unable to open '%s'", fname);
 
-  ck_read(fd, virgin_bits, MAP_SIZE, fname);
+  ck_read(fd, virgin_bits, afl_map_size, fname);
 
   close(fd);
 
@@ -1479,14 +1461,14 @@ static inline u8 has_new_bits(u8* virgin_map) {
   u64* current = (u64*)trace_bits;
   u64* virgin  = (u64*)virgin_map;
 
-  u32  i = (MAP_SIZE >> 3);
+  u32  i = (afl_map_size >> 3);
 
 #else
 
   u32* current = (u32*)trace_bits;
   u32* virgin  = (u32*)virgin_map;
 
-  u32  i = (MAP_SIZE >> 2);
+  u32  i = (afl_map_size >> 2);
 
 #endif /* ^__x86_64__ */
 
@@ -1548,7 +1530,7 @@ static inline u8 has_new_bits(u8* virgin_map) {
 static u32 count_bits(u8* mem) {
 
   u32* ptr = (u32*)mem;
-  u32  i   = (MAP_SIZE >> 2);
+  u32  i   = (afl_map_size >> 2);
   u32  ret = 0;
 
   while (i--) {
@@ -1583,7 +1565,7 @@ static u32 count_bits(u8* mem) {
 static u32 count_bytes(u8* mem) {
 
   u32* ptr = (u32*)mem;
-  u32  i   = (MAP_SIZE >> 2);
+  u32  i   = (afl_map_size >> 2);
   u32  ret = 0;
 
   while (i--) {
@@ -1609,7 +1591,7 @@ static u32 count_bytes(u8* mem) {
 static u32 count_non_255_bytes(u8* mem) {
 
   u32* ptr = (u32*)mem;
-  u32  i   = (MAP_SIZE >> 2);
+  u32  i   = (afl_map_size >> 2);
   u32  ret = 0;
 
   while (i--) {
@@ -1648,7 +1630,7 @@ static const u8 simplify_lookup[256] = {
 
 static void simplify_trace(u64* mem) {
 
-  u32 i = MAP_SIZE >> 3;
+  u32 i = afl_map_size >> 3;
 
   while (i--) {
 
@@ -1679,7 +1661,7 @@ static void simplify_trace(u64* mem) {
 
 static void simplify_trace(u32* mem) {
 
-  u32 i = MAP_SIZE >> 2;
+  u32 i = afl_map_size >> 2;
 
   while (i--) {
 
@@ -1742,7 +1724,7 @@ EXP_ST void init_count_class16(void) {
 
 static inline void classify_counts(u64* mem) {
 
-  u32 i = MAP_SIZE >> 3;
+  u32 i = afl_map_size >> 3;
 
   while (i--) {
 
@@ -1769,7 +1751,7 @@ static inline void classify_counts(u64* mem) {
 
 static inline void classify_counts(u32* mem) {
 
-  u32 i = MAP_SIZE >> 2;
+  u32 i = afl_map_size >> 2;
 
   while (i--) {
 
@@ -1810,7 +1792,7 @@ static void minimize_bits(u8* dst, u8* src) {
 
   u32 i = 0;
 
-  while (i < MAP_SIZE) {
+  while (i < afl_map_size) {
 
     if (*(src++)) dst[i >> 3] |= 1 << (i & 7);
     i++;
@@ -1838,7 +1820,7 @@ static void update_bitmap_score(struct queue_entry* q) {
   /* For every byte set in trace_bits[], see if there is a previous winner,
      and how it compares to us. */
 
-  for (i = 0; i < MAP_SIZE; i++)
+  for (i = 0; i < afl_map_size; i++)
 
     if (trace_bits[i]) {
 
@@ -1864,7 +1846,7 @@ static void update_bitmap_score(struct queue_entry* q) {
        q->tc_ref++;
 
        if (!q->trace_mini) {
-         q->trace_mini = ck_alloc(MAP_SIZE >> 3);
+         q->trace_mini = ck_alloc(afl_map_size >> 3);
          minimize_bits(q->trace_mini, trace_bits);
        }
 
@@ -1884,14 +1866,15 @@ static void update_bitmap_score(struct queue_entry* q) {
 static void cull_queue(void) {
 
   struct queue_entry* q;
-  static u8 temp_v[MAP_SIZE >> 3];
+  //static u8 temp_v[afl_map_size >> 3];
+  u8* temp_v = (u8*)calloc((afl_map_size >> 3), sizeof(u8));
   u32 i;
 
   if (dumb_mode || !score_changed) return;
 
   score_changed = 0;
 
-  memset(temp_v, 255, MAP_SIZE >> 3);
+  memset(temp_v, 255, afl_map_size >> 3);
 
   queued_favored  = 0;
   pending_favored = 0;
@@ -1906,10 +1889,10 @@ static void cull_queue(void) {
   /* Let's see if anything in the bitmap isn't captured in temp_v.
      If yes, and if it has a top_rated[] contender, let's use it. */
 
-  for (i = 0; i < MAP_SIZE; i++)
+  for (i = 0; i < afl_map_size; i++)
     if (top_rated[i] && (temp_v[i >> 3] & (1 << (i & 7)))) {
 
-      u32 j = MAP_SIZE >> 3;
+      u32 j = afl_map_size >> 3;
 
       /* Remove all bits belonging to the current entry from temp_v. */
 
@@ -1940,12 +1923,12 @@ EXP_ST void setup_shm(void) {
 
   u8* shm_str;
 
-  if (!in_bitmap) memset(virgin_bits, 255, MAP_SIZE);
+  if (!in_bitmap) memset(virgin_bits, 255, afl_map_size);
 
-  memset(virgin_tmout, 255, MAP_SIZE);
-  memset(virgin_crash, 255, MAP_SIZE);
+  memset(virgin_tmout, 255, afl_map_size);
+  memset(virgin_crash, 255, afl_map_size);
 
-  shm_id = shmget(IPC_PRIVATE, MAP_SIZE, IPC_CREAT | IPC_EXCL | 0600);
+  shm_id = shmget(IPC_PRIVATE, afl_map_size*sizeof(u8), IPC_CREAT | IPC_EXCL | 0600);
 
   if (shm_id < 0) PFATAL("shmget() failed");
 
@@ -2869,7 +2852,7 @@ static u8 run_target(char** argv, u32 timeout) {
      must prevent any earlier operations from venturing into that
      territory. */
 
-  memset(trace_bits, 0, MAP_SIZE);
+  memset(trace_bits, 0, afl_map_size);
   MEM_BARRIER();
 
   /* If we're running in "dumb" mode, we can't rely on the fork server
@@ -3128,7 +3111,8 @@ static void show_stats(void);
 static u8 calibrate_case(char** argv, struct queue_entry* q, u8* use_mem,
                          u32 handicap, u8 from_queue) {
 
-  static u8 first_trace[MAP_SIZE];
+  //static u8 first_trace[afl_map_size];
+  u8* first_trace = (u8*)calloc(afl_map_size, sizeof(u8));
 
   u8  fault = 0, new_bits = 0, var_detected = 0,
       first_run = (q->exec_cksum == 0);
@@ -3150,7 +3134,8 @@ static u8 calibrate_case(char** argv, struct queue_entry* q, u8* use_mem,
   q->cal_failed++;
 
   stage_name = "calibration";
-  stage_max  = fast_cal ? 3 : CAL_CYCLES;
+  //stage_max  = fast_cal ? 3 : CAL_CYCLES;
+  stage_max = 3;
 
   /* Make sure the forkserver is up before we do anything, and let's not
      count its spin-up time toward binary calibration. */
@@ -3158,7 +3143,7 @@ static u8 calibrate_case(char** argv, struct queue_entry* q, u8* use_mem,
   if (dumb_mode != 1 && !no_forkserver && !forksrv_pid)
     init_forkserver(argv);
 
-  if (q->exec_cksum) memcpy(first_trace, trace_bits, MAP_SIZE);
+  if (q->exec_cksum) memcpy(first_trace, trace_bits, afl_map_size);
 
   start_us = get_cur_time_us();
 
@@ -3182,7 +3167,7 @@ static u8 calibrate_case(char** argv, struct queue_entry* q, u8* use_mem,
       goto abort_calibration;
     }
 
-    cksum = hash32(trace_bits, MAP_SIZE, HASH_CONST);
+    cksum = hash32(trace_bits, afl_map_size, HASH_CONST);
 
     if (q->exec_cksum != cksum) {
 
@@ -3193,7 +3178,7 @@ static u8 calibrate_case(char** argv, struct queue_entry* q, u8* use_mem,
 
         u32 i;
 
-        for (i = 0; i < MAP_SIZE; i++) {
+        for (i = 0; i < afl_map_size; i++) {
 
           if (!var_bytes[i] && first_trace[i] != trace_bits[i]) {
 
@@ -3209,7 +3194,7 @@ static u8 calibrate_case(char** argv, struct queue_entry* q, u8* use_mem,
       } else {
 
         q->exec_cksum = cksum;
-        memcpy(first_trace, trace_bits, MAP_SIZE);
+        memcpy(first_trace, trace_bits, afl_map_size);
 
       }
 
@@ -3280,7 +3265,7 @@ static void check_map_coverage(void) {
 
   if (count_bytes(trace_bits) < 100) return;
 
-  for (i = (1 << (MAP_SIZE_POW2 - 1)); i < MAP_SIZE; i++)
+  for (i = (afl_map_size >> 1) ; i < afl_map_size; i++)
     if (trace_bits[i]) return;
 
   WARNF("Recompile binary with newer version of afl to improve coverage!");
@@ -3746,7 +3731,7 @@ static u8 save_if_interesting(char** argv, void* mem, u32 len, u8 fault) {
       queued_with_cov++;
     }
 
-    queue_top->exec_cksum = hash32(trace_bits, MAP_SIZE, HASH_CONST);
+    queue_top->exec_cksum = hash32(trace_bits, afl_map_size, HASH_CONST);
 
     /* Try to calibrate inline; this also calls update_bitmap_score() when
        successful. */
@@ -4519,7 +4504,7 @@ static void show_stats(void) {
   /* Do some bitmap stats. */
 
   t_bytes = count_non_255_bytes(virgin_bits);
-  t_byte_ratio = ((double)t_bytes * 100) / MAP_SIZE;
+  t_byte_ratio = ((double)t_bytes * 100) / afl_map_size;
 
   if (t_bytes)
     stab_ratio = 100 - ((double)var_byte_count) * 100 / t_bytes;
@@ -4559,7 +4544,7 @@ static void show_stats(void) {
 
   /* Compute some mildly useful bitmap stats. */
 
-  t_bits = (MAP_SIZE << 3) - count_bits(virgin_bits);
+  t_bits = (afl_map_size << 3) - count_bits(virgin_bits);
 
   /* Now, for the visuals... */
 
@@ -4763,7 +4748,7 @@ if (limit_time_sig == 1)
   SAYF(bV bSTOP "  now processing : " cRST "%-17s " bSTG bV bSTOP, tmp);
 
   sprintf(tmp, "%0.02f%% / %0.02f%%", ((double)queue_cur->bitmap_size) *
-          100 / MAP_SIZE, t_byte_ratio);
+          100 / afl_map_size, t_byte_ratio);
 
   SAYF("    map density : %s%-21s " bSTG bV "\n", t_byte_ratio > 70 ? cLRD :
        ((t_bytes < 200 && !dumb_mode) ? cPIN : cRST), tmp);
@@ -5130,7 +5115,8 @@ static u32 next_p2(u32 val) {
 static u8 trim_case(char** argv, struct queue_entry* q, u8* in_buf) {
 
   static u8 tmp[64];
-  static u8 clean_trace[MAP_SIZE];
+  //static u8 clean_trace[afl_map_size];
+  u8* clean_trace = (u8*)calloc(afl_map_size, sizeof(u8));
 
   u8  needs_write = 0, fault = 0;
   u32 trim_exec = 0;
@@ -5178,7 +5164,7 @@ static u8 trim_case(char** argv, struct queue_entry* q, u8* in_buf) {
 
       /* Note that we don't keep track of crashes or hangs here; maybe TODO? */
 
-      cksum = hash32(trace_bits, MAP_SIZE, HASH_CONST);
+      cksum = hash32(trace_bits, afl_map_size, HASH_CONST);
 
       /* If the deletion had no impact on the trace, make it permanent. This
          isn't perfect for variable-path inputs, but we're just making a
@@ -5201,7 +5187,7 @@ static u8 trim_case(char** argv, struct queue_entry* q, u8* in_buf) {
         if (!needs_write) {
 
           needs_write = 1;
-          memcpy(clean_trace, trace_bits, MAP_SIZE);
+          memcpy(clean_trace, trace_bits, afl_map_size);
 
         }
 
@@ -5234,7 +5220,7 @@ static u8 trim_case(char** argv, struct queue_entry* q, u8* in_buf) {
     ck_write(fd, in_buf, q->len, q->fname);
     close(fd);
 
-    memcpy(trace_bits, clean_trace, MAP_SIZE);
+    memcpy(trace_bits, clean_trace, afl_map_size);
     update_bitmap_score(q);
 
   }
@@ -5259,6 +5245,27 @@ EXP_ST u8 common_fuzz_stuff(char** argv, u8* out_buf, u32 len, struct loghistory
 u64 cur_time_lyu = get_cur_time();
 
 
+/*
+if( (cur_time_lyu - start_time2) > 3600000 )
+{
+  start_time2 = get_cur_time();
+  FILE *fddd = NULL;
+  //out_dir
+  char *newname = (char *) ck_alloc_nozero(strlen(out_dir) + 10);
+  strcpy(newname, out_dir);
+  strcat(newname, "/queuenum\0");
+  fddd = fopen( newname ,"a");
+  fprintf(fddd,"%d", (int)(queued_paths));
+  fprintf(fddd,"\n");
+  fclose(fddd);
+  char *newname2 = (char *) ck_alloc_nozero(strlen(out_dir) + 10);
+  strcpy(newname2, out_dir);
+  strcat(newname2, "/crashnum\0");
+  fddd = fopen( newname2,"a");
+  fprintf(fddd,"%d", (int)(unique_crashes));
+  fprintf(fddd,"\n");
+  fclose(fddd);
+}*/
 
 
   if (post_handler) {
@@ -5903,7 +5910,7 @@ static u8 normal_fuzz_one(char** argv) {
 
         if (!dumb_mode && (stage_cur & 7) == 7) {
 
-            u32 cksum = hash32(trace_bits, MAP_SIZE, HASH_CONST);
+            u32 cksum = hash32(trace_bits, afl_map_size, HASH_CONST);
 
             if (stage_cur == stage_max - 1 && cksum == prev_cksum) {
 
@@ -6098,7 +6105,7 @@ static u8 normal_fuzz_one(char** argv) {
                without wasting time on checksums. */
 
             if (!dumb_mode && len >= EFF_MIN_LEN)
-                cksum = hash32(trace_bits, MAP_SIZE, HASH_CONST);
+                cksum = hash32(trace_bits, afl_map_size, HASH_CONST);
             else
                 cksum = ~queue_cur->exec_cksum;
 
@@ -7248,6 +7255,8 @@ havoc_stage:
 
     /* We essentially just do several thousand runs (depending on perf_score)
        where we take the input file and make random stacked tweaks. */
+
+    stage_max = stage_max / 10;
 
     for (stage_cur = 0; stage_cur < stage_max; stage_cur++) {
 
@@ -9053,7 +9062,7 @@ static u8 pilot_fuzzing(char** argv) {
 
             if (!dumb_mode && (stage_cur & 7) == 7) {
 
-                u32 cksum = hash32(trace_bits, MAP_SIZE, HASH_CONST);
+                u32 cksum = hash32(trace_bits, afl_map_size, HASH_CONST);
 
                 if (stage_cur == stage_max - 1 && cksum == prev_cksum) {
 
@@ -9263,7 +9272,7 @@ static u8 pilot_fuzzing(char** argv) {
                    without wasting time on checksums. */
 
                 if (!dumb_mode && len >= EFF_MIN_LEN)
-                    cksum = hash32(trace_bits, MAP_SIZE, HASH_CONST);
+                    cksum = hash32(trace_bits, afl_map_size, HASH_CONST);
                 else
                     cksum = ~queue_cur->exec_cksum;
 
@@ -10412,9 +10421,6 @@ static u8 pilot_fuzzing(char** argv) {
     stage_name = "deter_pcsg";
     stage_short = "DET_PCSG";
     int uselen = select_bytelen();
-    u32 seed[2];
-    ck_read(dev_urandom_fd, &seed, sizeof(seed), "/dev/urandom");
-    srandom(seed[0]);
     u64 select_location, tmpjj;
     int select_bool = 0;
     u32 tmpindata;
@@ -10430,7 +10436,7 @@ static u8 pilot_fuzzing(char** argv) {
         {
         case 1:{
             tmpindata = out_buf[select_location];
-            dict2d_cur = dict2d_hash[tmpindata % 4096];  //totalhash
+            dict2d_cur = dict2d_hash[tmpindata % hashtablelen];  //totalhash
             while (dict2d_cur)
             {
                 if(dict2d_cur->indata == tmpindata && dict2d_cur->bytelen == 1)
@@ -10526,7 +10532,7 @@ static u8 pilot_fuzzing(char** argv) {
             break;}
         case 2:{
             tmpindata = *(u16*)(out_buf + select_location);
-            dict2d_cur = dict2d_hash[tmpindata % 4096];
+            dict2d_cur = dict2d_hash[tmpindata % hashtablelen];
             while (dict2d_cur)
             {
                 if(dict2d_cur->indata == tmpindata && dict2d_cur->bytelen == 2)
@@ -10621,7 +10627,7 @@ static u8 pilot_fuzzing(char** argv) {
             break;}
         case 4:{
             tmpindata = *(u32*)(out_buf + select_location);
-            dict2d_cur = dict2d_hash[tmpindata % 4096];
+            dict2d_cur = dict2d_hash[tmpindata % hashtablelen];
             while (dict2d_cur)
             {
                 if(dict2d_cur->indata == tmpindata && dict2d_cur->bytelen == 4)
@@ -10760,7 +10766,7 @@ static u8 pilot_fuzzing(char** argv) {
         {
         case 1:{
             tmpindata = out_buf[select_location];
-            dict2d_cur = distill_hash[tmpindata % 4096];  //totalhash
+            dict2d_cur = distill_hash[tmpindata % hashtablelen];  //totalhash
             while (dict2d_cur)
             {
                 if(dict2d_cur->indata == tmpindata && dict2d_cur->bytelen == 1)
@@ -10857,7 +10863,7 @@ static u8 pilot_fuzzing(char** argv) {
             break;}
         case 2:{
             tmpindata = *(u16*)(out_buf + select_location);
-            dict2d_cur = distill_hash[tmpindata % 4096];
+            dict2d_cur = distill_hash[tmpindata % hashtablelen];
             while (dict2d_cur)
             {
                 if(dict2d_cur->indata == tmpindata && dict2d_cur->bytelen == 2)
@@ -10953,7 +10959,7 @@ static u8 pilot_fuzzing(char** argv) {
             break;}
         case 4:{
             tmpindata = *(u32*)(out_buf + select_location);
-            dict2d_cur = distill_hash[tmpindata % 4096];
+            dict2d_cur = distill_hash[tmpindata % hashtablelen];
             while (dict2d_cur)
             {
                 if(dict2d_cur->indata == tmpindata && dict2d_cur->bytelen == 4)
@@ -11155,7 +11161,8 @@ static u8 pilot_fuzzing(char** argv) {
                 havoc_queued = queued_paths;
 
 
-
+                stage_max = stage_max / 10; 
+                
                 for (stage_cur = 0; stage_cur < stage_max; stage_cur++) {
 
                     u32 use_stacking = 1 << (1 + UR(HAVOC_STACK_POW2));
@@ -12392,8 +12399,6 @@ static u8 pilot_fuzzing(char** argv) {
 
 
 case 16:{  //herehere
-        if(use_inter_trial == 0)
-            break;
         if(temp_len <= 4)
             break;
         u32 seed[2];
@@ -12418,7 +12423,7 @@ case 16:{  //herehere
         {
         case 1:{
             tmpindata = out_buf[select_location];
-            dict2d_cur = dict2d_hash[tmpindata % 4096];  //totalhash
+            dict2d_cur = dict2d_hash[tmpindata % hashtablelen];  //totalhash
             while (dict2d_cur)
             {
                 if(dict2d_cur->indata == tmpindata && dict2d_cur->bytelen == 1)
@@ -12556,7 +12561,7 @@ case 16:{  //herehere
             break;}
         case 2:{
             tmpindata = *(u16*)(out_buf + select_location);
-            dict2d_cur = dict2d_hash[tmpindata % 4096];
+            dict2d_cur = dict2d_hash[tmpindata % hashtablelen];
             while (dict2d_cur)
             {
                 if(dict2d_cur->indata == tmpindata && dict2d_cur->bytelen == 2)
@@ -12694,7 +12699,7 @@ case 16:{  //herehere
             break;}
         case 4:{
             tmpindata = *(u32*)(out_buf + select_location);
-            dict2d_cur = dict2d_hash[tmpindata % 4096];
+            dict2d_cur = dict2d_hash[tmpindata % hashtablelen];
             while (dict2d_cur)
             {
                 if(dict2d_cur->indata == tmpindata && dict2d_cur->bytelen == 4)
@@ -12835,7 +12840,7 @@ case 16:{  //herehere
         default:
             FATAL("error select_bytelen");
             break;
-        }
+      }
         
 
 
@@ -12849,6 +12854,7 @@ case 16:{  //herehere
 
 
 case 17:{  //distill   part
+        //herehere
         if(temp_len <= 4)
             break;
         u32 seed[2];
@@ -12863,7 +12869,7 @@ case 17:{  //distill   part
         {
         case 1:{
             tmpindata = out_buf[select_location];
-            dict2d_cur = distill_hash[tmpindata % 4096];  //totalhash
+            dict2d_cur = distill_hash[tmpindata % hashtablelen];  //totalhash
             while (dict2d_cur)
             {
                 if(dict2d_cur->indata == tmpindata && dict2d_cur->bytelen == 1)
@@ -12998,7 +13004,7 @@ case 17:{  //distill   part
             break;}
         case 2:{
             tmpindata = *(u16*)(out_buf + select_location);
-            dict2d_cur = distill_hash[tmpindata % 4096];
+            dict2d_cur = distill_hash[tmpindata % hashtablelen];
             while (dict2d_cur)
             {
                 if(dict2d_cur->indata == tmpindata && dict2d_cur->bytelen == 2)
@@ -13135,7 +13141,7 @@ case 17:{  //distill   part
             break;}
         case 4:{
             tmpindata = *(u32*)(out_buf + select_location);
-            dict2d_cur = distill_hash[tmpindata % 4096];
+            dict2d_cur = distill_hash[tmpindata % hashtablelen];
             while (dict2d_cur)
             {
                 if(dict2d_cur->indata == tmpindata && dict2d_cur->bytelen == 4)
@@ -14225,7 +14231,7 @@ static u8 core_fuzzing(char** argv) {
 
             if (!dumb_mode && (stage_cur & 7) == 7) {
 
-                u32 cksum = hash32(trace_bits, MAP_SIZE, HASH_CONST);
+                u32 cksum = hash32(trace_bits, afl_map_size, HASH_CONST);
 
                 if (stage_cur == stage_max - 1 && cksum == prev_cksum) {
 
@@ -14422,7 +14428,7 @@ static u8 core_fuzzing(char** argv) {
                    without wasting time on checksums. */
 
                 if (!dumb_mode && len >= EFF_MIN_LEN)
-                    cksum = hash32(trace_bits, MAP_SIZE, HASH_CONST);
+                    cksum = hash32(trace_bits, afl_map_size, HASH_CONST);
                 else
                     cksum = ~queue_cur->exec_cksum;
 
@@ -15559,7 +15565,7 @@ static u8 core_fuzzing(char** argv) {
         {
         case 1:{
             tmpindata = out_buf[select_location];
-            dict2d_cur = dict2d_hash[tmpindata % 4096];  //totalhash
+            dict2d_cur = dict2d_hash[tmpindata % hashtablelen];  //totalhash
             while (dict2d_cur)
             {
                 if(dict2d_cur->indata == tmpindata && dict2d_cur->bytelen == 1)
@@ -15654,7 +15660,7 @@ static u8 core_fuzzing(char** argv) {
             break;}
         case 2:{
             tmpindata = *(u16*)(out_buf + select_location);
-            dict2d_cur = dict2d_hash[tmpindata % 4096];
+            dict2d_cur = dict2d_hash[tmpindata % hashtablelen];
             while (dict2d_cur)
             {
                 if(dict2d_cur->indata == tmpindata && dict2d_cur->bytelen == 2)
@@ -15750,7 +15756,7 @@ static u8 core_fuzzing(char** argv) {
             break;}
         case 4:{
             tmpindata = *(u32*)(out_buf + select_location);
-            dict2d_cur = dict2d_hash[tmpindata % 4096];
+            dict2d_cur = dict2d_hash[tmpindata % hashtablelen];
             while (dict2d_cur)
             {
                 if(dict2d_cur->indata == tmpindata && dict2d_cur->bytelen == 4)
@@ -15890,7 +15896,7 @@ static u8 core_fuzzing(char** argv) {
         {
         case 1:{
             tmpindata = out_buf[select_location];
-            dict2d_cur = distill_hash[tmpindata % 4096];  //totalhash
+            dict2d_cur = distill_hash[tmpindata % hashtablelen];  //totalhash
             while (dict2d_cur)
             {
                 if(dict2d_cur->indata == tmpindata && dict2d_cur->bytelen == 1)
@@ -15985,7 +15991,7 @@ static u8 core_fuzzing(char** argv) {
             break;}
         case 2:{
             tmpindata = *(u16*)(out_buf + select_location);
-            dict2d_cur = distill_hash[tmpindata % 4096];
+            dict2d_cur = distill_hash[tmpindata % hashtablelen];
             while (dict2d_cur)
             {
                 if(dict2d_cur->indata == tmpindata && dict2d_cur->bytelen == 2)
@@ -16081,7 +16087,7 @@ static u8 core_fuzzing(char** argv) {
             break;}
         case 4:{
             tmpindata = *(u32*)(out_buf + select_location);
-            dict2d_cur = distill_hash[tmpindata % 4096];
+            dict2d_cur = distill_hash[tmpindata % hashtablelen];
             while (dict2d_cur)
             {
                 if(dict2d_cur->indata == tmpindata && dict2d_cur->bytelen == 4)
@@ -16284,7 +16290,7 @@ static u8 core_fuzzing(char** argv) {
 
                 havoc_queued = queued_paths;
 
-
+                stage_max = stage_max / 10;
 
                 for (stage_cur = 0; stage_cur < stage_max; stage_cur++) {
 
@@ -17507,14 +17513,10 @@ static u8 core_fuzzing(char** argv) {
 
 
 case 16:{  //herehere
-        if(use_inter_trial == 0)
-            break;
         if(temp_len <= 4)
             break;
 
-        u32 seed[2];
-        ck_read(dev_urandom_fd, &seed, sizeof(seed), "/dev/urandom");
-        srandom(seed[0]);
+        
         u32 tmpindata;
         int select_bool = 0;
         int uselen = select_bytelen();
@@ -17535,7 +17537,7 @@ case 16:{  //herehere
         {
         case 1:{
             tmpindata = out_buf[select_location];
-            dict2d_cur = dict2d_hash[tmpindata % 4096];  //totalhash
+            dict2d_cur = dict2d_hash[tmpindata % hashtablelen];  //totalhash
             while (dict2d_cur)
             {
                 if(dict2d_cur->indata == tmpindata && dict2d_cur->bytelen == 1)
@@ -17672,7 +17674,7 @@ case 16:{  //herehere
             break;}
         case 2:{
             tmpindata = *(u16*)(out_buf + select_location);
-            dict2d_cur = dict2d_hash[tmpindata % 4096];
+            dict2d_cur = dict2d_hash[tmpindata % hashtablelen];
             while (dict2d_cur)
             {
                 if(dict2d_cur->indata == tmpindata && dict2d_cur->bytelen == 2)
@@ -17809,7 +17811,7 @@ case 16:{  //herehere
             break;}
         case 4:{
             tmpindata = *(u32*)(out_buf + select_location);
-            dict2d_cur = dict2d_hash[tmpindata % 4096];
+            dict2d_cur = dict2d_hash[tmpindata % hashtablelen];
             while (dict2d_cur)
             {
                 if(dict2d_cur->indata == tmpindata && dict2d_cur->bytelen == 4)
@@ -17959,7 +17961,7 @@ case 16:{  //herehere
     break;
 }
 
-case 17:{
+case 17:{ //herehere
     if(temp_len <= 4)
         break;
 
@@ -17975,7 +17977,7 @@ case 17:{
         {
         case 1:{
             tmpindata = out_buf[select_location];
-            dict2d_cur = distill_hash[tmpindata % 4096];  //distill_hash
+            dict2d_cur = distill_hash[tmpindata % hashtablelen];  //distill_hash
             while (dict2d_cur)
             {
                 if(dict2d_cur->indata == tmpindata && dict2d_cur->bytelen == 1)
@@ -18111,7 +18113,7 @@ case 17:{
             break;}
         case 2:{
             tmpindata = *(u16*)(out_buf + select_location);
-            dict2d_cur = distill_hash[tmpindata % 4096];
+            dict2d_cur = distill_hash[tmpindata % hashtablelen];
             while (dict2d_cur)
             {
                 if(dict2d_cur->indata == tmpindata && dict2d_cur->bytelen == 2)
@@ -18248,7 +18250,7 @@ case 17:{
             break;}
         case 4:{
             tmpindata = *(u32*)(out_buf + select_location);
-            dict2d_cur = distill_hash[tmpindata % 4096];
+            dict2d_cur = distill_hash[tmpindata % hashtablelen];
             while (dict2d_cur)
             {
                 if(dict2d_cur->indata == tmpindata && dict2d_cur->bytelen == 4)
@@ -19115,7 +19117,30 @@ static u8 fuzz_one(char** argv) {
     //else
     u64 cur_time_lyu = get_cur_time();
 
+/*
+if( (cur_time_lyu - start_time2) > 7200000 )
+{
+  start_time2 = get_cur_time();
+  FILE *fddd = NULL;
+  //out_dir
+  char *newname = (char *) ck_alloc_nozero(strlen(out_dir) + 10);
+  strcpy(newname, out_dir);
+  strcat(newname, "/queuenum\0");
+  fddd = fopen( newname ,"a");
+  fprintf(fddd,"%d", (int)(queued_paths));
+  fprintf(fddd,"\n");
+  fclose(fddd);
+  char *newname2 = (char *) ck_alloc_nozero(strlen(out_dir) + 10);
+  strcpy(newname2, out_dir);
+  strcat(newname2, "/crashnum\0");
+  fddd = fopen( newname2,"a");
+  fprintf(fddd,"%d", (int)(unique_crashes));
+  fprintf(fddd,"\n");
+  fclose(fddd);
 
+  
+}
+*/
 
 
     {
@@ -19123,7 +19148,54 @@ static u8 fuzz_one(char** argv) {
             key_val_lv = pilot_fuzzing(argv);
         else if (key_module == 1)
             key_val_lv = core_fuzzing(argv);
+                        /*
+                        if ( lock_key == 0 && (cur_time_lyu - start_time ) % 7200000  <  2200000) //two hours
+                        {
+                            lock_key = 1;
+                            FILE *fddd = NULL;
+                            //out_dir
+                            char *newname = (char *) ck_alloc_nozero(strlen(out_dir) + 8);
+                            strcpy(newname, out_dir);
+                            strcat(newname, "/Lyulog\0");
+                            fddd = fopen( newname ,"a");
+                            fprintf(fddd,"%s","time(s): ");
+                            fprintf(fddd,"%d", (int)((cur_time_lyu - start_time )/1000));
+                            fprintf(fddd,"\n");
+                            fprintf(fddd,"%s","selected probability: ");
+                            for(int tmpmm = 0; tmpmm < operator_num; tmpmm++)
+                                fprintf(fddd,"%f  ", x_now[swarm_now][tmpmm]);
+                            fprintf(fddd,"\n");
+                            fprintf(fddd,"%s","G_best: ");
+                            for(int tmpmm = 0; tmpmm < operator_num; tmpmm++)
+                                fprintf(fddd,"%f  ", G_best[tmpmm]);
+                            fprintf(fddd,"\n");
 
+                            fprintf(fddd,"%s","operator_finds: ");
+                            for(int tmpmm = 0; tmpmm < operator_num; tmpmm++)
+                                fprintf(fddd,"%d  ", operator_finds_puppet[tmpmm]);
+                            fprintf(fddd,"\n");
+
+                            fprintf(fddd,"%s","operator_mutation: ");
+                            {  
+                            for(int tmpmm = 0; tmpmm < operator_num; tmpmm++){
+                                u64 tmptmpmutation = core_operator_cycles_puppet[tmpmm];
+                                for (int tmpnnn = 0; tmpnnn < swarm_num; tmpnnn++) 
+                                    tmptmpmutation = stage_cycles_puppet[tmpnnn][tmpmm];
+                                fprintf(fddd,"%d  ", tmptmpmutation);}
+                            fprintf(fddd,"\n");
+                            }
+
+                            fprintf(fddd,"%s","unique paths: ");
+                            fprintf(fddd,"%d", queued_paths);
+                            fprintf(fddd,"\n");
+
+                            fprintf(fddd,"%s","unique crashes: ");
+                            fprintf(fddd,"%d", unique_crashes);
+                            fprintf(fddd,"\n");
+
+                            fclose(fddd);
+
+                        }*/
 
         else if (key_module == 2)
         {
@@ -19131,7 +19203,11 @@ static u8 fuzz_one(char** argv) {
             dict_incremental();
             selection_update_distill();
             start_distill = 1;
-           
+            /*
+            if ( (cur_time_lyu - start_time ) % 7200000  >  5200000  && lock_key == 1)
+            {
+                lock_key = 0;
+            }*/
         }
             
     }
@@ -19568,9 +19644,9 @@ static void check_term_size(void) {
 
 static void usage(u8* argv0) {
 
-  SAYF("\nMOpt by <puppet@zju.edu.cn>\n\n"
+  SAYF("\nems by <puppet@zju.edu.cn>\n\n"
 "\n%s [ options ] -- /path/to/fuzzed_app [ ... ]\n\n"
-"\n****** You must add -L (e.g., -L 0) to use MOpt-AFL ******\n\n"
+"\n****** You can add -L (e.g., -L 0) to adjust MOpt mutator ******\n\n"
     
 
        "Required parameters:\n\n"
@@ -20238,18 +20314,27 @@ int main(int argc, char** argv) {
   s32 opt;
   u64 prev_queued = 0;
   u32 sync_interval_cnt = 0, seek_to;
+  u8  *extras_dir = 0;
   u8  mem_limit_given = 0;
   u8  exit_1 = !!getenv("AFL_BENCH_JUST_ONE");
-  //u8  *extras_dir = 0;
-  u8 *extras_dir[4];
-  u8 extras_dir_cnt = 0;
   char** use_argv;
 
   struct timeval tv;
   struct timezone tz;
 
   SAYF(cCYA "afl-fuzz " cBRI VERSION cRST " by <lcamtuf@google.com>\n");
+  char * bb_file_ptr;  
 
+  if((bb_file_ptr = getenv("AFL_LLVM_DOCUMENT_IDS")) == NULL){
+    afl_map_size = MAP_SIZE;
+  }else{
+    FILE *fpRead=fopen(bb_file_ptr,"r");
+    fscanf(fpRead,"%u",&afl_map_size);
+    fclose(fpRead);
+    OKF("use lto_mode, the number of edge id is %u.", afl_map_size);
+  }
+
+  initialize_lto();
   doc_path = access(DOC_PATH, F_OK) ? "docs" : DOC_PATH;
 
   gettimeofday(&tv, &tz);
@@ -20263,14 +20348,7 @@ int main(int argc, char** argv) {
       if (limit_time_puppet2 < limit_time_puppet ) FATAL("limit_time overflow");
       limit_time_puppet = limit_time_puppet2;
       SAYF("default limit_time_puppet %llu\n",limit_time_puppet);
-      SAYF("inter trial no use  \n");
   }
-        for(int tmpiii = 0; tmpiii< 4096; tmpiii++)
-        {
-          dict2d_hash[tmpiii] = NULL;
-          distill_hash[tmpiii] = NULL;
-          //tmp_distill_hash[tmpiii] = NULL;
-        }
 
 
   while ((opt = getopt(argc, argv, "+i:o:f:m:t:G:V:T:L:dnCB:S:M:x:Q")) > 0)
@@ -20329,18 +20407,8 @@ int main(int argc, char** argv) {
 
       case 'x': /* dictionary */
 
-        /*
         if (extras_dir) FATAL("Multiple -x options not supported");
         extras_dir = optarg;
-        break;
-        */
-        if (extras_dir_cnt >= 4) {
-
-          FATAL("More than four -x options are not supported");
-
-        }
-
-        extras_dir[extras_dir_cnt++] = optarg;
         break;
 
       case 't': { /* timeout */
@@ -20452,7 +20520,6 @@ int main(int argc, char** argv) {
         break;
 
       case 'G':{
-        use_inter_trial = 1;
         u8 *dict_path = optarg;
         SAYF("dict path: %s\n", dict_path);
         FILE *fp = fopen(dict_path, "r");
@@ -20462,7 +20529,7 @@ int main(int argc, char** argv) {
             printf("failed to open dict\n");
             return 1;
         }
-        for(int tmpiii = 0; tmpiii< 4096; tmpiii++)
+        for(int tmpiii = 0; tmpiii< hashtablelen; tmpiii++)
         {
           dict2d_hash[tmpiii] = NULL;
           distill_hash[tmpiii] = NULL;
@@ -20489,10 +20556,10 @@ int main(int argc, char** argv) {
                     tmpfeoffp = fscanf(fp,"%llu",&tmptotalcount);    //totalcount
                     tmpfeoffp = fscanf(fp,"%llu",&tmpsubdata_count);    //subdata_count
                     
-                        if(dict2d_hash[tmpindata % 4096])
+                        if(dict2d_hash[tmpindata % hashtablelen])
                         {
-                            dict2d_cur = dict2d_hash[tmpindata % 4096];
-                            dict2d_prev = dict2d_hash[tmpindata % 4096];
+                            dict2d_cur = dict2d_hash[tmpindata % hashtablelen];
+                            dict2d_prev = dict2d_hash[tmpindata % hashtablelen];
                             while(dict2d_cur)
                             {
                                 if(dict2d_cur->indata == tmpindata && dict2d_cur->bytelen == tmpbytelen )
@@ -20530,7 +20597,7 @@ int main(int argc, char** argv) {
                             dict2d_cur->subdata_count = tmpsubdata_count;
                             dict2d_cur->next = NULL;
                             dict2d_cur->subdata = NULL;
-                            dict2d_hash[tmpindata % 4096] = dict2d_cur;
+                            dict2d_hash[tmpindata % hashtablelen] = dict2d_cur;
                             tmpfeoffp = fscanf(fp,"%s",dicttxt);
                             if(strcmp(dicttxt, "startbyte") != 0 )
                             {
@@ -20797,20 +20864,9 @@ break;
   read_testcases();
   load_auto();
 
-  if (extras_dir_cnt) {
-
-    for (u8 i = 0; i < extras_dir_cnt; i++) {
-
-      load_extras(extras_dir[i]);
-
-    }
-
-  }
-
-
   pivot_inputs();
 
-  //if (extras_dir) load_extras(extras_dir);
+  if (extras_dir) load_extras(extras_dir);
 
   if (!timeout_given) find_timeout();
 
@@ -20821,7 +20877,7 @@ break;
   check_binary(argv[optind]);
 
   start_time = get_cur_time();
-  start_time2 = get_cur_time();
+  //start_time2 = get_cur_time();
 
   if (qemu_mode)
     use_argv = get_qemu_argv(argv[0], argv + optind, argc - optind);
