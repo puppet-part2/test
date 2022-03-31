@@ -1,0 +1,2 @@
+/usr/bin/ar Dqc ../../../libLLVMOrcShared.a  CMakeFiles/LLVMOrcShared.dir/OrcError.cpp.o CMakeFiles/LLVMOrcShared.dir/RPCError.cpp.o CMakeFiles/LLVMOrcShared.dir/TargetProcessControlTypes.cpp.o
+/usr/bin/ranlib -D ../../../libLLVMOrcShared.a

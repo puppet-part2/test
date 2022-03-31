@@ -1,0 +1,118 @@
+# The set of languages for which implicit dependencies are needed:
+set(CMAKE_DEPENDS_LANGUAGES
+  "CXX"
+  )
+# The set of files for implicit dependencies of each language:
+set(CMAKE_DEPENDS_CHECK_CXX
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/AMDGPUEmitPrintf.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/AMDGPUEmitPrintf.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/ASanStackFrameLayout.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/ASanStackFrameLayout.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/AddDiscriminators.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/AddDiscriminators.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/AssumeBundleBuilder.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/AssumeBundleBuilder.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/BasicBlockUtils.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/BasicBlockUtils.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/BreakCriticalEdges.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/BreakCriticalEdges.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/BuildLibCalls.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/BuildLibCalls.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/BypassSlowDivision.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/BypassSlowDivision.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/CallGraphUpdater.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/CallGraphUpdater.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/CallPromotionUtils.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/CallPromotionUtils.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/CanonicalizeAliases.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/CanonicalizeAliases.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/CanonicalizeFreezeInLoops.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/CanonicalizeFreezeInLoops.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/CloneFunction.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/CloneFunction.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/CloneModule.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/CloneModule.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/CodeExtractor.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/CodeExtractor.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/CodeMoverUtils.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/CodeMoverUtils.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/CtorUtils.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/CtorUtils.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/Debugify.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/Debugify.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/DemoteRegToStack.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/DemoteRegToStack.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/EntryExitInstrumenter.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/EntryExitInstrumenter.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/EscapeEnumerator.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/EscapeEnumerator.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/Evaluator.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/Evaluator.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/FixIrreducible.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/FixIrreducible.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/FlattenCFG.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/FlattenCFG.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/FunctionComparator.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/FunctionComparator.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/FunctionImportUtils.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/FunctionImportUtils.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/GlobalStatus.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/GlobalStatus.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/GuardUtils.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/GuardUtils.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/InjectTLIMappings.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/InjectTLIMappings.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/InlineFunction.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/InlineFunction.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/InstructionNamer.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/InstructionNamer.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/IntegerDivision.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/IntegerDivision.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/LCSSA.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/LCSSA.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/LibCallsShrinkWrap.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/LibCallsShrinkWrap.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/Local.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/Local.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/LoopPeel.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/LoopPeel.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/LoopRotationUtils.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/LoopRotationUtils.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/LoopSimplify.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/LoopSimplify.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/LoopUnroll.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/LoopUnroll.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/LoopUnrollAndJam.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/LoopUnrollAndJam.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/LoopUnrollRuntime.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/LoopUnrollRuntime.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/LoopUtils.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/LoopUtils.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/LoopVersioning.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/LoopVersioning.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/LowerInvoke.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/LowerInvoke.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/LowerMemIntrinsics.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/LowerMemIntrinsics.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/LowerSwitch.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/LowerSwitch.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/MatrixUtils.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/MatrixUtils.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/Mem2Reg.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/Mem2Reg.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/MetaRenamer.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/MetaRenamer.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/ModuleUtils.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/ModuleUtils.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/NameAnonGlobals.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/NameAnonGlobals.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/PredicateInfo.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/PredicateInfo.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/PromoteMemoryToRegister.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/PromoteMemoryToRegister.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/SSAUpdater.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/SSAUpdater.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/SSAUpdaterBulk.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/SSAUpdaterBulk.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/SanitizerStats.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/SanitizerStats.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/ScalarEvolutionExpander.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/ScalarEvolutionExpander.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/SimplifyCFG.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/SimplifyCFG.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/SimplifyIndVar.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/SimplifyIndVar.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/SimplifyLibCalls.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/SimplifyLibCalls.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/SizeOpts.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/SizeOpts.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/SplitModule.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/SplitModule.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/StripGCRelocates.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/StripGCRelocates.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/StripNonLineTableDebugInfo.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/StripNonLineTableDebugInfo.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/SymbolRewriter.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/SymbolRewriter.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/UnifyFunctionExitNodes.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/UnifyFunctionExitNodes.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/UnifyLoopExits.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/UnifyLoopExits.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/UniqueInternalLinkageNames.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/UniqueInternalLinkageNames.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/Utils.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/Utils.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/VNCoercion.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/VNCoercion.cpp.o"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils/ValueMapper.cpp" "/llvm-project-release-12.x/build/lib/Transforms/Utils/CMakeFiles/LLVMTransformUtils.dir/ValueMapper.cpp.o"
+  )
+set(CMAKE_CXX_COMPILER_ID "GNU")
+
+# Preprocessor definitions for this target.
+set(CMAKE_TARGET_DEFINITIONS_CXX
+  "GTEST_HAS_RTTI=0"
+  "_GNU_SOURCE"
+  "__STDC_CONSTANT_MACROS"
+  "__STDC_FORMAT_MACROS"
+  "__STDC_LIMIT_MACROS"
+  )
+
+# The include file search paths:
+set(CMAKE_CXX_TARGET_INCLUDE_PATH
+  "lib/Transforms/Utils"
+  "/llvm-project-release-12.x/llvm/lib/Transforms/Utils"
+  "include"
+  "/llvm-project-release-12.x/llvm/include"
+  )
+
+# Targets to which this target links.
+set(CMAKE_TARGET_LINKED_INFO_FILES
+  "/llvm-project-release-12.x/build/lib/Analysis/CMakeFiles/LLVMAnalysis.dir/DependInfo.cmake"
+  "/llvm-project-release-12.x/build/lib/IR/CMakeFiles/LLVMCore.dir/DependInfo.cmake"
+  "/llvm-project-release-12.x/build/lib/Support/CMakeFiles/LLVMSupport.dir/DependInfo.cmake"
+  "/llvm-project-release-12.x/build/lib/Object/CMakeFiles/LLVMObject.dir/DependInfo.cmake"
+  "/llvm-project-release-12.x/build/lib/Bitcode/Reader/CMakeFiles/LLVMBitReader.dir/DependInfo.cmake"
+  "/llvm-project-release-12.x/build/lib/MC/MCParser/CMakeFiles/LLVMMCParser.dir/DependInfo.cmake"
+  "/llvm-project-release-12.x/build/lib/MC/CMakeFiles/LLVMMC.dir/DependInfo.cmake"
+  "/llvm-project-release-12.x/build/lib/DebugInfo/CodeView/CMakeFiles/LLVMDebugInfoCodeView.dir/DependInfo.cmake"
+  "/llvm-project-release-12.x/build/lib/DebugInfo/MSF/CMakeFiles/LLVMDebugInfoMSF.dir/DependInfo.cmake"
+  "/llvm-project-release-12.x/build/lib/TextAPI/CMakeFiles/LLVMTextAPI.dir/DependInfo.cmake"
+  "/llvm-project-release-12.x/build/lib/ProfileData/CMakeFiles/LLVMProfileData.dir/DependInfo.cmake"
+  "/llvm-project-release-12.x/build/lib/BinaryFormat/CMakeFiles/LLVMBinaryFormat.dir/DependInfo.cmake"
+  "/llvm-project-release-12.x/build/lib/Remarks/CMakeFiles/LLVMRemarks.dir/DependInfo.cmake"
+  "/llvm-project-release-12.x/build/lib/Bitstream/Reader/CMakeFiles/LLVMBitstreamReader.dir/DependInfo.cmake"
+  "/llvm-project-release-12.x/build/lib/Demangle/CMakeFiles/LLVMDemangle.dir/DependInfo.cmake"
+  )
+
+# Fortran module output directory.
+set(CMAKE_Fortran_TARGET_MODULE_DIR "")

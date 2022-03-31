@@ -1,0 +1,20 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/llvm-project-release-12.x/compiler-rt/lib/fuzzer/FuzzerInterceptors.cpp
+FuzzerPlatform.h
+/llvm-project-release-12.x/compiler-rt/lib/fuzzer/FuzzerPlatform.h
+cassert
+-
+cstdint
+-
+dlfcn.h
+-
+
+/llvm-project-release-12.x/compiler-rt/lib/fuzzer/FuzzerPlatform.h
+

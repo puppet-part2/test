@@ -1,0 +1,13 @@
+# Target labels
+ google-benchmark-libcxx
+# Source files and their labels
+/llvm-project-release-12.x/build/projects/compiler-rt/lib/fuzzer/libcxx_fuzzer_x86_64-bins/cxx/benchmarks/CMakeFiles/google-benchmark-libcxx
+/llvm-project-release-12.x/build/projects/compiler-rt/lib/fuzzer/libcxx_fuzzer_x86_64-bins/cxx/benchmarks/CMakeFiles/google-benchmark-libcxx.rule
+/llvm-project-release-12.x/build/projects/compiler-rt/lib/fuzzer/libcxx_fuzzer_x86_64-bins/cxx/benchmarks/CMakeFiles/google-benchmark-libcxx-complete.rule
+/llvm-project-release-12.x/build/projects/compiler-rt/lib/fuzzer/libcxx_fuzzer_x86_64-bins/cxx/benchmarks/benchmark-libcxx/src/google-benchmark-libcxx-stamp/google-benchmark-libcxx-install.rule
+/llvm-project-release-12.x/build/projects/compiler-rt/lib/fuzzer/libcxx_fuzzer_x86_64-bins/cxx/benchmarks/benchmark-libcxx/src/google-benchmark-libcxx-stamp/google-benchmark-libcxx-mkdir.rule
+/llvm-project-release-12.x/build/projects/compiler-rt/lib/fuzzer/libcxx_fuzzer_x86_64-bins/cxx/benchmarks/benchmark-libcxx/src/google-benchmark-libcxx-stamp/google-benchmark-libcxx-download.rule
+/llvm-project-release-12.x/build/projects/compiler-rt/lib/fuzzer/libcxx_fuzzer_x86_64-bins/cxx/benchmarks/benchmark-libcxx/src/google-benchmark-libcxx-stamp/google-benchmark-libcxx-update.rule
+/llvm-project-release-12.x/build/projects/compiler-rt/lib/fuzzer/libcxx_fuzzer_x86_64-bins/cxx/benchmarks/benchmark-libcxx/src/google-benchmark-libcxx-stamp/google-benchmark-libcxx-patch.rule
+/llvm-project-release-12.x/build/projects/compiler-rt/lib/fuzzer/libcxx_fuzzer_x86_64-bins/cxx/benchmarks/benchmark-libcxx/src/google-benchmark-libcxx-stamp/google-benchmark-libcxx-configure.rule
+/llvm-project-release-12.x/build/projects/compiler-rt/lib/fuzzer/libcxx_fuzzer_x86_64-bins/cxx/benchmarks/benchmark-libcxx/src/google-benchmark-libcxx-stamp/google-benchmark-libcxx-build.rule

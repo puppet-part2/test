@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/llvm-project-release-12.x/compiler-rt/lib/builtins/assembly.h
+
+/llvm-project-release-12.x/compiler-rt/lib/builtins/x86_64/floatundidf.S
+../assembly.h
+/llvm-project-release-12.x/compiler-rt/lib/builtins/assembly.h
+
+/llvm-project-release-12.x/compiler-rt/lib/builtins/x86_64/floatundisf.S
+../assembly.h
+/llvm-project-release-12.x/compiler-rt/lib/builtins/assembly.h
+
+/llvm-project-release-12.x/compiler-rt/lib/builtins/x86_64/floatundixf.S
+../assembly.h
+/llvm-project-release-12.x/compiler-rt/lib/builtins/assembly.h
+

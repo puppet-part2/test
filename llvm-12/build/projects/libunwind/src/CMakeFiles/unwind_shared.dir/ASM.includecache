@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/llvm-project-release-12.x/libunwind/src/UnwindRegistersRestore.S
+assembly.h
+/llvm-project-release-12.x/libunwind/src/assembly.h
+
+/llvm-project-release-12.x/libunwind/src/UnwindRegistersSave.S
+assembly.h
+/llvm-project-release-12.x/libunwind/src/assembly.h
+
+/llvm-project-release-12.x/libunwind/src/assembly.h
+

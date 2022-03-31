@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/llvm-project-release-12.x/compiler-rt/lib/builtins/assembly.h
+
+/llvm-project-release-12.x/compiler-rt/lib/sanitizer_common/sanitizer_asm.h
+
+/llvm-project-release-12.x/compiler-rt/lib/xray/xray_trampoline_x86_64.S
+../builtins/assembly.h
+/llvm-project-release-12.x/compiler-rt/lib/builtins/assembly.h
+../sanitizer_common/sanitizer_asm.h
+/llvm-project-release-12.x/compiler-rt/lib/sanitizer_common/sanitizer_asm.h
+
