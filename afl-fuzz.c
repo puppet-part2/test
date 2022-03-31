@@ -20877,7 +20877,7 @@ break;
 
     for (u8 i = 0; i < extras_dir_cnt; i++) {
 
-      load_extras(afl, extras_dir[i]);
+      load_extras( extras_dir[i]);
 
     }
 
