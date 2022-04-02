@@ -20406,7 +20406,7 @@ int main(int argc, char** argv) {
         out_file = optarg;
         break;
 
-      case 'x': /* dictionary */
+      case 'x':{         /* dictionary */
 
         if (extras_dir_cnt >= 4) {
 
@@ -20416,7 +20416,7 @@ int main(int argc, char** argv) {
 
         extras_dir[extras_dir_cnt++] = optarg;
         break;
-
+      }
       case 't': { /* timeout */
 
           u8 suffix = 0;
