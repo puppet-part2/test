@@ -1,2 +1,0 @@
-#undef LLD_REVISION
-#undef LLD_REPOSITORY

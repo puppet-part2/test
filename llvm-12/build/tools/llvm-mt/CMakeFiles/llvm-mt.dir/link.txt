@@ -1,1 +1,0 @@
-/usr/bin/c++   -fPIC -fvisibility-inlines-hidden -Werror=date-time -w -ffunction-sections -fdata-sections -O3 -DNDEBUG   -Wl,-rpath-link,/llvm-project-release-12.x/build/./lib  -Wl,-O3 -Wl,--gc-sections CMakeFiles/llvm-mt.dir/llvm-mt.cpp.o  -o ../../bin/llvm-mt -Wl,-rpath,"\$ORIGIN/../lib" ../../lib/libLLVM-12.so -lpthread 

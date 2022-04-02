@@ -1,5 +1,0 @@
-LLVM_12 {
-  global:
-    onload;
-  local: *;
-};

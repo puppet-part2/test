@@ -1,2 +1,0 @@
-/usr/bin/ar Dqc ../../libLLVMHelloNew.a  CMakeFiles/LLVMHelloNew.dir/HelloWorld.cpp.o
-/usr/bin/ranlib -D ../../libLLVMHelloNew.a

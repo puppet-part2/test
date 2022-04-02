@@ -1,2 +1,0 @@
-/usr/bin/ar Dqc ../../../../lib/clang/12.0.1/lib/linux/libclang_rt.memprof_cxx-x86_64.a  CMakeFiles/RTMemprof_cxx.x86_64.dir/memprof_new_delete.cpp.o
-/usr/bin/ranlib -D ../../../../lib/clang/12.0.1/lib/linux/libclang_rt.memprof_cxx-x86_64.a

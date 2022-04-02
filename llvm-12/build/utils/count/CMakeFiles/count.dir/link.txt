@@ -1,1 +1,0 @@
-/usr/bin/cc  -fPIC -Werror=date-time -w -ffunction-sections -fdata-sections -O3 -DNDEBUG   -Wl,-rpath-link,/llvm-project-release-12.x/build/./lib  -Wl,-O3 -Wl,--gc-sections CMakeFiles/count.dir/count.c.o  -o ../../bin/count -Wl,-rpath,"\$ORIGIN/../lib" -lpthread 

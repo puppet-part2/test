@@ -1,2 +1,0 @@
-/usr/bin/ar Dqc ../../../../lib/clang/12.0.1/lib/linux/libclang_rt.xray-fdr-x86_64.a  CMakeFiles/RTXrayFDR.x86_64.dir/xray_fdr_flags.cpp.o CMakeFiles/RTXrayFDR.x86_64.dir/xray_fdr_logging.cpp.o
-/usr/bin/ranlib -D ../../../../lib/clang/12.0.1/lib/linux/libclang_rt.xray-fdr-x86_64.a

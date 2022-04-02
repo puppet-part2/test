@@ -1,2 +1,0 @@
-/usr/bin/ar Dqc ../../../../lib/clang/12.0.1/lib/linux/libclang_rt.fuzzer_interceptors-x86_64.a  CMakeFiles/RTfuzzer_interceptors.x86_64.dir/FuzzerInterceptors.cpp.o
-/usr/bin/ranlib -D ../../../../lib/clang/12.0.1/lib/linux/libclang_rt.fuzzer_interceptors-x86_64.a

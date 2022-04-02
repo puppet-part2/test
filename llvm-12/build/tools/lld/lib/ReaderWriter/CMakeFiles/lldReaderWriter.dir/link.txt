@@ -1,2 +1,0 @@
-/usr/bin/ar Dqc ../../../../lib/liblldReaderWriter.a  CMakeFiles/lldReaderWriter.dir/FileArchive.cpp.o
-/usr/bin/ranlib -D ../../../../lib/liblldReaderWriter.a

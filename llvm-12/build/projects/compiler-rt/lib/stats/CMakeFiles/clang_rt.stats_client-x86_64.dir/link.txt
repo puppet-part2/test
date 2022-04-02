@@ -1,2 +1,0 @@
-/usr/bin/ar Dqc ../../../../lib/clang/12.0.1/lib/linux/libclang_rt.stats_client-x86_64.a  CMakeFiles/clang_rt.stats_client-x86_64.dir/stats_client.cpp.o
-/usr/bin/ranlib -D ../../../../lib/clang/12.0.1/lib/linux/libclang_rt.stats_client-x86_64.a
