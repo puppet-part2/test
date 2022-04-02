@@ -20314,7 +20314,7 @@ int main(int argc, char** argv) {
   s32 opt;
   u64 prev_queued = 0;
   u32 sync_interval_cnt = 0, seek_to;
-  u8  *extras_dir = 0;
+  u8  *extras_dir[4];
   u8  mem_limit_given = 0;
   u8  exit_1 = !!getenv("AFL_BENCH_JUST_ONE");
   char** use_argv;
