@@ -213,7 +213,7 @@ void scanForDangerousFunctions(llvm::Module *M) {
 }
 
 
-std::string getSourceName(function *F) {
+std::string getSourceName(llvm::Function *F) {
 
     return DECL_SOURCE_FILE(F->decl);
 
