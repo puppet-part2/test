@@ -213,11 +213,53 @@ void scanForDangerousFunctions(llvm::Module *M) {
 }
 
 
-std::string getSourceName(llvm::Function *F) {
+static std::string getSourceName(llvm::Function *F) {
 
-    return DECL_SOURCE_FILE(F->decl);
+  // let's try to get the filename for the function
+  auto                 bb = &F->getEntryBlock();
+  BasicBlock::iterator IP = bb->getFirstInsertionPt();
+  IRBuilder<>          IRB(&(*IP));
+  DebugLoc             Loc = IP->getDebugLoc();
+
+#if LLVM_VERSION_MAJOR >= 4 || \
+    (LLVM_VERSION_MAJOR == 3 && LLVM_VERSION_MINOR >= 7)
+  if (Loc) {
+
+    StringRef   instFilename;
+    DILocation *cDILoc = dyn_cast<DILocation>(Loc.getAsMDNode());
+
+    if (cDILoc) { instFilename = cDILoc->getFilename(); }
+
+    if (instFilename.str().empty() && cDILoc) {
+
+      /* If the original location is empty, try using the inlined location
+       */
+      DILocation *oDILoc = cDILoc->getInlinedAt();
+      if (oDILoc) { instFilename = oDILoc->getFilename(); }
+
+    }
+
+    return instFilename.str();
 
   }
+
+#else
+  if (!Loc.isUnknown()) {
+
+    DILocation cDILoc(Loc.getAsMDNode(F->getContext()));
+
+    StringRef instFilename = cDILoc.getFilename();
+
+    /* Continue only if we know where we actually are */
+    return instFilename.str();
+
+  }
+
+#endif
+
+  return std::string("");
+
+}
 
 
 bool isInInstrumentList(llvm::Function *F) {
