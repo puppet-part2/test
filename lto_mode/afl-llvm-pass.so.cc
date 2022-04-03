@@ -30,6 +30,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <fnmatch.h>
 
 #include "llvm/ADT/Statistic.h"
 #include "llvm/IR/IRBuilder.h"
@@ -82,6 +83,69 @@ static std::list<std::string> denyListFiles;
 static std::list<std::string> denyListFunctions;
 
 
+/* Function that we never instrument or analyze */
+/* Note: this ignore check is also called in isInInstrumentList() */
+bool isIgnoreFunction(const llvm::Function *F) {
+
+  // Starting from "LLVMFuzzer" these are functions used in libfuzzer based
+  // fuzzing campaign installations, e.g. oss-fuzz
+
+  static constexpr const char *ignoreList[] = {
+
+      "asan.",
+      "llvm.",
+      "sancov.",
+      "__ubsan",
+      "ign.",
+      "__afl",
+      "_fini",
+      "__libc_",
+      "__asan",
+      "__msan",
+      "__cmplog",
+      "__sancov",
+      "__san",
+      "__cxx_",
+      "__decide_deferred",
+      "_GLOBAL",
+      "_ZZN6__asan",
+      "_ZZN6__lsan",
+      "msan.",
+      "LLVMFuzzerM",
+      "LLVMFuzzerC",
+      "LLVMFuzzerI",
+      "maybe_duplicate_stderr",
+      "discard_output",
+      "close_stdout",
+      "dup_and_close_stderr",
+      "maybe_close_fd_mask",
+      "ExecuteFilesOnyByOne"
+
+  };
+
+  for (auto const &ignoreListFunc : ignoreList) {
+
+    if (F->getName().startswith(ignoreListFunc)) { return true; }
+
+  }
+
+  static constexpr const char *ignoreSubstringList[] = {
+
+      "__asan", "__msan",       "__ubsan",    "__lsan",  "__san", "__sanitize",
+      "__cxx",  "DebugCounter", "DwarfDebug", "DebugLoc"
+
+  };
+
+  for (auto const &ignoreListFunc : ignoreSubstringList) {
+
+    // hexcoder: F->getName().contains() not avaiilable in llvm 3.8.0
+    if (StringRef::npos != F->getName().find(ignoreListFunc)) { return true; }
+
+  }
+
+  return false;
+
+}
 
 
 
@@ -149,6 +213,11 @@ void scanForDangerousFunctions(llvm::Module *M) {
 }
 
 
+std::string getSourceName(function *F) {
+
+    return DECL_SOURCE_FILE(F->decl);
+
+  }
 
 
 bool isInInstrumentList(llvm::Function *F) {
@@ -179,11 +248,6 @@ bool isInInstrumentList(llvm::Function *F) {
 
           if (fnmatch(("*" + *it).c_str(), instFunction.c_str(), 0) == 0) {
 
-            if (debug)
-              DEBUGF(
-                  "Function %s is in the deny function list, not instrumenting "
-                  "... \n",
-                  instFunction.c_str());
             return false;
 
           }
@@ -221,18 +285,7 @@ bool isInInstrumentList(llvm::Function *F) {
 
         }
 
-      } else {
-
-        // we could not find out the location. in this case we say it is not
-        // in the instrument file list
-        if (!be_quiet)
-          WARNF(
-              "No debug information found for function %s, will be "
-              "instrumented (recompile with -g -O[1-3]).",
-              F->getName().str().c_str());
-
-      }
-
+      } 
     }
 
   }
@@ -259,11 +312,7 @@ bool isInInstrumentList(llvm::Function *F) {
 
           if (fnmatch(("*" + *it).c_str(), instFunction.c_str(), 0) == 0) {
 
-            if (debug)
-              DEBUGF(
-                  "Function %s is in the allow function list, instrumenting "
-                  "... \n",
-                  instFunction.c_str());
+            
             return true;
 
           }
@@ -293,11 +342,7 @@ bool isInInstrumentList(llvm::Function *F) {
 
             if (fnmatch(("*" + *it).c_str(), source_file.c_str(), 0) == 0) {
 
-              if (debug)
-                DEBUGF(
-                    "Function %s is in the allowlist (%s), instrumenting ... "
-                    "\n",
-                    F->getName().str().c_str(), source_file.c_str());
+              
               return true;
 
             }
@@ -306,18 +351,7 @@ bool isInInstrumentList(llvm::Function *F) {
 
         }
 
-      } else {
-
-        // we could not find out the location. In this case we say it is not
-        // in the instrument file list
-        if (!be_quiet)
-          WARNF(
-              "No debug information found for function %s, will not be "
-              "instrumented (recompile with -g -O[1-3]).",
-              F->getName().str().c_str());
-        return false;
-
-      }
+      } 
 
     }
 
@@ -336,69 +370,7 @@ struct bb{
 static struct bb *bb_queue; 
 
 
-/* Function that we never instrument or analyze */
-/* Note: this ignore check is also called in isInInstrumentList() */
-bool isIgnoreFunction(const llvm::Function *F) {
 
-  // Starting from "LLVMFuzzer" these are functions used in libfuzzer based
-  // fuzzing campaign installations, e.g. oss-fuzz
-
-  static constexpr const char *ignoreList[] = {
-
-      "asan.",
-      "llvm.",
-      "sancov.",
-      "__ubsan",
-      "ign.",
-      "__afl",
-      "_fini",
-      "__libc_",
-      "__asan",
-      "__msan",
-      "__cmplog",
-      "__sancov",
-      "__san",
-      "__cxx_",
-      "__decide_deferred",
-      "_GLOBAL",
-      "_ZZN6__asan",
-      "_ZZN6__lsan",
-      "msan.",
-      "LLVMFuzzerM",
-      "LLVMFuzzerC",
-      "LLVMFuzzerI",
-      "maybe_duplicate_stderr",
-      "discard_output",
-      "close_stdout",
-      "dup_and_close_stderr",
-      "maybe_close_fd_mask",
-      "ExecuteFilesOnyByOne"
-
-  };
-
-  for (auto const &ignoreListFunc : ignoreList) {
-
-    if (F->getName().startswith(ignoreListFunc)) { return true; }
-
-  }
-
-  static constexpr const char *ignoreSubstringList[] = {
-
-      "__asan", "__msan",       "__ubsan",    "__lsan",  "__san", "__sanitize",
-      "__cxx",  "DebugCounter", "DwarfDebug", "DebugLoc"
-
-  };
-
-  for (auto const &ignoreListFunc : ignoreSubstringList) {
-
-    // hexcoder: F->getName().contains() not avaiilable in llvm 3.8.0
-    if (StringRef::npos != F->getName().find(ignoreListFunc)) { return true; }
-
-  }
-
-  return false;
-
-}
 
 
 bool AFLCoverage::runOnModule(Module &M) {
