@@ -928,6 +928,8 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
       break;}
     
     case 2:{ // mutation on 2 bytes
+      switch (tmptmplognow->type)
+      {
       case 0:{  //overwrite  reversal
 
         *(u16*)(out_buf + locatetmp) = (u16)(tmptmplognow->indata);  
@@ -972,9 +974,12 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
       default:
         FATAL("error in type");
         break;
+      }
       break;}
     
     case 4:{  // mutation on 4 bytes
+      switch (tmptmplognow->type)
+      {
       case 0:{  //overwrite  reversal
 
         *(u32*)(out_buf + locatetmp) = (u32)(tmptmplognow->indata);  
@@ -1019,6 +1024,7 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
       default:
         FATAL("error in type");
         break;
+      }
       break;}
 
     default:
