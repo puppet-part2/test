@@ -520,6 +520,7 @@ bool AFLCoverage::runOnModule(Module &M) {
   scanForDangerousFunctions(&M);
 
   for (auto &F : M){
+    if (!isInInstrumentList(&F)) { continue; }
     if (F.size() < function_minimum_size) continue;
     if (isIgnoreFunction(&F)) continue;
     std::vector<BasicBlock *> InsBlocks;
