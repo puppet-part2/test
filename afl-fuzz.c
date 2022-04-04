@@ -154,6 +154,8 @@ double bytelen_prob[3];
 static s32 dev_urandom_fd = -1;       /* Persistent fd for /dev/urandom   */
 
 
+
+
 int select_bytelen(void) {
 
   int i_puppet;
@@ -855,6 +857,204 @@ static void initialize_lto(void){
   }
 }
 
+
+
+
+
+
+void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmploghead, struct loghistory* tmplognow, u64* tmp_favorite_list, u64 tmp_favorite_list_num){
+  
+  if (tmploghead == NULL)
+      return;
+  
+  struct loghistory* tmptmplognow = tmploghead;
+  struct loghistory* tmptmplognowfront = tmploghead;
+  u32 originalcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
+  u32 locate_tmp_list = 0;
+
+  while(tmptmplognow != NULL)
+  { 
+    int whether_nouse = 0;
+    u32 locatetmp = tmp_favorite_list[locate_tmp_list];
+    switch (tmptmplognow->bytelen)
+    {
+    case 1:{  // mutation on 1 byte
+
+      switch (tmptmplognow->type)
+      {
+      case 0:{  //overwrite  reversal
+        out_buf[locatetmp] = (u8)(tmptmplognow->indata);
+        write_to_testcase(out_buf, len);
+        u8 fault = run_target(argv, exec_tmout);
+        u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
+        if (newcksum != originalcksum)
+          whether_nouse = 1;
+        out_buf[locatetmp] = (u8)(tmptmplognow->outdata);
+        break;}
+      
+      case 1:{  //delete  reversal
+        s32 templen_l = len + 1;
+        u8* new_buf;
+        new_buf = ck_alloc_nozero(templen_l);
+        memcpy(new_buf, out_buf, locatetmp);
+        new_buf[locatetmp] = (u8)(tmptmplognow->indata);
+        memcpy(new_buf + locatetmp + 1, out_buf + locatetmp,  len - locatetmp);
+        write_to_testcase(new_buf, templen_l);
+        u8 fault = run_target(argv, exec_tmout);
+        u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
+        if (newcksum != originalcksum)
+            whether_nouse = 1;
+        ck_free(new_buf);
+        break;}
+
+      case 2:{  //insert  reversal
+        s32 templen_l = len - 1;
+        u8* new_buf;
+        new_buf = ck_alloc_nozero(templen_l);
+        memcpy(new_buf, out_buf, locatetmp);
+        memcpy(new_buf + locatetmp, out_buf + locatetmp + 1, templen_l - locatetmp);
+        write_to_testcase(new_buf, templen_l);
+        u8 fault = run_target(argv, exec_tmout);
+        u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
+        if (newcksum != originalcksum)
+            whether_nouse = 1;
+        ck_free(new_buf);
+        break;}
+      
+      default:
+        FATAL("error in type");
+        break;
+      }
+      break;}
+    
+    case 2:{ // mutation on 2 bytes
+      case 0:{  //overwrite  reversal
+
+        *(u16*)(out_buf + locatetmp) = (u16)(tmptmplognow->indata);  
+        write_to_testcase(out_buf, len);
+        u8 fault = run_target(argv, exec_tmout);
+        u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
+        if (newcksum != originalcksum)
+          whether_nouse = 1;
+        *(u16*)(out_buf + locatetmp) = (u16)(tmptmplognow->outdata);
+
+        break;}
+      
+      case 1:{  //delete  reversal
+        s32 templen_l = len + 2;
+        u8* new_buf;
+        new_buf = ck_alloc_nozero(templen_l);
+        memcpy(new_buf, out_buf, locatetmp);
+        *(u16*)( new_buf + locatetmp) = (u16)(tmptmplognow->indata);
+        memcpy(new_buf + locatetmp + 2, out_buf + locatetmp,  len - locatetmp);
+        write_to_testcase(new_buf, templen_l);
+        u8 fault = run_target(argv, exec_tmout);
+        u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
+        if (newcksum != originalcksum)
+            whether_nouse = 1;
+        ck_free(new_buf);
+        break;}
+
+      case 2:{  //insert  reversal
+        s32 templen_l = len - 2;
+        u8* new_buf;
+        new_buf = ck_alloc_nozero(templen_l);
+        memcpy(new_buf, out_buf, locatetmp);
+        memcpy(new_buf + locatetmp, out_buf + locatetmp + 2, templen_l - locatetmp);
+        write_to_testcase(new_buf, templen_l);
+        u8 fault = run_target(argv, exec_tmout);
+        u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
+        if (newcksum != originalcksum)
+            whether_nouse = 1;
+        ck_free(new_buf);
+        break;}
+      
+      default:
+        FATAL("error in type");
+        break;
+      break;}
+    
+    case 4:{  // mutation on 4 bytes
+      case 0:{  //overwrite  reversal
+
+        *(u32*)(out_buf + locatetmp) = (u32)(tmptmplognow->indata);  
+        write_to_testcase(out_buf, len);
+        u8 fault = run_target(argv, exec_tmout);
+        u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
+        if (newcksum != originalcksum)
+          whether_nouse = 1;
+        *(u32*)(out_buf + locatetmp) = (u32)(tmptmplognow->outdata);
+
+        break;}
+      
+      case 1:{  //delete  reversal
+        s32 templen_l = len + 4;
+        u8* new_buf;
+        new_buf = ck_alloc_nozero(templen_l);
+        memcpy(new_buf, out_buf, locatetmp);
+        *(u32*)( new_buf + locatetmp) = (u32)(tmptmplognow->indata);
+        memcpy(new_buf + locatetmp + 4, out_buf + locatetmp,  len - locatetmp);
+        write_to_testcase(new_buf, templen_l);
+        u8 fault = run_target(argv, exec_tmout);
+        u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
+        if (newcksum != originalcksum)
+            whether_nouse = 1;
+        ck_free(new_buf);
+        break;}
+
+      case 2:{  //insert  reversal
+        s32 templen_l = len - 4;
+        u8* new_buf;
+        new_buf = ck_alloc_nozero(templen_l);
+        memcpy(new_buf, out_buf, locatetmp);
+        memcpy(new_buf + locatetmp, out_buf + locatetmp + 4, templen_l - locatetmp);
+        write_to_testcase(new_buf, templen_l);
+        u8 fault = run_target(argv, exec_tmout);
+        u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
+        if (newcksum != originalcksum)
+            whether_nouse = 1;
+        ck_free(new_buf);
+        break;}
+      
+      default:
+        FATAL("error in type");
+        break;
+      break;}
+
+    default:
+      FATAL("error verify_bytelen");
+      break;
+    }
+    
+    if (whether_nouse) // need to delete nouse log
+    {
+      if(tmptmplognow == tmploghead)
+      {
+        tmploghead = tmploghead->next;
+        tmptmplognowfront = tmploghead;
+        ck_free(tmptmplognow);
+        tmptmplognow = tmploghead;
+      }
+      else{
+        tmptmplognowfront->next = tmptmplognow->next;
+        ck_free(tmptmplognow);
+        tmptmplognow = tmptmplognowfront->next;
+      }
+      tmp_favorite_list[locate_tmp_list++] = -1;
+    }else{
+      locate_tmp_list += 1;
+      tmptmplognow = tmptmplognow->next;
+    }
+  }
+
+
+
+
+
+  //write_to_testcase(out_buf, len);
+  //u8 fault = run_target(argv, exec_tmout);
+  
+}
 
 
 
@@ -5245,28 +5445,6 @@ EXP_ST u8 common_fuzz_stuff(char** argv, u8* out_buf, u32 len, struct loghistory
 u64 cur_time_lyu = get_cur_time();
 
 
-/*
-if( (cur_time_lyu - start_time2) > 3600000 )
-{
-  start_time2 = get_cur_time();
-  FILE *fddd = NULL;
-  //out_dir
-  char *newname = (char *) ck_alloc_nozero(strlen(out_dir) + 10);
-  strcpy(newname, out_dir);
-  strcat(newname, "/queuenum\0");
-  fddd = fopen( newname ,"a");
-  fprintf(fddd,"%d", (int)(queued_paths));
-  fprintf(fddd,"\n");
-  fclose(fddd);
-  char *newname2 = (char *) ck_alloc_nozero(strlen(out_dir) + 10);
-  strcpy(newname2, out_dir);
-  strcat(newname2, "/crashnum\0");
-  fddd = fopen( newname2,"a");
-  fprintf(fddd,"%d", (int)(unique_crashes));
-  fprintf(fddd,"\n");
-  fclose(fddd);
-}*/
-
 
   if (post_handler) {
 
@@ -5304,8 +5482,12 @@ if( (cur_time_lyu - start_time2) > 3600000 )
   /* This handles FAULT_ERROR for us: */
   u32 return_keeping = save_if_interesting(argv, out_buf, len, fault);
   queued_discovered += return_keeping;
+
+  
+
   if(unlikely(return_keeping > 0))
   {
+      verify_key_log( argv,  out_buf,  len,  tmploghead,   tmplognow,  tmp_favorite_list, tmp_favorite_list_num);
       if(loghead == NULL)
       {
           loghead = tmploghead;
@@ -5336,6 +5518,9 @@ if( (cur_time_lyu - start_time2) > 3600000 )
       }
       for(int jjj = 0; jjj < tmp_favorite_list_num; jjj++)
       {
+          if(tmp_favorite_list[jjj] == -1)
+              continue;
+
           int insert_list = 0;
           u64 hashlocation = tmp_favorite_list[jjj] % favorite_list_len;
           for(int ttt = 0; ttt < favorite_list_num[hashlocation]; ttt++)
