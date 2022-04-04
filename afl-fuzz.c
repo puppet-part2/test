@@ -5427,16 +5427,12 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
       tmp_favorite_list[locate_tmp_list++] = -1;
     }else{
       locate_tmp_list += 1;
+      tmptmplognowfront = tmptmplognowfront->next;
       tmptmplognow = tmptmplognow->next;
     }
   }
+  tmplognow = tmptmplognowfront;
 
-
-
-
-
-  //write_to_testcase(out_buf, len);
-  //u8 fault = run_target(argv, exec_tmout);
   
 }
 
