@@ -1413,26 +1413,6 @@ static void add_to_queue(u8* fname, u32 len, u8 passed_det) {
 }
 
 
-/* Destroy the entire queue. */
-
-EXP_ST void destroy_queue(void) {
-
-  struct queue_entry *q = queue, *n;
-
-  while (q) {
-
-    n = q->next;
-    ck_free(q->fname);
-    ck_free(q->trace_mini);
-    ck_free(q);
-    q = n;
-
-  }
-
-}
-
-
-
 static void add_to_queue2(u8* fname, u32 len, u8 passed_det) {
 
   struct queue_entry* q = ck_alloc(sizeof(struct queue_entry));
@@ -1475,6 +1455,8 @@ static void add_to_queue2(u8* fname, u32 len, u8 passed_det) {
 }
 
 
+
+
 /* Destroy the entire queue. */
 
 EXP_ST void destroy_queue(void) {
@@ -1492,6 +1474,9 @@ EXP_ST void destroy_queue(void) {
   }
 
 }
+
+
+
 
 
 /* Write bitmap to file. The bitmap is useful mostly for the secret
