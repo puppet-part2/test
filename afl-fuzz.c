@@ -5302,7 +5302,7 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         write_to_testcase(new_buf_lyu, len);
         u8 fault = run_target(argv, exec_tmout);
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
-        if (newcksum != originalcksum)
+        if (newcksum == originalcksum)
           whether_nouse = 1;
         ck_free(new_buf_lyu);
         break;}
@@ -5322,7 +5322,7 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         write_to_testcase(new_buf_lyu, templen_l);
         u8 fault = run_target(argv, exec_tmout);
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
-        if (newcksum != originalcksum)
+        if (newcksum == originalcksum)
             whether_nouse = 1;
         ck_free(new_buf_lyu);
         break;}
@@ -5342,7 +5342,7 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         write_to_testcase(new_buf_lyu, templen_l);
         u8 fault = run_target(argv, exec_tmout);
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
-        if (newcksum != originalcksum)
+        if (newcksum == originalcksum)
             whether_nouse = 1;
         ck_free(new_buf_lyu);
         break;}
@@ -5367,7 +5367,7 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         write_to_testcase(new_buf_lyu, len);
         u8 fault = run_target(argv, exec_tmout);
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
-        if (newcksum != originalcksum)
+        if (newcksum == originalcksum)
           whether_nouse = 1;
         //*(u16*)(out_buf + locatetmp) = (u16)(tmptmplognow->outdata);
         ck_free(new_buf_lyu);
@@ -5389,7 +5389,7 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         write_to_testcase(new_buf_lyu, templen_l);
         u8 fault = run_target(argv, exec_tmout);
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
-        if (newcksum != originalcksum)
+        if (newcksum == originalcksum)
             whether_nouse = 1;
         ck_free(new_buf_lyu);
         break;}
@@ -5408,7 +5408,7 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         write_to_testcase(new_buf_lyu, templen_l);
         u8 fault = run_target(argv, exec_tmout);
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
-        if (newcksum != originalcksum)
+        if (newcksum == originalcksum)
             whether_nouse = 1;
         ck_free(new_buf_lyu);
         break;}
@@ -5433,7 +5433,7 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         write_to_testcase(new_buf_lyu,  len);
         u8 fault = run_target(argv, exec_tmout);
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
-        if (newcksum != originalcksum)
+        if (newcksum == originalcksum)
           whether_nouse = 1;
         //*(u32*)(out_buf + locatetmp) = (u32)(tmptmplognow->outdata);
         ck_free(new_buf_lyu);
@@ -5455,7 +5455,7 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         write_to_testcase(new_buf_lyu,  templen_l);
         u8 fault = run_target(argv, exec_tmout);
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
-        if (newcksum != originalcksum)
+        if (newcksum == originalcksum)
             whether_nouse = 1;
         ck_free(new_buf_lyu);
         break;}
@@ -5475,7 +5475,7 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         write_to_testcase(new_buf_lyu,  templen_l);
         u8 fault = run_target(argv, exec_tmout);
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
-        if (newcksum != originalcksum)
+        if (newcksum == originalcksum)
             whether_nouse = 1;
         ck_free(new_buf_lyu);
         break;}
