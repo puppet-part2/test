@@ -5263,13 +5263,16 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
       case 0:{  //overwrite  reversal
         if(locatetmp >= len )
           break;
-        out_buf[locatetmp] = (u8)(tmptmplognow->indata);
-        write_to_testcase(out_buf, len);
+        u8* new_buf;
+        new_buf = ck_alloc_nozero(len);
+        memcpy(new_buf, out_buf, len);
+        new_buf[locatetmp] = (u8)(tmptmplognow->indata);
+        write_to_testcase(new_buf, len);
         u8 fault = run_target(argv, exec_tmout);
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
         if (newcksum != originalcksum)
           whether_nouse = 1;
-        out_buf[locatetmp] = (u8)(tmptmplognow->outdata);
+        ck_free(new_buf);
         break;}
       
       case 1:{  //delete  reversal
@@ -5319,14 +5322,17 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
       case 0:{  //overwrite  reversal
         if(locatetmp >= len - 1)
           break;
-
-        *(u16*)(out_buf + locatetmp) = (u16)(tmptmplognow->indata);  
-        write_to_testcase(out_buf, len);
+        u8* new_buf;
+        new_buf = ck_alloc_nozero(len);
+        memcpy(new_buf, out_buf, len);
+        *(u16*)(new_buf + locatetmp) = (u16)(tmptmplognow->indata);  
+        write_to_testcase(new_buf, len);
         u8 fault = run_target(argv, exec_tmout);
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
         if (newcksum != originalcksum)
           whether_nouse = 1;
-        *(u16*)(out_buf + locatetmp) = (u16)(tmptmplognow->outdata);
+        //*(u16*)(out_buf + locatetmp) = (u16)(tmptmplognow->outdata);
+        ck_free(new_buf);
 
         break;}
       
@@ -5377,14 +5383,17 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
       case 0:{  //overwrite  reversal
         if(locatetmp >= len - 3)
           break;
-
-        *(u32*)(out_buf + locatetmp) = (u32)(tmptmplognow->indata);  
-        write_to_testcase(out_buf, len);
+        u8* new_buf;
+        new_buf = ck_alloc_nozero(len);
+        memcpy(new_buf, out_buf, len);
+        *(u32*)(new_buf + locatetmp) = (u32)(tmptmplognow->indata);  
+        write_to_testcase(new_buf, len);
         u8 fault = run_target(argv, exec_tmout);
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
         if (newcksum != originalcksum)
           whether_nouse = 1;
-        *(u32*)(out_buf + locatetmp) = (u32)(tmptmplognow->outdata);
+        //*(u32*)(out_buf + locatetmp) = (u32)(tmptmplognow->outdata);
+        ck_free(new_buf);
 
         break;}
       
