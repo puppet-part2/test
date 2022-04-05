@@ -78,6 +78,7 @@
 #endif /* ^AFL_LIB */
 
 
+#define maxu64 18446744073709551615
 
 struct loghistory{
   u32 indata;
@@ -5294,8 +5295,8 @@ void verify_key_log(char** argv, u8* out_buf, s32 len, struct loghistory* tmplog
         if(locatetmp >= len )
           break;
         u8* new_buf;
-        //new_buf = ck_alloc_nozero(len);
-        new_buf = ck_alloc(len + 5);
+        new_buf = ck_alloc_nozero(len);
+        //new_buf = ck_alloc(len + 5);
         memcpy(new_buf, out_buf, len);
         new_buf[locatetmp] = (u8)(tmptmplognow->indata);
         write_to_testcase(new_buf, len);
@@ -5311,12 +5312,12 @@ void verify_key_log(char** argv, u8* out_buf, s32 len, struct loghistory* tmplog
         if(locatetmp > len)
           break;
         u8* new_buf;
-        //new_buf = ck_alloc_nozero(templen_l);
-        new_buf = ck_alloc(templen_l + 5);
+        new_buf = ck_alloc_nozero(templen_l);
+        //new_buf = ck_alloc(templen_l + 5);
         if(locatetmp > 0)
           memcpy(new_buf, out_buf, locatetmp);
         new_buf[locatetmp] = (u8)(tmptmplognow->indata);
-        if (len - locatetmp > 0)
+        if (len >  locatetmp)
           memcpy(new_buf + locatetmp + 1, out_buf + locatetmp,  len - locatetmp);
         write_to_testcase(new_buf, templen_l);
         u8 fault = run_target(argv, exec_tmout);
@@ -5332,11 +5333,11 @@ void verify_key_log(char** argv, u8* out_buf, s32 len, struct loghistory* tmplog
         if(locatetmp > templen_l)
           break;
         u8* new_buf;
-        //new_buf = ck_alloc_nozero(templen_l);
-        new_buf = ck_alloc(templen_l + 5);
+        new_buf = ck_alloc_nozero(templen_l);
+        //new_buf = ck_alloc(templen_l + 5);
         if(locatetmp > 0)
           memcpy(new_buf, out_buf, locatetmp);
-        if(templen_l - locatetmp > 0)
+        if(templen_l  > locatetmp)
           memcpy(new_buf + locatetmp, out_buf + locatetmp + 1, templen_l - locatetmp);
         write_to_testcase(new_buf, templen_l);
         u8 fault = run_target(argv, exec_tmout);
@@ -5356,11 +5357,11 @@ void verify_key_log(char** argv, u8* out_buf, s32 len, struct loghistory* tmplog
       switch (tmptmplognow->type)
       {
       case 0:{  //overwrite  reversal
-        if(locatetmp >= len - 1)
+        if(locatetmp + 1 >= len )
           break;
         u8* new_buf;
-        //new_buf = ck_alloc_nozero(len);
-        new_buf = ck_alloc(len + 5);
+        new_buf = ck_alloc_nozero(len);
+        //new_buf = ck_alloc(len + 5);
         memcpy(new_buf, out_buf, len);
         *(u16*)(new_buf + locatetmp) = (u16)(tmptmplognow->indata);  
         write_to_testcase(new_buf, len);
@@ -5378,12 +5379,12 @@ void verify_key_log(char** argv, u8* out_buf, s32 len, struct loghistory* tmplog
         if(locatetmp > len)
           break;
         u8* new_buf;
-        //new_buf = ck_alloc_nozero(templen_l);
-        new_buf = ck_alloc(templen_l + 5);
+        new_buf = ck_alloc_nozero(templen_l);
+        //new_buf = ck_alloc(templen_l + 5);
         if(locatetmp > 0)
           memcpy(new_buf, out_buf, locatetmp);
         *(u16*)( new_buf + locatetmp) = (u16)(tmptmplognow->indata);
-        if(len - locatetmp > 0)
+        if(len  > locatetmp)
           memcpy(new_buf + locatetmp + 2, out_buf + locatetmp,  len - locatetmp);
         write_to_testcase(new_buf, templen_l);
         u8 fault = run_target(argv, exec_tmout);
@@ -5398,11 +5399,11 @@ void verify_key_log(char** argv, u8* out_buf, s32 len, struct loghistory* tmplog
         if(locatetmp > templen_l)
           break;
         u8* new_buf;
-        //new_buf = ck_alloc_nozero(templen_l);
-        new_buf = ck_alloc(templen_l + 5);
+        new_buf = ck_alloc_nozero(templen_l);
+        //new_buf = ck_alloc(templen_l + 5);
         if(locatetmp > 0)
           memcpy(new_buf, out_buf, locatetmp);
-        if(templen_l - locatetmp > 0)
+        if(templen_l  > locatetmp)
           memcpy(new_buf + locatetmp, out_buf + locatetmp + 2, templen_l - locatetmp);
         write_to_testcase(new_buf, templen_l);
         u8 fault = run_target(argv, exec_tmout);
@@ -5422,11 +5423,11 @@ void verify_key_log(char** argv, u8* out_buf, s32 len, struct loghistory* tmplog
       switch (tmptmplognow->type)
       {
       case 0:{  //overwrite  reversal
-        if(locatetmp >= len - 3)
+        if(locatetmp + 3 >= len )
           break;
         u8* new_buf;
-        //new_buf = ck_alloc_nozero(len);
-        new_buf = ck_alloc(len + 5);
+        new_buf = ck_alloc_nozero(len);
+        //new_buf = ck_alloc(len + 5);
         memcpy(new_buf, out_buf, len);
         *(u32*)(new_buf + locatetmp) = (u32)(tmptmplognow->indata);  
         write_to_testcase(new_buf, len);
@@ -5444,12 +5445,12 @@ void verify_key_log(char** argv, u8* out_buf, s32 len, struct loghistory* tmplog
         if(locatetmp > len)
           break;
         u8* new_buf;
-        //new_buf = ck_alloc_nozero(templen_l);
-        new_buf = ck_alloc(templen_l + 5);
+        new_buf = ck_alloc_nozero(templen_l);
+        //new_buf = ck_alloc(templen_l + 5);
         if(locatetmp > 0)
           memcpy(new_buf, out_buf, locatetmp);
         *(u32*)( new_buf + locatetmp) = (u32)(tmptmplognow->indata);
-        if(len - locatetmp > 0)
+        if(len  > locatetmp)
           memcpy(new_buf + locatetmp + 4, out_buf + locatetmp,  len - locatetmp);
         write_to_testcase(new_buf, templen_l);
         u8 fault = run_target(argv, exec_tmout);
@@ -5465,11 +5466,11 @@ void verify_key_log(char** argv, u8* out_buf, s32 len, struct loghistory* tmplog
         if(locatetmp > templen_l)
           break;
         u8* new_buf;
-        //new_buf = ck_alloc_nozero(templen_l);
-        new_buf = ck_alloc(templen_l + 5);
+        new_buf = ck_alloc_nozero(templen_l);
+        //new_buf = ck_alloc(templen_l + 5);
         if(locatetmp > 0)
           memcpy(new_buf, out_buf, locatetmp);
-        if(templen_l - locatetmp > 0)
+        if(templen_l  >  locatetmp)
           memcpy(new_buf + locatetmp, out_buf + locatetmp + 4, templen_l - locatetmp);
         write_to_testcase(new_buf, templen_l);
         u8 fault = run_target(argv, exec_tmout);
@@ -5504,7 +5505,7 @@ void verify_key_log(char** argv, u8* out_buf, s32 len, struct loghistory* tmplog
         ck_free(tmptmplognow);
         tmptmplognow = tmptmplognowfront->next;
       }
-      tmp_favorite_list[locate_tmp_list++] = -1;
+      tmp_favorite_list[locate_tmp_list++] = maxu64;
     }else{
       locate_tmp_list += 1;
       tmptmplognowfront = tmptmplognow;
@@ -5617,7 +5618,7 @@ u64 cur_time_lyu = get_cur_time();
       }
       for(int jjj = 0; jjj < tmp_favorite_list_num; jjj++)
       {
-          if(tmp_favorite_list[jjj] == -1)
+          if(tmp_favorite_list[jjj] == maxu64)
               continue;
 
           int insert_list = 0;
