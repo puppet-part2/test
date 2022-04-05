@@ -5261,6 +5261,8 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
       switch (tmptmplognow->type)
       {
       case 0:{  //overwrite  reversal
+        if(locatetmp >= len )
+          break;
         out_buf[locatetmp] = (u8)(tmptmplognow->indata);
         write_to_testcase(out_buf, len);
         u8 fault = run_target(argv, exec_tmout);
@@ -5315,6 +5317,8 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
       switch (tmptmplognow->type)
       {
       case 0:{  //overwrite  reversal
+        if(locatetmp >= len - 1)
+          break;
 
         *(u16*)(out_buf + locatetmp) = (u16)(tmptmplognow->indata);  
         write_to_testcase(out_buf, len);
@@ -5371,6 +5375,8 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
       switch (tmptmplognow->type)
       {
       case 0:{  //overwrite  reversal
+        if(locatetmp >= len - 3)
+          break;
 
         *(u32*)(out_buf + locatetmp) = (u32)(tmptmplognow->indata);  
         write_to_testcase(out_buf, len);
