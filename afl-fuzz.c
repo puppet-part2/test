@@ -5240,7 +5240,7 @@ abort_trimming:
 
 s32 locatetmp =0;
 
-void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmploghead, struct loghistory* tmplognow, u64* tmp_favorite_list, u64 tmp_favorite_list_num){
+void verify_key_log(char** argv, u8* out_buf, s32 len, struct loghistory* tmploghead, struct loghistory* tmplognow, u64* tmp_favorite_list, u64 tmp_favorite_list_num){
   
   if (tmploghead == NULL)
       return;
@@ -5535,7 +5535,7 @@ u64 cur_time_lyu = get_cur_time();
   
   if(unlikely(return_keeping > 0))
   {
-      verify_key_log( argv,  out_buf,  len,  tmploghead,   tmplognow,  tmp_favorite_list, tmp_favorite_list_num);
+      verify_key_log( argv,  out_buf,  (s32)(len),  tmploghead,   tmplognow,  tmp_favorite_list, tmp_favorite_list_num);
       if(loghead == NULL)
       {
           loghead = tmploghead;
