@@ -156,6 +156,7 @@ static s32 dev_urandom_fd = -1;       /* Persistent fd for /dev/urandom   */
 
 
 u8* tmplyu; 
+const unsigned char allChar[63] = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 void generateString(unsigned char * dest, const unsigned int len)
 {
