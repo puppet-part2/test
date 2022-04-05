@@ -5478,6 +5478,7 @@ void verify_key_log(char** argv, u8* out_buf, s32 len, struct loghistory* tmplog
     tmplognow = tmptmplognowfront;
   }
   
+  write_to_testcase(out_buf, len);
 }
 
 
