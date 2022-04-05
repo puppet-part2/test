@@ -1385,6 +1385,13 @@ static void add_to_queue(u8* fname, u32 len, u8 passed_det) {
   q->depth        = cur_depth + 1;
   q->passed_det   = passed_det;
 
+  {
+  s32 tfd;
+  unlink(q->fname); /* ignore errors */
+  tfd = open(q->fname, O_WRONLY | O_CREAT | O_EXCL, 0600);
+  if (tfd < 0) PFATAL("Unable to create '%s' during add_to_queue", q->fname);
+  }
+
   if (q->depth > max_depth) max_depth = q->depth;
 
   if (queue_top) {
