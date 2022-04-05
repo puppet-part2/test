@@ -1385,11 +1385,68 @@ static void add_to_queue(u8* fname, u32 len, u8 passed_det) {
   q->depth        = cur_depth + 1;
   q->passed_det   = passed_det;
 
+
+
+  if (q->depth > max_depth) max_depth = q->depth;
+
+  if (queue_top) {
+
+    queue_top->next = q;
+    queue_top = q;
+
+  } else q_prev100 = queue = queue_top = q;
+
+  queued_paths++;
+  pending_not_fuzzed++;
+
+  cycles_wo_finds = 0;
+
+  if (!(queued_paths % 100)) {
+
+    q_prev100->next_100 = q;
+    q_prev100 = q;
+
+  }
+
+  last_path_time = get_cur_time();
+
+}
+
+
+/* Destroy the entire queue. */
+
+EXP_ST void destroy_queue(void) {
+
+  struct queue_entry *q = queue, *n;
+
+  while (q) {
+
+    n = q->next;
+    ck_free(q->fname);
+    ck_free(q->trace_mini);
+    ck_free(q);
+    q = n;
+
+  }
+
+}
+
+
+
+static void add_to_queue2(u8* fname, u32 len, u8 passed_det) {
+
+  struct queue_entry* q = ck_alloc(sizeof(struct queue_entry));
+
+  q->fname        = fname;
+  q->len          = len;
+  q->depth        = cur_depth + 1;
+  q->passed_det   = passed_det;
+
   {
   s32 tfd;
   unlink(q->fname); /* ignore errors */
   tfd = open(q->fname, O_WRONLY | O_CREAT | O_EXCL, 0600);
-  if (tfd < 0) PFATAL("Unable to create '%s' during add_to_queue", q->fname);
+  if (tfd < 0) PFATAL("Unable to create '%s' during add_to_queue2", q->fname);
   }
 
   if (q->depth > max_depth) max_depth = q->depth;
@@ -3755,7 +3812,7 @@ static u8 save_if_interesting(char** argv, void* mem, u32 len, u8 fault) {
 
 #endif /* ^!SIMPLE_FILES */
 
-    add_to_queue(fn, len, 0);
+    add_to_queue2(fn, len, 0);
 
     if (hnb == 2) {
       queue_top->has_new_cov = 1;
