@@ -5461,7 +5461,7 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
       tmp_favorite_list[locate_tmp_list++] = -1;
     }else{
       locate_tmp_list += 1;
-      tmptmplognowfront = tmptmplognowfront->next;
+      tmptmplognowfront = tmptmplognow;
       tmptmplognow = tmptmplognow->next;
     }
   }
