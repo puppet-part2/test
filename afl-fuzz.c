@@ -5465,8 +5465,11 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
       tmptmplognow = tmptmplognow->next;
     }
   }
-  tmplognow = tmptmplognowfront;
-
+  if (tmploghead == NULL)
+    tmplognow = NULL;
+  else{
+    tmplognow = tmptmplognowfront;
+  }
   
 }
 
