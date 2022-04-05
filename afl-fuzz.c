@@ -3906,9 +3906,6 @@ keep_as_crash:
   ck_write(fd, mem, len, fn);
   close(fd);
 
-  if(strcmp(queue_top->fname, fn) != 0){
-    PFATAL("unmatch fname  fname: '%s' fn: '%s'", queue_top->fname, fn);
-  }
 
   ck_free(fn);
 
@@ -5577,7 +5574,7 @@ u64 cur_time_lyu = get_cur_time();
   
   if(unlikely(return_keeping > 0))
   {
-      verify_key_log( argv,  out_buf,  (s32)(len),  tmploghead,   tmplognow,  tmp_favorite_list, tmp_favorite_list_num);
+      //verify_key_log( argv,  out_buf,  (s32)(len),  tmploghead,   tmplognow,  tmp_favorite_list, tmp_favorite_list_num);
       if(loghead == NULL)
       {
           loghead = tmploghead;
