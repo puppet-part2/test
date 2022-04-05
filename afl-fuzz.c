@@ -5515,6 +5515,12 @@ u64 cur_time_lyu = get_cur_time();
 
   
 
+
+  
+
+  if (!(stage_cur % stats_update_freq) || stage_cur + 1 == stage_max)
+    show_stats();
+  
   if(unlikely(return_keeping > 0))
   {
       verify_key_log( argv,  out_buf,  len,  tmploghead,   tmplognow,  tmp_favorite_list, tmp_favorite_list_num);
@@ -5582,10 +5588,6 @@ u64 cur_time_lyu = get_cur_time();
           tmploghead = tmplognow;
       }
   }
-  
-
-  if (!(stage_cur % stats_update_freq) || stage_cur + 1 == stage_max)
-    show_stats();
 
   return 0;
 
