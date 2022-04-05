@@ -5511,7 +5511,7 @@ void verify_key_log(char** argv, u8* out_buf, s32 len, struct loghistory* tmplog
       tmptmplognowfront = tmptmplognow;
       tmptmplognow = tmptmplognow->next;
     }
-    if(locate_tmp_list >= tmp_favorite_list_num)
+    if(locate_tmp_list > tmp_favorite_list_num)
       PFATAL("ERROR locate_tmp_list: '%llu'  tmp_favorite_list_num: '%llu'", locate_tmp_list, tmp_favorite_list_num);
   }
 
