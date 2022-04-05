@@ -5502,10 +5502,17 @@ void verify_key_log(char** argv, u8* out_buf, s32 len, struct loghistory* tmplog
       tmptmplognow = tmptmplognow->next;
     }
   }
+
   if (tmploghead == NULL)
     tmplognow = NULL;
   else{
-    tmplognow = tmptmplognowfront;
+    if (tmptmplognowfront != NULL && tmptmplognowfront->next == NULL )
+      tmplognow = tmptmplognowfront;
+    else{
+      tmplognow = tmploghead;
+      while(tmplognow->next)
+        tmplognow = tmplognow->next;
+    }
   }
   
   write_to_testcase(out_buf, len);
@@ -5565,16 +5572,12 @@ u64 cur_time_lyu = get_cur_time();
   queued_discovered += return_keeping;
 
   
-
-
-  
-
   if (!(stage_cur % stats_update_freq) || stage_cur + 1 == stage_max)
     show_stats();
   
   if(unlikely(return_keeping > 0))
   {
-      //verify_key_log( argv,  out_buf,  (s32)(len),  tmploghead,   tmplognow,  tmp_favorite_list, tmp_favorite_list_num);
+      verify_key_log( argv,  out_buf,  (s32)(len),  tmploghead,   tmplognow,  tmp_favorite_list, tmp_favorite_list_num);
       if(loghead == NULL)
       {
           loghead = tmploghead;
