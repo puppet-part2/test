@@ -155,6 +155,24 @@ static s32 dev_urandom_fd = -1;       /* Persistent fd for /dev/urandom   */
 
 
 
+u8* tmplyu; 
+
+void generateString(unsigned char * dest, const unsigned int len)
+{
+	unsigned int cnt, randNo;
+	srand((unsigned int)time(NULL));
+ 
+	for (cnt = 0; cnt<len; cnt++)
+	{
+		randNo = rand() % 62;
+		*dest = allChar[randNo];
+		dest++;
+	}
+ 
+	*dest = '\0';
+}
+
+
 
 int select_bytelen(void) {
 
@@ -20368,8 +20386,17 @@ EXP_ST void detect_file_args(char** argv) {
 
       /* If we don't have a file name chosen yet, use a safe default. */
 
-      if (!out_file)
-        out_file = alloc_printf("%s/.cur_input", out_dir);
+      if (!out_file){
+        //out_file = alloc_printf("%s/.cur_input", out_dir);
+        unsigned char strlyu[20 + 1] = {};
+        generateString(strlyu, 20);
+        u8* tmplyu = alloc_printf("/dev/shm/%s", strlyu);
+
+        if (mkdir(tmplyu, 0700)) {
+           PFATAL("Unable to create '%s'", tmplyu);
+        }
+        out_file = alloc_printf("/dev/shm/%s/.cur_input",out_dir);
+      }
 
       /* Be sure that we're always using fully-qualified paths. */
 
@@ -21279,6 +21306,7 @@ stop_fuzzing:
 
   fclose(plot_file);
   destroy_queue();
+  remove(tmplyu);
   destroy_extras();
   ck_free(target_path);
   ck_free(sync_id);
