@@ -20396,7 +20396,7 @@ EXP_ST void detect_file_args(char** argv) {
         if (mkdir(tmplyu, 0700)) {
            PFATAL("Unable to create '%s'", tmplyu);
         }
-        out_file = alloc_printf("/dev/shm/%s/.cur_input",out_dir);
+        out_file = alloc_printf("%s/.cur_input",tmplyu);
       }
 
       /* Be sure that we're always using fully-qualified paths. */
