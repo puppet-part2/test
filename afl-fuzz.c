@@ -5295,7 +5295,8 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         if(locatetmp + 1 >= len )
           break;
         u8* new_buf;
-        new_buf = ck_alloc_nozero(len);
+        //new_buf = ck_alloc_nozero(len);
+        new_buf = malloc(sizeof(u8) * len);
         //new_buf = ck_alloc(len + 5);
         memcpy(new_buf, out_buf, len);
         new_buf[locatetmp] = (u8)(tmptmplognow->indata);
@@ -5304,7 +5305,8 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
         if (newcksum != originalcksum)
           whether_nouse = 1;
-        ck_free(new_buf);
+        //ck_free(new_buf);
+        free(new_buf);
         break;}
       
       case 1:{  //delete  reversal
@@ -5312,7 +5314,8 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         if(locatetmp >= len)
           break;
         u8* new_buf;
-        new_buf = ck_alloc_nozero(templen_l);
+        //new_buf = ck_alloc_nozero(templen_l);
+        new_buf = malloc(sizeof(u8) * templen_l);
         //new_buf = ck_alloc(templen_l + 5);
         if(locatetmp > 0)
           memcpy(new_buf, out_buf, locatetmp);
@@ -5324,7 +5327,8 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
         if (newcksum != originalcksum)
             whether_nouse = 1;
-        ck_free(new_buf);
+        //ck_free(new_buf);
+        free(new_buf);
         break;}
 
       case 2:{  //insert  reversal
@@ -5333,7 +5337,8 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         if(locatetmp >= templen_l || len < 2)
           break;
         u8* new_buf;
-        new_buf = ck_alloc_nozero(templen_l);
+        //new_buf = ck_alloc_nozero(templen_l);
+        new_buf = malloc(sizeof(u8) * templen_l);
         //new_buf = ck_alloc(templen_l + 5);
         if(locatetmp > 0)
           memcpy(new_buf, out_buf, locatetmp);
@@ -5344,7 +5349,8 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
         if (newcksum != originalcksum)
             whether_nouse = 1;
-        ck_free(new_buf);
+        //ck_free(new_buf);
+        free(new_buf);
         break;}
       
       default:
@@ -5360,7 +5366,8 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         if(locatetmp + 2 >= len )
           break;
         u8* new_buf;
-        new_buf = ck_alloc_nozero(len);
+        //new_buf = ck_alloc_nozero(len);
+        new_buf = malloc(sizeof(u8) * len);
         //new_buf = ck_alloc(len + 5);
         memcpy(new_buf, out_buf, len);
         *(u16*)(new_buf + locatetmp) = (u16)(tmptmplognow->indata);  
@@ -5370,7 +5377,8 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         if (newcksum != originalcksum)
           whether_nouse = 1;
         //*(u16*)(out_buf + locatetmp) = (u16)(tmptmplognow->outdata);
-        ck_free(new_buf);
+        //ck_free(new_buf);
+        free(new_buf);
 
         break;}
       
@@ -5379,7 +5387,8 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         if(locatetmp >= len)
           break;
         u8* new_buf;
-        new_buf = ck_alloc_nozero(templen_l);
+        //new_buf = ck_alloc_nozero(templen_l);
+        new_buf = malloc(sizeof(u8) * templen_l);
         //new_buf = ck_alloc(templen_l + 5);
         if(locatetmp > 0)
           memcpy(new_buf, out_buf, locatetmp);
@@ -5391,7 +5400,8 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
         if (newcksum != originalcksum)
             whether_nouse = 1;
-        ck_free(new_buf);
+        //ck_free(new_buf);
+        free(new_buf);
         break;}
 
       case 2:{  //insert  reversal
@@ -5399,7 +5409,8 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         if(locatetmp >= templen_l || len < 3)
           break;
         u8* new_buf;
-        new_buf = ck_alloc_nozero(templen_l);
+        //new_buf = ck_alloc_nozero(templen_l);
+        new_buf = malloc(sizeof(u8) * templen_l);
         //new_buf = ck_alloc(templen_l + 5);
         if(locatetmp > 0)
           memcpy(new_buf, out_buf, locatetmp);
@@ -5410,7 +5421,8 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
         if (newcksum != originalcksum)
             whether_nouse = 1;
-        ck_free(new_buf);
+        //ck_free(new_buf);
+        free(new_buf);
         break;}
       
       default:
@@ -5426,7 +5438,8 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         if(locatetmp + 4 >= len )
           break;
         u8* new_buf;
-        new_buf = ck_alloc_nozero(len);
+        //new_buf = ck_alloc_nozero(len);
+        new_buf = malloc(sizeof(u8) * len);
         //new_buf = ck_alloc(len + 5);
         memcpy(new_buf, out_buf, len);
         *(u32*)(new_buf + locatetmp) = (u32)(tmptmplognow->indata);  
@@ -5436,7 +5449,8 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         if (newcksum != originalcksum)
           whether_nouse = 1;
         //*(u32*)(out_buf + locatetmp) = (u32)(tmptmplognow->outdata);
-        ck_free(new_buf);
+        //ck_free(new_buf);
+        free(new_buf);
 
         break;}
       
@@ -5445,7 +5459,8 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         if(locatetmp >= len)
           break;
         u8* new_buf;
-        new_buf = ck_alloc_nozero(templen_l);
+        //new_buf = ck_alloc_nozero(templen_l);
+        new_buf = malloc(sizeof(u8) * templen_l);
         //new_buf = ck_alloc(templen_l + 5);
         if(locatetmp > 0)
           memcpy(new_buf, out_buf, locatetmp);
@@ -5457,7 +5472,8 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
         if (newcksum != originalcksum)
             whether_nouse = 1;
-        ck_free(new_buf);
+        //ck_free(new_buf);
+        free(new_buf);
         break;}
 
       case 2:{  //insert  reversal
@@ -5466,7 +5482,8 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         if(locatetmp >= templen_l || len < 5)
           break;
         u8* new_buf;
-        new_buf = ck_alloc_nozero(templen_l);
+        //new_buf = ck_alloc_nozero(templen_l);
+        new_buf = malloc(sizeof(u8) * templen_l);
         //new_buf = ck_alloc(templen_l + 5);
         if(locatetmp > 0)
           memcpy(new_buf, out_buf, locatetmp);
@@ -5477,7 +5494,8 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
         if (newcksum != originalcksum)
             whether_nouse = 1;
-        ck_free(new_buf);
+        //ck_free(new_buf);
+        free(new_buf);
         break;}
       
       default:
