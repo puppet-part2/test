@@ -5248,12 +5248,12 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
   struct loghistory* tmptmplognow = tmploghead;
   struct loghistory* tmptmplognowfront = tmploghead;
   u32 originalcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
-  u32 locate_tmp_list = 0;
+  s32 locate_tmp_list = 0;
 
   while(tmptmplognow != NULL)
   { 
     int whether_nouse = 0;
-    u32 locatetmp = tmp_favorite_list[locate_tmp_list];
+    s32 locatetmp = tmp_favorite_list[locate_tmp_list];
     switch (tmptmplognow->bytelen)
     {
     case 1:{  // mutation on 1 byte
