@@ -5272,6 +5272,7 @@ abort_trimming:
 
 u32 globallen ;
 struct loghistory* whichtmptmplognow;
+u32 locatetmp; 
 
 void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmploghead, 
       struct loghistory* tmplognow, u64* tmp_favorite_list, u64 tmp_favorite_list_num){
@@ -5289,7 +5290,7 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
   while(tmptmplognow != NULL)
   { 
     int whether_nouse = 0;
-    u32 locatetmp = (u32)(tmp_favorite_list[locate_tmp_list]);
+     locatetmp = (u32)(tmp_favorite_list[locate_tmp_list]);
     globallen = len;
     whichtmptmplognow = tmptmplognow;
     switch (tmptmplognow->bytelen)
@@ -5300,7 +5301,7 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
       {
       
       case 0:{  //overwrite  reversal
-      break;
+      //break;
         if(locatetmp + 1 > len || len < 1)
           break;
         u8 *new_buf_lyu = ck_alloc_nozero(len);
@@ -5380,7 +5381,7 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
       {
       
       case 0:{  //overwrite  reversal
-      break;
+      //break;
         if(locatetmp + 2 > len || len < 2)
           break;
         u8 *new_buf_lyu = ck_alloc_nozero(len);
@@ -5459,7 +5460,7 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
       {
       
       case 0:{  //overwrite  reversal
-      break;
+      //break;
         if(locatetmp + 4 > len || len < 4)
           break;
         u8 *new_buf_lyu = ck_alloc_nozero(len);
