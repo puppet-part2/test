@@ -5306,7 +5306,7 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
         if (newcksum == originalcksum)
           whether_nouse = 1;
-        memset(new_buf_lyu, 0, len + 5);
+        memset(new_buf_lyu, (u8)(0), len + 5);
         break;}
       
       case 1:{  //delete  reversal
@@ -5324,7 +5324,7 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
         if (newcksum == originalcksum)
             whether_nouse = 1;
-        memset(new_buf_lyu, 0, len + 5);
+        memset(new_buf_lyu, (u8)(0), len + 5);
         break;}
 
       case 2:{  //insert  reversal
@@ -5342,7 +5342,7 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
         if (newcksum == originalcksum)
             whether_nouse = 1;
-        memset(new_buf_lyu, 0, len + 5);
+        memset(new_buf_lyu, (u8)(0), len + 5);
         break;}
       
       default:
@@ -5365,7 +5365,7 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
         if (newcksum == originalcksum)
           whether_nouse = 1;
-        memset(new_buf_lyu, 0, len + 5);
+        memset(new_buf_lyu, (u8)(0), len + 5);
 
         break;}
       
@@ -5384,7 +5384,7 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
         if (newcksum == originalcksum)
             whether_nouse = 1;
-        memset(new_buf_lyu, 0, len + 5);
+        memset(new_buf_lyu, (u8)(0), len + 5);
         break;}
 
       case 2:{  //insert  reversal
@@ -5401,7 +5401,7 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
         if (newcksum == originalcksum)
             whether_nouse = 1;
-        memset(new_buf_lyu, 0, len + 5);
+        memset(new_buf_lyu, (u8)(0), len + 5);
         break;}
       
       default:
@@ -5424,7 +5424,7 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
         if (newcksum == originalcksum)
           whether_nouse = 1;
-        memset(new_buf_lyu, 0, len + 5);
+        memset(new_buf_lyu, (u8)(0), len + 5);
 
         break;}
       
@@ -5443,7 +5443,7 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
         if (newcksum == originalcksum)
             whether_nouse = 1;
-        memset(new_buf_lyu, 0, len + 5);
+        memset(new_buf_lyu, (u8)(0), len + 5);
         break;}
 
       case 2:{  //insert  reversal
@@ -5461,7 +5461,7 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
         if (newcksum == originalcksum)
             whether_nouse = 1;
-        memset(new_buf_lyu, 0, len + 5);
+        memset(new_buf_lyu, (u8)(0), len + 5);
         break;}
       
       default:
