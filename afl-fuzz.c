@@ -5270,7 +5270,7 @@ abort_trimming:
 
 
 
-
+u8 *new_buf_lyu ;
 
 void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmploghead, 
       struct loghistory* tmplognow, u64* tmp_favorite_list, u64 tmp_favorite_list_num){
@@ -5284,7 +5284,7 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
   u32 originalcksum = queue_top->exec_cksum;
   u64 locate_tmp_list = 0;
 
-  u8 *new_buf_lyu = ck_alloc(sizeof(u8) * (len + 5));
+  new_buf_lyu = ck_alloc(sizeof(u8) * (len + 5));
 
   while(tmptmplognow != NULL)
   { 
@@ -5301,7 +5301,7 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
           break;
         memcpy(new_buf_lyu, out_buf, len);
         new_buf_lyu[locatetmp] = (u8)(tmptmplognow->indata);
-        write_to_testcase(new_buf_lyu, len + 1);
+        write_to_testcase(new_buf_lyu, len);
         u8 fault = run_target(argv, exec_tmout);
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
         if (newcksum == originalcksum)
@@ -5319,7 +5319,7 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         new_buf_lyu[locatetmp] = (u8)(tmptmplognow->indata);
         if (len >  locatetmp)
           memcpy(new_buf_lyu + locatetmp + 1, out_buf + locatetmp,  len - locatetmp);
-        write_to_testcase(new_buf_lyu, templen_l + 1);
+        write_to_testcase(new_buf_lyu, templen_l);
         u8 fault = run_target(argv, exec_tmout);
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
         if (newcksum == originalcksum)
@@ -5337,7 +5337,7 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
           memcpy(new_buf_lyu, out_buf, locatetmp);
         if(templen_l  > locatetmp)
           memcpy(new_buf_lyu + locatetmp, out_buf + locatetmp + 1, templen_l - locatetmp);
-        write_to_testcase(new_buf_lyu, templen_l + 1);
+        write_to_testcase(new_buf_lyu, templen_l);
         u8 fault = run_target(argv, exec_tmout);
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
         if (newcksum == originalcksum)
@@ -5360,7 +5360,7 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         
         memcpy(new_buf_lyu, out_buf, len);
         *(u16*)(new_buf_lyu + locatetmp) = (u16)(tmptmplognow->indata);  
-        write_to_testcase(new_buf_lyu, len + 1);
+        write_to_testcase(new_buf_lyu, len);
         u8 fault = run_target(argv, exec_tmout);
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
         if (newcksum == originalcksum)
@@ -5379,7 +5379,7 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         *(u16*)( new_buf_lyu + locatetmp) = (u16)(tmptmplognow->indata);
         if(len  > locatetmp)
           memcpy(new_buf_lyu + locatetmp + 2, out_buf + locatetmp,  len - locatetmp);
-        write_to_testcase(new_buf_lyu, templen_l + 1);
+        write_to_testcase(new_buf_lyu, templen_l);
         u8 fault = run_target(argv, exec_tmout);
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
         if (newcksum == originalcksum)
@@ -5396,7 +5396,7 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
           memcpy(new_buf_lyu, out_buf, locatetmp);
         if(templen_l  > locatetmp)
           memcpy(new_buf_lyu + locatetmp, out_buf + locatetmp + 2, templen_l - locatetmp);
-        write_to_testcase(new_buf_lyu, templen_l + 1);
+        write_to_testcase(new_buf_lyu, templen_l);
         u8 fault = run_target(argv, exec_tmout);
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
         if (newcksum == originalcksum)
@@ -5419,7 +5419,7 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         
         memcpy(new_buf_lyu, out_buf, len);
         *(u32*)(new_buf_lyu + locatetmp) = (u32)(tmptmplognow->indata);  
-        write_to_testcase(new_buf_lyu,  len + 1);
+        write_to_testcase(new_buf_lyu,  len);
         u8 fault = run_target(argv, exec_tmout);
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
         if (newcksum == originalcksum)
@@ -5438,7 +5438,7 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         *(u32*)( new_buf_lyu + locatetmp) = (u32)(tmptmplognow->indata);
         if(len  > locatetmp)
           memcpy(new_buf_lyu + locatetmp + 4, out_buf + locatetmp,  len - locatetmp);
-        write_to_testcase(new_buf_lyu,  templen_l + 1);
+        write_to_testcase(new_buf_lyu,  templen_l);
         u8 fault = run_target(argv, exec_tmout);
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
         if (newcksum == originalcksum)
@@ -5456,7 +5456,7 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
           memcpy(new_buf_lyu, out_buf, locatetmp);
         if(templen_l  >  locatetmp)
           memcpy(new_buf_lyu + locatetmp, out_buf + locatetmp + 4, templen_l - locatetmp);
-        write_to_testcase(new_buf_lyu,  templen_l + 1);
+        write_to_testcase(new_buf_lyu,  templen_l);
         u8 fault = run_target(argv, exec_tmout);
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
         if (newcksum == originalcksum)
