@@ -5523,6 +5523,8 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
   
   write_to_testcase(out_buf, len);
   u8 fault = run_target(argv, exec_tmout);
+
+  return;
 }
 
 
@@ -5575,6 +5577,8 @@ u64 cur_time_lyu = get_cur_time();
   }
 
   /* This handles FAULT_ERROR for us: */
+  u64 old_interesting_test_case = queued_paths + unique_crashes;
+
   u32 return_keeping = save_if_interesting(argv, out_buf, len, fault);
   queued_discovered += return_keeping;
 
@@ -5582,9 +5586,9 @@ u64 cur_time_lyu = get_cur_time();
   if (!(stage_cur % stats_update_freq) || stage_cur + 1 == stage_max)
     show_stats();
   
-  if(unlikely(return_keeping > 0))
+  if(unlikely(queued_paths + unique_crashes > old_interesting_test_case))
   {
-      //verify_key_log( argv,  out_buf,  len,  tmploghead,   tmplognow,  tmp_favorite_list, tmp_favorite_list_num);
+      verify_key_log( argv,  out_buf,  len,  tmploghead,   tmplognow,  tmp_favorite_list, tmp_favorite_list_num);
       if(loghead == NULL)
       {
           loghead = tmploghead;
