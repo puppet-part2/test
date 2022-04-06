@@ -8082,7 +8082,7 @@ havoc_stage:
 
                     memmove(out_buf + del_from, out_buf + del_from + del_len,
                         temp_len - del_from - del_len);
-                    tmp_favorite_list[tmp_favorite_list_num++] = del_from;
+                    //tmp_favorite_list[tmp_favorite_list_num++] = del_from;
 
                     temp_len -= del_len;
                     break;}
@@ -8259,7 +8259,7 @@ havoc_stage:
                     /* Tail */
                     memcpy(new_buf + clone_to + clone_len, out_buf + clone_to,
                         temp_len - clone_to);
-                    tmp_favorite_list[tmp_favorite_list_num++] = clone_to;
+                    //tmp_favorite_list[tmp_favorite_list_num++] = clone_to;
                     break;}
             }
 
@@ -8370,7 +8370,7 @@ havoc_stage:
                     break;}
                 default: {
                     memmove(out_buf + copy_to, out_buf + copy_from, copy_len);
-                    tmp_favorite_list[tmp_favorite_list_num++] = copy_to;
+                    //tmp_favorite_list[tmp_favorite_list_num++] = copy_to;
                     break;}
             }
 
@@ -8463,7 +8463,7 @@ havoc_stage:
                 default: {
                      memset(out_buf + copy_to,
                         UR(2) ? UR(256) : out_buf[UR(temp_len)], copy_len);
-                    tmp_favorite_list[tmp_favorite_list_num++] = copy_to;
+                    //tmp_favorite_list[tmp_favorite_list_num++] = copy_to;
                     break;}
             }
 
@@ -8574,7 +8574,7 @@ havoc_stage:
                     break;}
                 default: {
                     memcpy(out_buf + insert_at, a_extras[use_extra].data, extra_len);
-                    tmp_favorite_list[tmp_favorite_list_num++] = insert_at;
+                    //tmp_favorite_list[tmp_favorite_list_num++] = insert_at;
                     break;}
             }
 
@@ -8673,7 +8673,7 @@ havoc_stage:
                     break;}
                 default: {
                     memcpy(out_buf + insert_at, extras[use_extra].data, extra_len);
-                    tmp_favorite_list[tmp_favorite_list_num++] = insert_at;
+                    //tmp_favorite_list[tmp_favorite_list_num++] = insert_at;
                     break;}
             }
                     
@@ -8798,7 +8798,7 @@ havoc_stage:
 
                     /* Inserted part */
                     memcpy(new_buf + insert_at, a_extras[use_extra].data, extra_len);
-                    tmp_favorite_list[tmp_favorite_list_num++] = insert_at;
+                    //tmp_favorite_list[tmp_favorite_list_num++] = insert_at;
 
                     break;}
             }
@@ -8910,7 +8910,7 @@ havoc_stage:
 
                     /* Inserted part */
                     memcpy(new_buf + insert_at, extras[use_extra].data, extra_len);
-                    tmp_favorite_list[tmp_favorite_list_num++] = insert_at;
+                    //tmp_favorite_list[tmp_favorite_list_num++] = insert_at;
 
                     break;}
             }
@@ -12231,7 +12231,7 @@ static u8 pilot_fuzzing(char** argv) {
                                     memmove(out_buf + del_from, out_buf + del_from + del_len,
                                         temp_len - del_from - del_len);
                                     temp_len -= del_len;
-                                    tmp_favorite_list[tmp_favorite_list_num++] = del_from;
+                                    //tmp_favorite_list[tmp_favorite_list_num++] = del_from;
                                     break;
                                 }
                             }
@@ -12361,7 +12361,7 @@ static u8 pilot_fuzzing(char** argv) {
                                         }
                                         default: {
                                             memcpy(new_buf + clone_to, out_buf + clone_from, clone_len);
-                                            tmp_favorite_list[tmp_favorite_list_num++] = clone_to;
+                                            //tmp_favorite_list[tmp_favorite_list_num++] = clone_to;
 
                                             break;
                                         }
@@ -12450,7 +12450,7 @@ static u8 pilot_fuzzing(char** argv) {
                     break;}
                 default: {
                     memset(new_buf + clone_to, UR(2) ? UR(256) : out_buf[UR(temp_len)], clone_len);
-                    tmp_favorite_list[tmp_favorite_list_num++] = clone_to;
+                    //tmp_favorite_list[tmp_favorite_list_num++] = clone_to;
 
                     break;}
             }
@@ -12564,7 +12564,7 @@ static u8 pilot_fuzzing(char** argv) {
                     break;}
                 default: {
                     memmove(out_buf + copy_to, out_buf + copy_from, copy_len);
-                    tmp_favorite_list[tmp_favorite_list_num++] = copy_to;
+                    //tmp_favorite_list[tmp_favorite_list_num++] = copy_to;
                     break;}
             }
                                     
@@ -12655,7 +12655,7 @@ static u8 pilot_fuzzing(char** argv) {
                 default: {
                      memset(out_buf + copy_to,
                         UR(2) ? UR(256) : out_buf[UR(temp_len)], copy_len);
-                    tmp_favorite_list[tmp_favorite_list_num++] = copy_to;
+                    //tmp_favorite_list[tmp_favorite_list_num++] = copy_to;
                     break;}
             }
 
@@ -13667,7 +13667,7 @@ case 17:{  //distill   part
                     break;}
                 default: {
                     memcpy(out_buf + insert_at, a_extras[use_extra].data, extra_len);
-                    tmp_favorite_list[tmp_favorite_list_num++] = insert_at;
+                    //tmp_favorite_list[tmp_favorite_list_num++] = insert_at;
                     break;}
             }
                                                        
@@ -13762,7 +13762,7 @@ case 17:{  //distill   part
                     break;}
                 default: {
                     memcpy(out_buf + insert_at, extras[use_extra].data, extra_len);
-                    tmp_favorite_list[tmp_favorite_list_num++] = insert_at;
+                    //tmp_favorite_list[tmp_favorite_list_num++] = insert_at;
                     break;}
             }
                                                        
@@ -13887,7 +13887,7 @@ case 17:{  //distill   part
 
                     /* Inserted part */
                     memcpy(new_buf + insert_at, a_extras[use_extra].data, extra_len);
-                    tmp_favorite_list[tmp_favorite_list_num++] = insert_at;
+                    //tmp_favorite_list[tmp_favorite_list_num++] = insert_at;
 
                     break;}
             }
@@ -13996,7 +13996,7 @@ case 17:{  //distill   part
 
                     /* Inserted part */
                     memcpy(new_buf + insert_at, extras[use_extra].data, extra_len);
-                    tmp_favorite_list[tmp_favorite_list_num++] = insert_at;
+                    //tmp_favorite_list[tmp_favorite_list_num++] = insert_at;
 
                     break;}
             }
@@ -17349,7 +17349,7 @@ static u8 core_fuzzing(char** argv) {
 
                             memmove(out_buf + del_from, out_buf + del_from + del_len,
                                 temp_len - del_from - del_len);
-                            tmp_favorite_list[tmp_favorite_list_num++] = del_from;
+                            //tmp_favorite_list[tmp_favorite_list_num++] = del_from;
 
                             temp_len -= del_len;
                     break;}
@@ -17478,7 +17478,7 @@ static u8 core_fuzzing(char** argv) {
                     break;}
                 default: {
                     memcpy(new_buf + clone_to, out_buf + clone_from, clone_len);
-                    tmp_favorite_list[tmp_favorite_list_num++] = clone_to;
+                    //tmp_favorite_list[tmp_favorite_list_num++] = clone_to;
 
                     break;}
             }
@@ -17567,7 +17567,7 @@ static u8 core_fuzzing(char** argv) {
                     break;}
                 default: {
                     memset(new_buf + clone_to, UR(2) ? UR(256) : out_buf[UR(temp_len)], clone_len);
-                    tmp_favorite_list[tmp_favorite_list_num++] = clone_to;
+                    //tmp_favorite_list[tmp_favorite_list_num++] = clone_to;
 
                     break;}
             }
@@ -17681,7 +17681,7 @@ static u8 core_fuzzing(char** argv) {
                     break;}
                 default: {
                     memmove(out_buf + copy_to, out_buf + copy_from, copy_len);
-                    tmp_favorite_list[tmp_favorite_list_num++] = copy_to;
+                    //tmp_favorite_list[tmp_favorite_list_num++] = copy_to;
                     break;}
             }
                                     
@@ -17772,7 +17772,7 @@ static u8 core_fuzzing(char** argv) {
                 default: {
                      memset(out_buf + copy_to,
                         UR(2) ? UR(256) : out_buf[UR(temp_len)], copy_len);
-                    tmp_favorite_list[tmp_favorite_list_num++] = copy_to;
+                    //tmp_favorite_list[tmp_favorite_list_num++] = copy_to;
                     break;}
             }
 
@@ -18769,7 +18769,7 @@ case 17:{ //herehere
                     break;}
                 default: {
                     memcpy(out_buf + insert_at, a_extras[use_extra].data, extra_len);
-                    tmp_favorite_list[tmp_favorite_list_num++] = insert_at;
+                    //tmp_favorite_list[tmp_favorite_list_num++] = insert_at;
                     break;}
             }
                                
@@ -18863,7 +18863,7 @@ case 17:{ //herehere
                     break;}
                 default: {
                     memcpy(out_buf + insert_at, extras[use_extra].data, extra_len);
-                    tmp_favorite_list[tmp_favorite_list_num++] = insert_at;
+                    //tmp_favorite_list[tmp_favorite_list_num++] = insert_at;
                     break;}
             }
 
@@ -18987,7 +18987,7 @@ case 17:{ //herehere
 
                     /* Inserted part */
                     memcpy(new_buf + insert_at, a_extras[use_extra].data, extra_len);
-                    tmp_favorite_list[tmp_favorite_list_num++] = insert_at;
+                    //tmp_favorite_list[tmp_favorite_list_num++] = insert_at;
 
                     break;}
             }
@@ -19094,7 +19094,7 @@ case 17:{ //herehere
 
                     /* Inserted part */
                     memcpy(new_buf + insert_at, extras[use_extra].data, extra_len);
-                    tmp_favorite_list[tmp_favorite_list_num++] = insert_at;
+                    //tmp_favorite_list[tmp_favorite_list_num++] = insert_at;
 
                     break;}
             }
