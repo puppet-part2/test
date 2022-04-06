@@ -5271,6 +5271,7 @@ abort_trimming:
 
 
 u32 globallen ;
+struct loghistory* whichtmptmplognow;
 
 void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmploghead, 
       struct loghistory* tmplognow, u64* tmp_favorite_list, u64 tmp_favorite_list_num){
@@ -5290,6 +5291,7 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
     int whether_nouse = 0;
     u32 locatetmp = (u32)(tmp_favorite_list[locate_tmp_list]);
     globallen = len;
+    whichtmptmplognow = tmptmplognow;
     switch (tmptmplognow->bytelen)
     {
     case 1:{  // mutation on 1 byte
