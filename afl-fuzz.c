@@ -5303,11 +5303,11 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         new_buf_lyu[locatetmp] = (u8)(tmptmplognow->indata);
         write_to_testcase(new_buf_lyu, len);
         u8 fault = run_target(argv, exec_tmout);
-        ck_free(new_buf_lyu);
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
         if (newcksum == originalcksum)
           whether_nouse = 1;
-        
+        write_to_testcase(out_buf, len);
+        ck_free(new_buf_lyu);
         break;}
       
       case 1:{  //delete  reversal
@@ -5322,11 +5322,11 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
           memcpy(new_buf_lyu + locatetmp + 1, out_buf + locatetmp,  (len - locatetmp));
         write_to_testcase(new_buf_lyu, templen_l);
         u8 fault = run_target(argv, exec_tmout);
-        ck_free(new_buf_lyu);
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
         if (newcksum == originalcksum)
             whether_nouse = 1;
-        
+        write_to_testcase(out_buf, len);
+        ck_free(new_buf_lyu);
         break;}
 
       case 2:{  //insert  reversal
@@ -5341,11 +5341,11 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
           memcpy(new_buf_lyu + locatetmp, out_buf + locatetmp + 1, (templen_l - locatetmp) );
         write_to_testcase(new_buf_lyu, templen_l);
         u8 fault = run_target(argv, exec_tmout);
-        ck_free(new_buf_lyu);
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
         if (newcksum == originalcksum)
             whether_nouse = 1;
-        
+        write_to_testcase(out_buf, len);
+        ck_free(new_buf_lyu);
         break;}
       
       default:
@@ -5365,12 +5365,11 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         *(u16*)(new_buf_lyu + locatetmp) = (u16)(tmptmplognow->indata);  
         write_to_testcase(new_buf_lyu, len);
         u8 fault = run_target(argv, exec_tmout);
-        ck_free(new_buf_lyu);
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
         if (newcksum == originalcksum)
           whether_nouse = 1;
-        
-
+        write_to_testcase(out_buf, len);
+        ck_free(new_buf_lyu);
         break;}
       
       case 1:{  //delete  reversal
@@ -5385,11 +5384,11 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
           memcpy(new_buf_lyu + locatetmp + 2, out_buf + locatetmp,  (len - locatetmp) );
         write_to_testcase(new_buf_lyu, templen_l);
         u8 fault = run_target(argv, exec_tmout);
-        ck_free(new_buf_lyu);
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
         if (newcksum == originalcksum)
             whether_nouse = 1;
-        
+        write_to_testcase(out_buf, len);
+        ck_free(new_buf_lyu);
         break;}
 
       case 2:{  //insert  reversal
@@ -5403,11 +5402,11 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
           memcpy(new_buf_lyu + locatetmp, out_buf + locatetmp + 2, (templen_l - locatetmp) );
         write_to_testcase(new_buf_lyu, templen_l);
         u8 fault = run_target(argv, exec_tmout);
-        ck_free(new_buf_lyu);
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
         if (newcksum == originalcksum)
             whether_nouse = 1;
-        
+        write_to_testcase(out_buf, len);
+        ck_free(new_buf_lyu);
         break;}
       
       default:
@@ -5427,12 +5426,11 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         *(u32*)(new_buf_lyu + locatetmp) = (u32)(tmptmplognow->indata);  
         write_to_testcase(new_buf_lyu,  len);
         u8 fault = run_target(argv, exec_tmout);
-        ck_free(new_buf_lyu);
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
         if (newcksum == originalcksum)
           whether_nouse = 1;
-        
-
+        write_to_testcase(out_buf, len);
+        ck_free(new_buf_lyu);
         break;}
       
       case 1:{  //delete  reversal
@@ -5447,11 +5445,11 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
           memcpy(new_buf_lyu + locatetmp + 4, out_buf + locatetmp,  (len - locatetmp));
         write_to_testcase(new_buf_lyu,  templen_l);
         u8 fault = run_target(argv, exec_tmout);
-        ck_free(new_buf_lyu);
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
         if (newcksum == originalcksum)
             whether_nouse = 1;
-        
+        write_to_testcase(out_buf, len);
+        ck_free(new_buf_lyu);
         break;}
 
       case 2:{  //insert  reversal
@@ -5466,11 +5464,11 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
           memcpy(new_buf_lyu + locatetmp, out_buf + locatetmp + 4, (templen_l - locatetmp) );
         write_to_testcase(new_buf_lyu,  templen_l);
         u8 fault = run_target(argv, exec_tmout);
-        ck_free(new_buf_lyu);
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
         if (newcksum == originalcksum)
             whether_nouse = 1;
-        
+        write_to_testcase(out_buf, len);
+        ck_free(new_buf_lyu);
         break;}
       
       default:
@@ -5521,8 +5519,8 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
   }
 
   
-  write_to_testcase(out_buf, len);
-  u8 fault = run_target(argv, exec_tmout);
+  //write_to_testcase(out_buf, len);
+  //u8 fault = run_target(argv, exec_tmout);
 
   return;
 }
