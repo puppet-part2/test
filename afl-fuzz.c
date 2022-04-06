@@ -5377,6 +5377,7 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
       {
       
       case 0:{  //overwrite  reversal
+      break;
         if(locatetmp + 2 > len )
           break;
         u8 *new_buf_lyu = ck_alloc_nozero(len);
