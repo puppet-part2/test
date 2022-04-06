@@ -5295,6 +5295,7 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
 
       switch (tmptmplognow->type)
       {
+        """
       case 0:{  //overwrite  reversal
       break;
         if(locatetmp + 1 > len )
@@ -5302,6 +5303,23 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         u8 *new_buf_lyu = ck_alloc_nozero(len);
         memcpy(new_buf_lyu, out_buf, len );
         new_buf_lyu[locatetmp] = (u8)(tmptmplognow->indata);
+        write_to_testcase(new_buf_lyu, len);
+        u8 fault = run_target(argv, exec_tmout);
+        u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
+        if (newcksum == originalcksum)
+          whether_nouse = 1;
+        ck_free(new_buf_lyu);
+        break;}"""
+      case 0:{  //overwrite  reversal
+      break;
+        if(locatetmp + 1 > len )
+          break;
+        u8 *new_buf_lyu = ck_alloc_nozero(len);
+        if(locatetmp > 0)
+          memcpy(new_buf_lyu, out_buf, locatetmp);
+        new_buf_lyu[locatetmp] = (u8)(tmptmplognow->indata);
+        if (len >  locatetmp + 1)
+          memcpy(new_buf_lyu + locatetmp + 1, out_buf + locatetmp + 1, len - locatetmp - 1);
         write_to_testcase(new_buf_lyu, len);
         u8 fault = run_target(argv, exec_tmout);
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
@@ -5356,6 +5374,7 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
     
       switch (tmptmplognow->type)
       {
+      """
       case 0:{  //overwrite  reversal
       break;
         if(locatetmp + 2 > len )
@@ -5363,6 +5382,22 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         u8 *new_buf_lyu = ck_alloc_nozero(len);
         memcpy(new_buf_lyu, out_buf, len  );
         *(u16*)(new_buf_lyu + locatetmp) = (u16)(tmptmplognow->indata);  
+        write_to_testcase(new_buf_lyu, len);
+        u8 fault = run_target(argv, exec_tmout);
+        u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
+        if (newcksum == originalcksum)
+          whether_nouse = 1;
+        ck_free(new_buf_lyu);
+        break;}"""
+      case 0:{  //overwrite  reversal
+        if(locatetmp + 2 > len )
+          break;
+        u8 *new_buf_lyu = ck_alloc_nozero(len);
+        if(locatetmp > 0)
+          memcpy(new_buf_lyu, out_buf, locatetmp);
+        *(u16*)(new_buf_lyu + locatetmp) = (u16)(tmptmplognow->indata);  
+        if (len >  locatetmp + 2)
+          memcpy(new_buf_lyu + locatetmp + 2, out_buf + locatetmp + 2, len - locatetmp - 2);
         write_to_testcase(new_buf_lyu, len);
         u8 fault = run_target(argv, exec_tmout);
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
@@ -5416,6 +5451,7 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
     case 4:{  // mutation on 4 bytes
       switch (tmptmplognow->type)
       {
+      """
       case 0:{  //overwrite  reversal
       break;
         if(locatetmp + 4 > len )
@@ -5423,6 +5459,23 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         u8 *new_buf_lyu = ck_alloc_nozero(len);
         memcpy(new_buf_lyu, out_buf, len  );
         *(u32*)(new_buf_lyu + locatetmp) = (u32)(tmptmplognow->indata);  
+        write_to_testcase(new_buf_lyu,  len);
+        u8 fault = run_target(argv, exec_tmout);
+        u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
+        if (newcksum == originalcksum)
+          whether_nouse = 1;
+        ck_free(new_buf_lyu);
+        break;}"""
+      case 0:{  //overwrite  reversal
+
+        if(locatetmp + 4 > len )
+          break;
+        u8 *new_buf_lyu = ck_alloc_nozero(len);
+        if(locatetmp > 0)
+          memcpy(new_buf_lyu, out_buf, locatetmp);
+        *(u32*)(new_buf_lyu + locatetmp) = (u32)(tmptmplognow->indata);  
+        if (len >  locatetmp + 4)
+          memcpy(new_buf_lyu + locatetmp + 4, out_buf + locatetmp + 4, len - locatetmp - 4);
         write_to_testcase(new_buf_lyu,  len);
         u8 fault = run_target(argv, exec_tmout);
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
