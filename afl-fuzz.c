@@ -5270,9 +5270,8 @@ abort_trimming:
 
 
 
-u32 globallen ;
-struct loghistory* whichtmptmplognow;
-u32 locatetmp; 
+
+
 
 void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmploghead, 
       struct loghistory* tmplognow, u64* tmp_favorite_list, u64 tmp_favorite_list_num){
@@ -5290,9 +5289,9 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
   while(tmptmplognow != NULL)
   { 
     int whether_nouse = 0;
-     locatetmp = (u32)(tmp_favorite_list[locate_tmp_list]);
-    globallen = len;
-    whichtmptmplognow = tmptmplognow;
+    u32 locatetmp = (u32)(tmp_favorite_list[locate_tmp_list]);
+    //globallen = len;
+    //whichtmptmplognow = tmptmplognow;
     switch (tmptmplognow->bytelen)
     {
     case 1:{  // mutation on 1 byte
@@ -5643,13 +5642,257 @@ u64 cur_time_lyu = get_cur_time();
   
   if(unlikely(queued_paths + unique_crashes > old_interesting_test_case))
   {
-      verify_key_log( argv,  out_buf,  len,  tmploghead,   tmplognow,  tmp_favorite_list, tmp_favorite_list_num);
+      //verify_key_log( argv,  out_buf,  len,  tmploghead,   tmplognow,  tmp_favorite_list, tmp_favorite_list_num);
+
+if (tmploghead != NULL)
+{
+  struct loghistory* tmptmplognow = tmploghead;
+  struct loghistory* tmptmplognowfront = tmploghead;
+  u32 originalcksum = queue_top->exec_cksum;
+  u64 locate_tmp_list = 0;
+
+  while(tmptmplognow != NULL)
+  { 
+    int whether_nouse = 0;
+    u32 locatetmp = (u32)(tmp_favorite_list[locate_tmp_list]);
+    switch (tmptmplognow->bytelen)
+    {
+    case 1:{  // mutation on 1 byte
+
+      switch (tmptmplognow->type)
+      {
+      
+      case 0:{  //overwrite  reversal
+        if(locatetmp + 1 > len || len < 1)
+          break;
+        u8 *new_buf_lyu = ck_alloc_nozero(len);
+        memcpy(new_buf_lyu, out_buf, len );
+        new_buf_lyu[locatetmp] = (u8)(tmptmplognow->indata);
+        write_to_testcase(new_buf_lyu, len);
+        u8 fault = run_target(argv, exec_tmout);
+        u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
+        if (newcksum == originalcksum)
+          whether_nouse = 1;
+        ck_free(new_buf_lyu);
+        break;}
+
+      
+      case 1:{  //delete  reversal
+        
+        u32 templen_l = len + 1;
+        if(locatetmp > len)
+          break;
+        u8 *new_buf_lyu = ck_alloc_nozero(templen_l);
+        if(locatetmp > 0)
+          memcpy(new_buf_lyu, out_buf, locatetmp);
+        new_buf_lyu[locatetmp] = (u8)(tmptmplognow->indata);
+        if (len >  locatetmp)
+          memcpy(new_buf_lyu + locatetmp + 1, out_buf + locatetmp,  (len - locatetmp));
+        write_to_testcase(new_buf_lyu, templen_l);
+        u8 fault = run_target(argv, exec_tmout);
+        u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
+        if (newcksum == originalcksum)
+            whether_nouse = 1;
+        ck_free(new_buf_lyu);
+        break;}
+
+      case 2:{  //insert  reversal
+        u32 templen_l = len - 1;
+        if(locatetmp > templen_l || len < 2)
+          break;
+        u8 *new_buf_lyu = ck_alloc_nozero(templen_l);
+        if(locatetmp > 0)
+          memcpy(new_buf_lyu, out_buf, locatetmp );
+        if(templen_l  > locatetmp)
+          memcpy(new_buf_lyu + locatetmp, out_buf + locatetmp + 1, (templen_l - locatetmp) );
+        write_to_testcase(new_buf_lyu, templen_l);
+        u8 fault = run_target(argv, exec_tmout);
+        u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
+        if (newcksum == originalcksum)
+            whether_nouse = 1;
+        ck_free(new_buf_lyu);
+        break;}
+      
+      default:
+        FATAL("error in type");
+        break;
+      }
+      break;}
+    
+    case 2:{ // mutation on 2 bytes
+    
+      switch (tmptmplognow->type)
+      {
+      
+      case 0:{  //overwrite  reversal
+        if(locatetmp + 2 > len || len < 2)
+          break;
+        u8 *new_buf_lyu = ck_alloc_nozero(len);
+        memcpy(new_buf_lyu, out_buf, len);
+        *(u16*)(new_buf_lyu + locatetmp) = (u16)(tmptmplognow->indata);  
+        write_to_testcase(new_buf_lyu, len);
+        u8 fault = run_target(argv, exec_tmout);
+        u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
+        if (newcksum == originalcksum)
+          whether_nouse = 1;
+        ck_free(new_buf_lyu);
+        break;}
+        
+      
+      case 1:{  //delete  reversal
+      
+        u32 templen_l = len + 2;
+        if(locatetmp > len)
+          break;
+        u8 *new_buf_lyu = ck_alloc_nozero(templen_l);
+        if(locatetmp > 0)
+          memcpy(new_buf_lyu, out_buf, locatetmp );
+        *(u16*)( new_buf_lyu + locatetmp) = (u16)(tmptmplognow->indata);
+        if(len  > locatetmp)
+          memcpy(new_buf_lyu + locatetmp + 2, out_buf + locatetmp,  (len - locatetmp) );
+        write_to_testcase(new_buf_lyu, templen_l);
+        u8 fault = run_target(argv, exec_tmout);
+        u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
+        if (newcksum == originalcksum)
+            whether_nouse = 1;
+        ck_free(new_buf_lyu);
+        break;}
+
+      case 2:{  //insert  reversal
+        u32 templen_l = len - 2;
+        if(locatetmp > templen_l || len < 3)
+          break;
+        u8 *new_buf_lyu = ck_alloc_nozero(templen_l);
+        if(locatetmp > 0)
+          memcpy(new_buf_lyu, out_buf, locatetmp );
+        if(templen_l  > locatetmp)
+          memcpy(new_buf_lyu + locatetmp, out_buf + locatetmp + 2, (templen_l - locatetmp) );
+        write_to_testcase(new_buf_lyu, templen_l);
+        u8 fault = run_target(argv, exec_tmout);
+        u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
+        if (newcksum == originalcksum)
+            whether_nouse = 1;
+        ck_free(new_buf_lyu);
+        break;}
+      
+      default:
+        FATAL("error in type");
+        break;
+      }
+      break;}
+    
+    case 4:{  // mutation on 4 bytes
+      switch (tmptmplognow->type)
+      {
+      
+      case 0:{  //overwrite  reversal
+      //break;
+        if(locatetmp + 4 > len || len < 4)
+          break;
+        u8 *new_buf_lyu = ck_alloc_nozero(len);
+        memcpy(new_buf_lyu, out_buf, len  );
+        *(u32*)(new_buf_lyu + locatetmp) = (u32)(tmptmplognow->indata);  
+        write_to_testcase(new_buf_lyu,  len);
+        u8 fault = run_target(argv, exec_tmout);
+        u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
+        if (newcksum == originalcksum)
+          whether_nouse = 1;
+        ck_free(new_buf_lyu);
+        break;}
+
+      
+      case 1:{  //delete  reversal
+      
+        u32 templen_l = len + 4;
+        if(locatetmp > len)
+          break;
+        u8 *new_buf_lyu = ck_alloc_nozero(templen_l);
+        if(locatetmp > 0)
+          memcpy(new_buf_lyu, out_buf, locatetmp  );
+        *(u32*)( new_buf_lyu + locatetmp) = (u32)(tmptmplognow->indata);
+        if(len  > locatetmp)
+          memcpy(new_buf_lyu + locatetmp + 4, out_buf + locatetmp,  (len - locatetmp));
+        write_to_testcase(new_buf_lyu,  templen_l);
+        u8 fault = run_target(argv, exec_tmout);
+        u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
+        if (newcksum == originalcksum)
+            whether_nouse = 1;
+        ck_free(new_buf_lyu);
+        break;}
+
+      case 2:{  //insert  reversal
+        u32 templen_l = len - 4;
+        if(locatetmp > templen_l || len < 5)
+          break;
+        u8 *new_buf_lyu = ck_alloc_nozero(templen_l);
+        if(locatetmp > 0)
+          memcpy(new_buf_lyu, out_buf, locatetmp );
+        if(templen_l  >  locatetmp)
+          memcpy(new_buf_lyu + locatetmp, out_buf + locatetmp + 4, (templen_l - locatetmp) );
+        write_to_testcase(new_buf_lyu,  templen_l);
+        u8 fault = run_target(argv, exec_tmout);
+        u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
+        if (newcksum == originalcksum)
+            whether_nouse = 1;
+        ck_free(new_buf_lyu);
+        break;}
+      
+      default:
+        FATAL("error in type");
+        break;
+      }
+      break;}
+
+    default:
+      FATAL("error verify_bytelen");
+      break;
+    }
+    
+    if (whether_nouse) // need to delete nouse log
+    {
+      if(tmptmplognow == tmploghead)
+      {
+        tmploghead = tmploghead->next;
+        tmptmplognowfront = tmploghead;
+        ck_free(tmptmplognow);
+        tmptmplognow = tmploghead;
+      }
+      else{
+        tmptmplognowfront->next = tmptmplognow->next;
+        ck_free(tmptmplognow);
+        tmptmplognow = tmptmplognowfront->next;
+      }
+      tmp_favorite_list[locate_tmp_list++] = maxu64;
+    }else{
+      locate_tmp_list += 1;
+      tmptmplognowfront = tmptmplognow;
+      tmptmplognow = tmptmplognow->next;
+    }
+  }
+  if(locate_tmp_list != tmp_favorite_list_num)
+      PFATAL("ERROR locate_tmp_list: '%llu'  tmp_favorite_list_num: '%llu'", locate_tmp_list, tmp_favorite_list_num);
+
+  if (tmploghead == NULL)
+    tmplognow = NULL;
+  else{
+    if (tmptmplognowfront != NULL && tmptmplognowfront->next == NULL )
+      tmplognow = tmptmplognowfront;
+    else{
+      tmplognow = tmploghead;
+      while(tmplognow->next)
+        tmplognow = tmplognow->next;
+    }
+  }
+}
+
+  
       if(loghead == NULL)
       {
+        if(tmploghead != NULL){
           loghead = tmploghead;
-          lognow = tmplognow;  //start queue
-          tmploghead = NULL;
-          tmplognow = NULL;
+          lognow = tmplognow;
+        }  //start queue
+          
       }
       else if(tmploghead != NULL)
       {
@@ -5672,6 +5915,8 @@ u64 cur_time_lyu = get_cur_time();
               }
           }
       }
+      tmploghead = NULL;
+      tmplognow = NULL;
       for(int jjj = 0; jjj < tmp_favorite_list_num; jjj++)
       {
           if(tmp_favorite_list[jjj] == maxu64)
