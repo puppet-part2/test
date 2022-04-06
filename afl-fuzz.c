@@ -5311,7 +5311,7 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         break;}
       
       case 1:{  //delete  reversal
-        break;
+        
         u32 templen_l = len + 1;
         if(locatetmp > len)
           break;
@@ -5373,7 +5373,7 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         break;}
       
       case 1:{  //delete  reversal
-      break;
+      
         u32 templen_l = len + 2;
         if(locatetmp > len)
           break;
@@ -5434,7 +5434,7 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         break;}
       
       case 1:{  //delete  reversal
-      break;
+      
         u32 templen_l = len + 4;
         if(locatetmp > len)
           break;
