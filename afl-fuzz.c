@@ -5299,7 +5299,7 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         if(locatetmp + 1 > len )
           break;
         u8 *new_buf_lyu = ck_alloc_nozero(len);
-        memcpy(new_buf_lyu, out_buf, len);
+        memcpy(new_buf_lyu, out_buf, len * sizeof(u8));
         new_buf_lyu[locatetmp] = (u8)(tmptmplognow->indata);
         write_to_testcase(new_buf_lyu, len);
         u8 fault = run_target(argv, exec_tmout);
@@ -5316,10 +5316,10 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
           break;
         u8 *new_buf_lyu = ck_alloc_nozero(templen_l);
         if(locatetmp > 0)
-          memcpy(new_buf_lyu, out_buf, locatetmp);
+          memcpy(new_buf_lyu, out_buf, locatetmp * sizeof(u8));
         new_buf_lyu[locatetmp] = (u8)(tmptmplognow->indata);
-        if (templen_l >  locatetmp)
-          memcpy(new_buf_lyu + locatetmp + 1, out_buf + locatetmp,  len - locatetmp);
+        if (len >  locatetmp)
+          memcpy(new_buf_lyu + locatetmp + 1, out_buf + locatetmp,  (len - locatetmp) * sizeof(u8));
         write_to_testcase(new_buf_lyu, templen_l);
         u8 fault = run_target(argv, exec_tmout);
         ck_free(new_buf_lyu);
@@ -5336,9 +5336,9 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
           break;
         u8 *new_buf_lyu = ck_alloc_nozero(templen_l);
         if(locatetmp > 0)
-          memcpy(new_buf_lyu, out_buf, locatetmp);
+          memcpy(new_buf_lyu, out_buf, locatetmp * sizeof(u8));
         if(templen_l  > locatetmp)
-          memcpy(new_buf_lyu + locatetmp, out_buf + locatetmp + 1, templen_l - locatetmp);
+          memcpy(new_buf_lyu + locatetmp, out_buf + locatetmp + 1, (templen_l - locatetmp) * sizeof(u8));
         write_to_testcase(new_buf_lyu, templen_l);
         u8 fault = run_target(argv, exec_tmout);
         ck_free(new_buf_lyu);
@@ -5361,7 +5361,7 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         if(locatetmp + 2 > len )
           break;
         u8 *new_buf_lyu = ck_alloc_nozero(len);
-        memcpy(new_buf_lyu, out_buf, len);
+        memcpy(new_buf_lyu, out_buf, len  * sizeof(u8));
         *(u16*)(new_buf_lyu + locatetmp) = (u16)(tmptmplognow->indata);  
         write_to_testcase(new_buf_lyu, len);
         u8 fault = run_target(argv, exec_tmout);
@@ -5379,10 +5379,10 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
           break;
         u8 *new_buf_lyu = ck_alloc_nozero(templen_l);
         if(locatetmp > 0)
-          memcpy(new_buf_lyu, out_buf, locatetmp);
+          memcpy(new_buf_lyu, out_buf, locatetmp  * sizeof(u8));
         *(u16*)( new_buf_lyu + locatetmp) = (u16)(tmptmplognow->indata);
-        if(templen_l  > locatetmp)
-          memcpy(new_buf_lyu + locatetmp + 2, out_buf + locatetmp,  len - locatetmp);
+        if(len  > locatetmp)
+          memcpy(new_buf_lyu + locatetmp + 2, out_buf + locatetmp,  (len - locatetmp) * sizeof(u8));
         write_to_testcase(new_buf_lyu, templen_l);
         u8 fault = run_target(argv, exec_tmout);
         ck_free(new_buf_lyu);
@@ -5398,9 +5398,9 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
           break;
         u8 *new_buf_lyu = ck_alloc_nozero(templen_l);
         if(locatetmp > 0)
-          memcpy(new_buf_lyu, out_buf, locatetmp);
+          memcpy(new_buf_lyu, out_buf, locatetmp * sizeof(u8));
         if(templen_l  > locatetmp)
-          memcpy(new_buf_lyu + locatetmp, out_buf + locatetmp + 2, templen_l - locatetmp);
+          memcpy(new_buf_lyu + locatetmp, out_buf + locatetmp + 2, (templen_l - locatetmp) * sizeof(u8));
         write_to_testcase(new_buf_lyu, templen_l);
         u8 fault = run_target(argv, exec_tmout);
         ck_free(new_buf_lyu);
@@ -5423,7 +5423,7 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         if(locatetmp + 4 > len )
           break;
         u8 *new_buf_lyu = ck_alloc_nozero(len);
-        memcpy(new_buf_lyu, out_buf, len);
+        memcpy(new_buf_lyu, out_buf, len  * sizeof(u8));
         *(u32*)(new_buf_lyu + locatetmp) = (u32)(tmptmplognow->indata);  
         write_to_testcase(new_buf_lyu,  len);
         u8 fault = run_target(argv, exec_tmout);
@@ -5441,10 +5441,10 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
           break;
         u8 *new_buf_lyu = ck_alloc_nozero(templen_l);
         if(locatetmp > 0)
-          memcpy(new_buf_lyu, out_buf, locatetmp);
+          memcpy(new_buf_lyu, out_buf, locatetmp  * sizeof(u8));
         *(u32*)( new_buf_lyu + locatetmp) = (u32)(tmptmplognow->indata);
-        if(templen_l  > locatetmp)
-          memcpy(new_buf_lyu + locatetmp + 4, out_buf + locatetmp,  len - locatetmp);
+        if(len  > locatetmp)
+          memcpy(new_buf_lyu + locatetmp + 4, out_buf + locatetmp,  (len - locatetmp) * sizeof(u8));
         write_to_testcase(new_buf_lyu,  templen_l);
         u8 fault = run_target(argv, exec_tmout);
         ck_free(new_buf_lyu);
@@ -5461,9 +5461,9 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
           break;
         u8 *new_buf_lyu = ck_alloc_nozero(templen_l);
         if(locatetmp > 0)
-          memcpy(new_buf_lyu, out_buf, locatetmp);
+          memcpy(new_buf_lyu, out_buf, locatetmp * sizeof(u8));
         if(templen_l  >  locatetmp)
-          memcpy(new_buf_lyu + locatetmp, out_buf + locatetmp + 4, templen_l - locatetmp);
+          memcpy(new_buf_lyu + locatetmp, out_buf + locatetmp + 4, (templen_l - locatetmp) * sizeof(u8));
         write_to_testcase(new_buf_lyu,  templen_l);
         u8 fault = run_target(argv, exec_tmout);
         ck_free(new_buf_lyu);
