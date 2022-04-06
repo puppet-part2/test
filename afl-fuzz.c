@@ -5295,7 +5295,7 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
 
       switch (tmptmplognow->type)
       {
-        """
+      /*
       case 0:{  //overwrite  reversal
       break;
         if(locatetmp + 1 > len )
@@ -5309,7 +5309,7 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         if (newcksum == originalcksum)
           whether_nouse = 1;
         ck_free(new_buf_lyu);
-        break;}"""
+        break;}*/
       case 0:{  //overwrite  reversal
       break;
         if(locatetmp + 1 > len )
@@ -5374,7 +5374,7 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
     
       switch (tmptmplognow->type)
       {
-      """
+      /*
       case 0:{  //overwrite  reversal
       break;
         if(locatetmp + 2 > len )
@@ -5388,7 +5388,9 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         if (newcksum == originalcksum)
           whether_nouse = 1;
         ck_free(new_buf_lyu);
-        break;}"""
+        break;}
+        */
+        
       case 0:{  //overwrite  reversal
         if(locatetmp + 2 > len )
           break;
@@ -5451,7 +5453,7 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
     case 4:{  // mutation on 4 bytes
       switch (tmptmplognow->type)
       {
-      """
+      /*
       case 0:{  //overwrite  reversal
       break;
         if(locatetmp + 4 > len )
@@ -5465,7 +5467,8 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
         if (newcksum == originalcksum)
           whether_nouse = 1;
         ck_free(new_buf_lyu);
-        break;}"""
+        break;}*/
+        
       case 0:{  //overwrite  reversal
 
         if(locatetmp + 4 > len )
