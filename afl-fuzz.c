@@ -5297,8 +5297,8 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
       {
       
       case 0:{  //overwrite  reversal
-      break;
-        if(locatetmp + 1 > len )
+      //break;
+        if(locatetmp + 1 > len || len < 1)
           break;
         u8 *new_buf_lyu = ck_alloc_nozero(len);
         memcpy(new_buf_lyu, out_buf, len );
@@ -5377,8 +5377,8 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
       {
       
       case 0:{  //overwrite  reversal
-      break;
-        if(locatetmp + 2 > len )
+      //break;
+        if(locatetmp + 2 > len || len < 2)
           break;
         u8 *new_buf_lyu = ck_alloc_nozero(len);
         memcpy(new_buf_lyu, out_buf, len);
@@ -5456,8 +5456,8 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
       {
       
       case 0:{  //overwrite  reversal
-      break;
-        if(locatetmp + 4 > len )
+      //break;
+        if(locatetmp + 4 > len || len < 4)
           break;
         u8 *new_buf_lyu = ck_alloc_nozero(len);
         memcpy(new_buf_lyu, out_buf, len  );
