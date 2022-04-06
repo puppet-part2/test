@@ -5513,7 +5513,6 @@ void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmplog
     }
   }
 
-  ck_free(new_buf_lyu);
   
   write_to_testcase(out_buf, len);
   u8 fault = run_target(argv, exec_tmout);
