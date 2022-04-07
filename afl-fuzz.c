@@ -133,7 +133,7 @@ static struct change_byte *dict1d, *dict1d_cur, *newdict1d, *newdict1d_cur, *dic
 #define hashtablelen 8192
 static struct start_byte *dict2d_hash[hashtablelen];
 static struct start_byte *distill_hash[hashtablelen];
-//static struct start_byte2 *tmp_distill_hash[hashtablelen];
+
 
 #define dictcount  8
 #define use_favorite_list 0.1
@@ -5273,313 +5273,6 @@ abort_trimming:
 
 
 
-void verify_key_log(char** argv, u8* out_buf, u32 len, struct loghistory* tmploghead, 
-      struct loghistory* tmplognow, u64* tmp_favorite_list, u64 tmp_favorite_list_num){
-  
-  if (tmploghead == NULL)
-      return;
-  
-  struct loghistory* tmptmplognow = tmploghead;
-  struct loghistory* tmptmplognowfront = tmploghead;
-  //u32 originalcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
-  u32 originalcksum = queue_top->exec_cksum;
-  u64 locate_tmp_list = 0;
-
-
-  while(tmptmplognow != NULL)
-  { 
-    int whether_nouse = 0;
-    u32 locatetmp = (u32)(tmp_favorite_list[locate_tmp_list]);
-    //globallen = len;
-    //whichtmptmplognow = tmptmplognow;
-    switch (tmptmplognow->bytelen)
-    {
-    case 1:{  // mutation on 1 byte
-
-      switch (tmptmplognow->type)
-      {
-      
-      case 0:{  //overwrite  reversal
-      //break;
-        if(locatetmp + 1 > len || len < 1)
-          break;
-        u8 *new_buf_lyu = ck_alloc_nozero(len);
-        memcpy(new_buf_lyu, out_buf, len );
-        *(u8*)(new_buf_lyu + locatetmp) = (u8)(tmptmplognow->indata);
-        write_to_testcase(new_buf_lyu, len);
-        u8 fault = run_target(argv, exec_tmout);
-        u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
-        if (newcksum == originalcksum)
-          whether_nouse = 1;
-        ck_free(new_buf_lyu);
-        break;}
-      /*
-      case 0:{  //overwrite  reversal
-      break;
-        if(locatetmp + 1 > len )
-          break;
-        u8 *new_buf_lyu = ck_alloc_nozero(len);
-        if(locatetmp > 0)
-          memcpy(new_buf_lyu, out_buf, locatetmp);
-        new_buf_lyu[locatetmp] = (u8)(tmptmplognow->indata);
-        if (len >  locatetmp + 1)
-          memcpy(new_buf_lyu + locatetmp + 1, out_buf + locatetmp + 1, len - locatetmp - 1);
-        write_to_testcase(new_buf_lyu, len);
-        u8 fault = run_target(argv, exec_tmout);
-        u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
-        if (newcksum == originalcksum)
-          whether_nouse = 1;
-        ck_free(new_buf_lyu);
-        break;}*/
-      
-      case 1:{  //delete  reversal
-        
-        u32 templen_l = len + 1;
-        if(locatetmp > len)
-          break;
-        u8 *new_buf_lyu = ck_alloc_nozero(templen_l);
-        if(locatetmp > 0)
-          memcpy(new_buf_lyu, out_buf, locatetmp);
-        new_buf_lyu[locatetmp] = (u8)(tmptmplognow->indata);
-        if (len >  locatetmp)
-          memcpy(new_buf_lyu + locatetmp + 1, out_buf + locatetmp,  (len - locatetmp));
-        write_to_testcase(new_buf_lyu, templen_l);
-        u8 fault = run_target(argv, exec_tmout);
-        u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
-        if (newcksum == originalcksum)
-            whether_nouse = 1;
-        ck_free(new_buf_lyu);
-        break;}
-
-      case 2:{  //insert  reversal
-        u32 templen_l = len - 1;
-        if(locatetmp > templen_l || len < 2)
-          break;
-        u8 *new_buf_lyu = ck_alloc_nozero(templen_l);
-        if(locatetmp > 0)
-          memcpy(new_buf_lyu, out_buf, locatetmp );
-        if(templen_l  > locatetmp)
-          memcpy(new_buf_lyu + locatetmp, out_buf + locatetmp + 1, (templen_l - locatetmp) );
-        write_to_testcase(new_buf_lyu, templen_l);
-        u8 fault = run_target(argv, exec_tmout);
-        u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
-        if (newcksum == originalcksum)
-            whether_nouse = 1;
-        ck_free(new_buf_lyu);
-        break;}
-      
-      default:
-        FATAL("error in type");
-        break;
-      }
-      break;}
-    
-    case 2:{ // mutation on 2 bytes
-    
-      switch (tmptmplognow->type)
-      {
-      
-      case 0:{  //overwrite  reversal
-      //break;
-        if(locatetmp + 2 > len || len < 2)
-          break;
-        u8 *new_buf_lyu = ck_alloc_nozero(len);
-        memcpy(new_buf_lyu, out_buf, len);
-        *(u16*)(new_buf_lyu + locatetmp) = (u16)(tmptmplognow->indata);  
-        write_to_testcase(new_buf_lyu, len);
-        u8 fault = run_target(argv, exec_tmout);
-        u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
-        if (newcksum == originalcksum)
-          whether_nouse = 1;
-        ck_free(new_buf_lyu);
-        break;}
-        
-      /*
-      case 0:{  //overwrite  reversal
-        if(locatetmp + 2 > len )
-          break;
-        u8 *new_buf_lyu = ck_alloc_nozero(len);
-        if(locatetmp > 0)
-          memcpy(new_buf_lyu, out_buf, locatetmp);
-        *(u16*)(new_buf_lyu + locatetmp) = (u16)(tmptmplognow->indata);  
-        if (len >  locatetmp + 2)
-          memcpy(new_buf_lyu + locatetmp + 2, out_buf + locatetmp + 2, len - locatetmp - 2);
-        write_to_testcase(new_buf_lyu, len);
-        u8 fault = run_target(argv, exec_tmout);
-        u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
-        if (newcksum == originalcksum)
-          whether_nouse = 1;
-        ck_free(new_buf_lyu);
-        break;}*/
-      
-      case 1:{  //delete  reversal
-      
-        u32 templen_l = len + 2;
-        if(locatetmp > len)
-          break;
-        u8 *new_buf_lyu = ck_alloc_nozero(templen_l);
-        if(locatetmp > 0)
-          memcpy(new_buf_lyu, out_buf, locatetmp );
-        *(u16*)( new_buf_lyu + locatetmp) = (u16)(tmptmplognow->indata);
-        if(len  > locatetmp)
-          memcpy(new_buf_lyu + locatetmp + 2, out_buf + locatetmp,  (len - locatetmp) );
-        write_to_testcase(new_buf_lyu, templen_l);
-        u8 fault = run_target(argv, exec_tmout);
-        u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
-        if (newcksum == originalcksum)
-            whether_nouse = 1;
-        ck_free(new_buf_lyu);
-        break;}
-
-      case 2:{  //insert  reversal
-        u32 templen_l = len - 2;
-        if(locatetmp > templen_l || len < 3)
-          break;
-        u8 *new_buf_lyu = ck_alloc_nozero(templen_l);
-        if(locatetmp > 0)
-          memcpy(new_buf_lyu, out_buf, locatetmp );
-        if(templen_l  > locatetmp)
-          memcpy(new_buf_lyu + locatetmp, out_buf + locatetmp + 2, (templen_l - locatetmp) );
-        write_to_testcase(new_buf_lyu, templen_l);
-        u8 fault = run_target(argv, exec_tmout);
-        u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
-        if (newcksum == originalcksum)
-            whether_nouse = 1;
-        ck_free(new_buf_lyu);
-        break;}
-      
-      default:
-        FATAL("error in type");
-        break;
-      }
-      break;}
-    
-    case 4:{  // mutation on 4 bytes
-      switch (tmptmplognow->type)
-      {
-      
-      case 0:{  //overwrite  reversal
-      //break;
-        if(locatetmp + 4 > len || len < 4)
-          break;
-        u8 *new_buf_lyu = ck_alloc_nozero(len);
-        memcpy(new_buf_lyu, out_buf, len  );
-        *(u32*)(new_buf_lyu + locatetmp) = (u32)(tmptmplognow->indata);  
-        write_to_testcase(new_buf_lyu,  len);
-        u8 fault = run_target(argv, exec_tmout);
-        u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
-        if (newcksum == originalcksum)
-          whether_nouse = 1;
-        ck_free(new_buf_lyu);
-        break;}
-      /*
-      case 0:{  //overwrite  reversal
-
-        if(locatetmp + 4 > len )
-          break;
-        u8 *new_buf_lyu = ck_alloc_nozero(len);
-        if(locatetmp > 0)
-          memcpy(new_buf_lyu, out_buf, locatetmp);
-        *(u32*)(new_buf_lyu + locatetmp) = (u32)(tmptmplognow->indata);  
-        if (len >  locatetmp + 4)
-          memcpy(new_buf_lyu + locatetmp + 4, out_buf + locatetmp + 4, len - locatetmp - 4);
-        write_to_testcase(new_buf_lyu,  len);
-        u8 fault = run_target(argv, exec_tmout);
-        u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
-        if (newcksum == originalcksum)
-          whether_nouse = 1;
-        ck_free(new_buf_lyu);
-        break;}*/
-      
-      case 1:{  //delete  reversal
-      
-        u32 templen_l = len + 4;
-        if(locatetmp > len)
-          break;
-        u8 *new_buf_lyu = ck_alloc_nozero(templen_l);
-        if(locatetmp > 0)
-          memcpy(new_buf_lyu, out_buf, locatetmp  );
-        *(u32*)( new_buf_lyu + locatetmp) = (u32)(tmptmplognow->indata);
-        if(len  > locatetmp)
-          memcpy(new_buf_lyu + locatetmp + 4, out_buf + locatetmp,  (len - locatetmp));
-        write_to_testcase(new_buf_lyu,  templen_l);
-        u8 fault = run_target(argv, exec_tmout);
-        u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
-        if (newcksum == originalcksum)
-            whether_nouse = 1;
-        ck_free(new_buf_lyu);
-        break;}
-
-      case 2:{  //insert  reversal
-        u32 templen_l = len - 4;
-        if(locatetmp > templen_l || len < 5)
-          break;
-        u8 *new_buf_lyu = ck_alloc_nozero(templen_l);
-        if(locatetmp > 0)
-          memcpy(new_buf_lyu, out_buf, locatetmp );
-        if(templen_l  >  locatetmp)
-          memcpy(new_buf_lyu + locatetmp, out_buf + locatetmp + 4, (templen_l - locatetmp) );
-        write_to_testcase(new_buf_lyu,  templen_l);
-        u8 fault = run_target(argv, exec_tmout);
-        u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
-        if (newcksum == originalcksum)
-            whether_nouse = 1;
-        ck_free(new_buf_lyu);
-        break;}
-      
-      default:
-        FATAL("error in type");
-        break;
-      }
-      break;}
-
-    default:
-      FATAL("error verify_bytelen");
-      break;
-    }
-    
-    if (whether_nouse) // need to delete nouse log
-    {
-      if(tmptmplognow == tmploghead)
-      {
-        tmploghead = tmploghead->next;
-        tmptmplognowfront = tmploghead;
-        ck_free(tmptmplognow);
-        tmptmplognow = tmploghead;
-      }
-      else{
-        tmptmplognowfront->next = tmptmplognow->next;
-        ck_free(tmptmplognow);
-        tmptmplognow = tmptmplognowfront->next;
-      }
-      tmp_favorite_list[locate_tmp_list++] = maxu64;
-    }else{
-      locate_tmp_list += 1;
-      tmptmplognowfront = tmptmplognow;
-      tmptmplognow = tmptmplognow->next;
-    }
-  }
-  if(locate_tmp_list != tmp_favorite_list_num)
-      PFATAL("ERROR locate_tmp_list: '%llu'  tmp_favorite_list_num: '%llu'", locate_tmp_list, tmp_favorite_list_num);
-
-  if (tmploghead == NULL)
-    tmplognow = NULL;
-  else{
-    if (tmptmplognowfront != NULL && tmptmplognowfront->next == NULL )
-      tmplognow = tmptmplognowfront;
-    else{
-      tmplognow = tmploghead;
-      while(tmplognow->next)
-        tmplognow = tmplognow->next;
-    }
-  }
-
-  
-  //write_to_testcase(out_buf, len);
-  //u8 fault = run_target(argv, exec_tmout);
-
-  return;
-}
 
 
 
@@ -5642,7 +5335,6 @@ u64 cur_time_lyu = get_cur_time();
   
   if(unlikely(queued_paths + unique_crashes > old_interesting_test_case))
   {
-      //verify_key_log( argv,  out_buf,  len,  tmploghead,   tmplognow,  tmp_favorite_list, tmp_favorite_list_num);
 
 if (tmploghead != NULL)
 {
@@ -21600,16 +21292,6 @@ if(most_time_key ==1)
   }
 
 
-
-      
-
-
-
-
-
-  
-
-
   if (queue_cur) show_stats();
 
   write_bitmap();
@@ -21617,6 +21299,44 @@ if(most_time_key ==1)
   save_auto();
 
 stop_fuzzing:
+
+
+
+  if((bb_file_ptr = getenv("EMS_INTER_TRIAL_PBOM")) != NULL){
+    FILE *fpRead=fopen(bb_file_ptr,"w");
+    for (int storeiii = 0 ; storeiii < hashtablelen; storeiii++)
+    {
+      dict2d_cur = distill_hash[storeiii];
+      while (dict2d_cur)
+      {
+        fprintf(fpRead,"%u\n",dict2d_cur->indata);
+        fprintf(fpRead,"%d\n",dict2d_cur->bytelen);
+        //fprintf(ems,"%d\n",dict2d_cur->type);
+        fprintf(fpRead,"%llu\n",dict2d_cur->totalcount);
+        fprintf(fpRead,"%llu\n",dict2d_cur->subdata_count);
+        fprintf(fpRead,"startbyte\n");
+        dict1d = dict2d_cur->subdata;
+        while (dict1d)
+        {
+          fprintf(fpRead,"%u\n",dict1d->outdata);
+          fprintf(fpRead,"%d\n",dict1d->type);
+          fprintf(fpRead,"%llu\n",dict1d->countnum);
+          fprintf(fpRead,"%lf\n",dict1d->prob);
+          if(dict1d->next != NULL)
+            fprintf(fpRead,"samebyte\n");
+          else
+            fprintf(fpRead,"changebyte\n");
+          dict1d = dict1d->next;
+        }
+        dict2d_cur = dict2d_cur->next;
+      }
+      
+    }
+    fclose(fpRead);
+  }
+
+
+
 
   SAYF(CURSOR_SHOW cLRD "\n\n+++ Testing aborted %s +++\n" cRST,
        stop_soon == 2 ? "programmatically" : "by user");
