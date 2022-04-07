@@ -21303,6 +21303,7 @@ stop_fuzzing:
 
 
   if((bb_file_ptr = getenv("EMS_INTER_TRIAL_PBOM")) != NULL){
+    dict_incremental();
     FILE *fpRead=fopen(bb_file_ptr,"w");
     for (int storeiii = 0 ; storeiii < hashtablelen; storeiii++)
     {
