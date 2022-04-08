@@ -514,6 +514,7 @@ void selection_update_distill(void){
                 struct change_byte *tmpdict1d_10;
                 tmpdict1d_10 = dict1d;
                 double tmpprob10 = 0.0;
+                double tmpprob10prev = 0.0;
                 while (tmpusenum < dict2d_cur->usenum)
                 {
                     dict1d->prob = (double)(dict1d->countnum)/ (double)(dict2d_cur->usetotalcount);
@@ -522,7 +523,8 @@ void selection_update_distill(void){
                     tmpprob10 += dict1d->prob ;
                     if(tmpusenum % 10 == 9)
                     {
-                      dict1d->prob10 =  tmpprob10;
+                      dict1d->prob10 =  tmpprob10 - tmpprob10prev;
+                      tmpprob10prev = tmpprob10;
                       tmpdict1d_10->next10 = dict1d;
                       tmpdict1d_10 = dict1d;
                     }
@@ -530,6 +532,10 @@ void selection_update_distill(void){
                     dict1d = dict1d->next;
                     tmpusenum++;
                 }
+                if(tmpusenum != dict2d_cur->usenum) 
+                  PFATAL("error dict2d_cur->usenum");
+                if(tmpprob10 > 1.0) 
+                  PFATAL("error tmpprob10: %f  tmpprob10prev: %f", tmpprob10, tmpprob10prev);
                 dict2d_cur->change_list = 0;
             }
             dict2d_cur = dict2d_cur->next;
