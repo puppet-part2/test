@@ -9152,6 +9152,8 @@ static u8 pilot_fuzzing(char** argv) {
     if (not_on_tty) {
         ACTF("Fuzzing test case #%u (%u total, %llu uniq crashes found)...",
             current_entry, queued_paths, unique_crashes);
+        ACTF("out_file #%s...",
+            out_file);
         fflush(stdout);
     }
 
