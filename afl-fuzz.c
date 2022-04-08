@@ -511,7 +511,8 @@ void selection_update_distill(void){
             {
               u64 tmpusenum = 0;
                 dict1d = dict2d_cur->subdata;
-                static struct change_byte *tmpdict1d_10 = dict1d;
+                struct change_byte *tmpdict1d_10;
+                tmpdict1d_10 = dict1d;
                 double tmpprob10 = 0.0;
                 while (tmpusenum < dict2d_cur->usenum)
                 {
@@ -969,6 +970,11 @@ static inline u32 UR(u32 limit) {
 
   if (unlikely(!rand_cnt--)) {
 
+    u32 seed[2];
+
+    ck_read(dev_urandom_fd, &seed, sizeof(seed), "/dev/urandom");
+
+    srandom(seed[0]);
     rand_cnt = (RESEED_RNG / 2) + (seed[1] % RESEED_RNG);
 
   }
