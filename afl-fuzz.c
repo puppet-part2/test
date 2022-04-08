@@ -268,23 +268,37 @@ void dict2dhash_dictcount(void)
         u64 tmptotalcount = 0;
         u64 tmpsubdata_count = 0;
         u64 tmpusenum = 0;
+        struct change_byte *tmpdict1d_10;
+        tmpdict1d_10 = dict1d_cur;
+        double tmpprob10 = 0.0;
+        double tmpprob10prev = 0.0;
         while (dict1d_cur != NULL)
         {
-          tmpusenum++;
           tmptotalcount += dict1d_cur->countnum;
           tmpsubdata_count += 1;
           if (dict2d_cur->subdata_count == 1){
             dict1d_cur->prob = 1.0;
           }
           else{
-            dict1d->prob = ((double)(dict2d_cur->totalcount - dict1d->countnum))/((double)((dict2d_cur->subdata_count - 1) * dict2d_cur->totalcount));
+            dict1d_cur->prob = ((double)(dict2d_cur->totalcount - dict1d_cur->countnum))/((double)((dict2d_cur->subdata_count - 1) * dict2d_cur->totalcount));
           }
+          tmpprob10 += dict1d_cur->prob;
+          if(tmpusenum % 10 == 9)
+          {
+            dict1d_cur->prob10 =  tmpprob10 - tmpprob10prev;
+            tmpprob10prev = tmpprob10;
+            tmpdict1d_10->next10 = dict1d_cur;
+            tmpdict1d_10 = dict1d_cur;
+          }
+          tmpusenum++;
           dict1d_cur = dict1d_cur->next;
         }
         if(dict2d_cur->totalcount != tmptotalcount || dict2d_cur->subdata_count != tmpsubdata_count || tmpusenum != dict2d_cur->usenum|| tmptotalcount == 0)
         {
           FATAL("error after delete sparse cases in dict2d_hash");
         }
+        if (tmpprob10 != 1.0)
+          PFATAL("error tmpprob10: %f  tmpprob10prev: %f", tmpprob10, tmpprob10prev);
       }
       dict2d_prev = dict2d_cur;
       dict2d_cur = dict2d_cur->next;
@@ -518,7 +532,7 @@ void selection_update_distill(void){
                 while (tmpusenum < dict2d_cur->usenum)
                 {
                     dict1d->prob = (double)(dict1d->countnum)/ (double)(dict2d_cur->usetotalcount);
-                    dict1d->prob10 = 0.0;
+                    dict1d->prob10 = 2.0;
                     dict1d->next10 = NULL;
                     tmpprob10 += dict1d->prob ;
                     if(tmpusenum % 10 == 9)
@@ -20995,7 +21009,7 @@ int main(int argc, char** argv) {
                     dict1d_cur->type = tmptype;
                     dict1d_cur->countnum = tmpcountnum;
                     dict1d_cur->prob = tmpprob;
-                    dict1d_cur->prob10 = 0.0;
+                    dict1d_cur->prob10 = 2.0;
                     dict1d_cur->next10 = NULL;
                     dict1d_cur->next = NULL;
                     dict2d_cur->subdata = dict1d_cur;
@@ -21017,7 +21031,7 @@ int main(int argc, char** argv) {
                         dict1d_cur->type = tmptype;
                         dict1d_cur->countnum = tmpcountnum;
                         dict1d_cur->prob = tmpprob;
-                        dict1d_cur->prob10 = 0.0;
+                        dict1d_cur->prob10 = 2.0;
                         dict1d_cur->next10 = NULL;
                         dict1d_cur->next = NULL;
                         dict1d->next = dict1d_cur;
