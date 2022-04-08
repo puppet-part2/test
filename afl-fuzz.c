@@ -20706,9 +20706,7 @@ int main(int argc, char** argv) {
       SAYF("default limit_time_puppet %llu\n",limit_time_puppet);
   }
 
-  u32 seed[2];
-  ck_read(dev_urandom_fd, &seed, sizeof(seed), "/dev/urandom");
-  srandom(seed[0]);
+  
 
 
   while ((opt = getopt(argc, argv, "+i:o:f:m:t:G:V:T:L:dnCB:S:M:x:Q")) > 0)
