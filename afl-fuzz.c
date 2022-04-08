@@ -100,7 +100,7 @@ struct start_byte{
   //double totalratio;
   u64 subdata_count;
   u64 usetotalcount;
-  u64 usesubdata_count;
+  //u64 usesubdata_count;
   struct start_byte *next;
   struct change_byte *subdata;
 };
@@ -125,11 +125,13 @@ struct change_byte{
   u64 countnum;
   double prob;
   //double ratio;
+  double prob10;
   struct change_byte *next;
+  struct change_byte *next10;
 };
 
 static struct start_byte *dict2d_cur, *dict2d_prev, *newdict2d_cur, *newdict2d_prev;
-static struct change_byte *dict1d, *dict1d_cur, *newdict1d, *newdict1d_cur, *dict1d_final;
+static struct change_byte *dict1d, *dict1d_cur,  *dict1d_final;
 #define hashtablelen 8192
 static struct start_byte *dict2d_hash[hashtablelen];
 static struct start_byte *distill_hash[hashtablelen];
@@ -179,9 +181,6 @@ void generateString(unsigned char * dest, const unsigned int len)
 int select_bytelen(void) {
 
   int i_puppet;
-    u32 seed[2];
-    ck_read(dev_urandom_fd, &seed, sizeof(seed), "/dev/urandom");
-    srandom(seed[0]);
 
   double sele = ((double)(random() % 1000000) * 0.000001);
 
@@ -416,7 +415,7 @@ void dict_incremental(void)
         if(dict2d_cur->usenum > 0)
         {
           dict2d_cur->usetotalcount = 0;
-          dict2d_cur->usesubdata_count = 0;
+          //dict2d_cur->usesubdata_count = 0;
           u64 tmpusenum = 0;
           dict1d_cur = dict2d_cur->subdata;
           dict1d = dict2d_cur->subdata;
@@ -426,7 +425,7 @@ void dict_incremental(void)
           {
             tmpusenum += 1;
             dict2d_cur->usetotalcount += dict1d_cur->countnum; 
-            dict2d_cur->usesubdata_count += 1;
+            //dict2d_cur->usesubdata_count += 1;
             dict1d_final = dict1d_cur;
             dict1d = dict1d_cur;
             dict1d_cur = dict1d_cur->next;
@@ -447,7 +446,7 @@ void dict_incremental(void)
                   dict2d_cur->subdata = dict1d_cur;
                   dict1d_final = dict1d_cur;
                   dict2d_cur->usetotalcount += dict1d_final->countnum; 
-                  dict2d_cur->usesubdata_count += 1;
+                  //dict2d_cur->usesubdata_count += 1;
                   dict1d_cur = dict1d->next;
                   tmpusenum += 1;
                   
@@ -459,7 +458,7 @@ void dict_incremental(void)
                   dict1d_final->next = dict1d_cur;
                   dict1d_final = dict1d_final->next;
                   dict2d_cur->usetotalcount += dict1d_final->countnum; 
-                  dict2d_cur->usesubdata_count += 1;
+                  //dict2d_cur->usesubdata_count += 1;
                   dict1d_cur = dict1d->next;
                   tmpusenum += 1;
                   
@@ -512,9 +511,21 @@ void selection_update_distill(void){
             {
               u64 tmpusenum = 0;
                 dict1d = dict2d_cur->subdata;
+                static struct change_byte *tmpdict1d_10 = dict1d;
+                double tmpprob10 = 0.0;
                 while (tmpusenum < dict2d_cur->usenum)
                 {
                     dict1d->prob = (double)(dict1d->countnum)/ (double)(dict2d_cur->usetotalcount);
+                    dict1d->prob10 = 0.0;
+                    dict1d->next10 = NULL;
+                    tmpprob10 += dict1d->prob ;
+                    if(tmpusenum % 10 == 9)
+                    {
+                      dict1d->prob10 =  tmpprob10;
+                      tmpdict1d_10->next10 = dict1d;
+                      tmpdict1d_10 = dict1d;
+                    }
+                    
                     dict1d = dict1d->next;
                     tmpusenum++;
                 }
@@ -890,9 +901,6 @@ int select_algorithm(int extras) {
 
   int i_puppet;
 
-  u32 seed[2];
-  ck_read(dev_urandom_fd, &seed, sizeof(seed), "/dev/urandom");
-  srandom(seed[0]);
 
   int operator_number = operator_num;
   if (start_distill == 0) operator_number = operator_number - 3;
@@ -961,11 +969,6 @@ static inline u32 UR(u32 limit) {
 
   if (unlikely(!rand_cnt--)) {
 
-    u32 seed[2];
-
-    ck_read(dev_urandom_fd, &seed, sizeof(seed), "/dev/urandom");
-
-    srandom(seed[0]);
     rand_cnt = (RESEED_RNG / 2) + (seed[1] % RESEED_RNG);
 
   }
@@ -9152,8 +9155,6 @@ static u8 pilot_fuzzing(char** argv) {
     if (not_on_tty) {
         ACTF("Fuzzing test case #%u (%u total, %llu uniq crashes found)...",
             current_entry, queued_paths, unique_crashes);
-        ACTF("out_file #%s...",
-            out_file);
         fflush(stdout);
     }
 
@@ -11024,9 +11025,7 @@ static u8 pilot_fuzzing(char** argv) {
     stage_name = "deter_pcsg2";
     stage_short = "DET_PCSG2";
     int uselen = select_bytelen();
-    u32 seed[2];
-    ck_read(dev_urandom_fd, &seed, sizeof(seed), "/dev/urandom");
-    srandom(seed[0]);
+    
     u64 select_location, tmpjj;
     int select_bool = 0;
     u32 tmpindata;
@@ -12677,9 +12676,7 @@ static u8 pilot_fuzzing(char** argv) {
 case 16:{  //herehere
         if(temp_len <= 4)
             break;
-        u32 seed[2];
-        ck_read(dev_urandom_fd, &seed, sizeof(seed), "/dev/urandom");
-        srandom(seed[0]);
+        
         u32 tmpindata;
         int select_bool = 0;
         int uselen = select_bytelen();
@@ -12713,8 +12710,16 @@ case 16:{  //herehere
               break;
 
             dict1d_cur = dict2d_cur->subdata;
+
             while(dict1d_cur)
             {
+              if(sele > dict1d_cur->prob10)
+              {
+                sele -= dict1d_cur->prob10;
+                dict1d_cur = dict1d_cur->next10;
+                dict1d_cur = dict1d_cur->next;
+
+              }else{
                 if (sele > dict1d_cur->prob)
                 {
                     sele -= dict1d_cur->prob;
@@ -12724,6 +12729,7 @@ case 16:{  //herehere
                     break;  //match
                 }
                 dict1d_cur = dict1d_cur->next;
+              }
                 
             }
             if(dict1d_cur)
@@ -12853,6 +12859,13 @@ case 16:{  //herehere
             dict1d_cur = dict2d_cur->subdata;
             while(dict1d_cur)
             {
+              if(sele > dict1d_cur->prob10)
+              {
+                sele -= dict1d_cur->prob10;
+                dict1d_cur = dict1d_cur->next10;
+                dict1d_cur = dict1d_cur->next;
+
+              }else{
                 if (sele > dict1d_cur->prob)
                 {
                     sele -= dict1d_cur->prob;
@@ -12862,8 +12875,10 @@ case 16:{  //herehere
                     break;  //match
                 }
                 dict1d_cur = dict1d_cur->next;
+              }
                 
             }
+
             if(dict1d_cur)
             {
                 switch (dict1d_cur->type)
@@ -12990,18 +13005,27 @@ case 16:{  //herehere
 
             dict1d_cur = dict2d_cur->subdata;
             while(dict1d_cur)
-            {
-                if (sele > dict1d_cur->prob)
-                {
-                    sele -= dict1d_cur->prob;
-                }
-                else
-                {
-                    break;  //match
-                }
-                dict1d_cur = dict1d_cur->next;
-                
-            }
+  {
+  if(sele > dict1d_cur->prob10)
+  {
+  sele -= dict1d_cur->prob10;
+  dict1d_cur = dict1d_cur->next10;
+  dict1d_cur = dict1d_cur->next;
+
+  }else{
+  if (sele > dict1d_cur->prob)
+  {
+  sele -= dict1d_cur->prob;
+  }
+  else
+  {
+  break; //match
+  }
+  dict1d_cur = dict1d_cur->next;
+  }
+  
+  }
+
             if(dict1d_cur)
             {
                 switch (dict1d_cur->type)
@@ -13133,9 +13157,7 @@ case 17:{  //distill   part
         //herehere
         if(temp_len <= 4)
             break;
-        u32 seed[2];
-        ck_read(dev_urandom_fd, &seed, sizeof(seed), "/dev/urandom");
-        srandom(seed[0]);
+        
         u32 tmpindata;
         int select_bool = 0;
         int uselen = select_bytelen();
@@ -13159,18 +13181,27 @@ case 17:{  //distill   part
 
             dict1d_cur = dict2d_cur->subdata;
             while(dict1d_cur)
-            {
-                if (sele > dict1d_cur->prob)
-                {
-                    sele -= dict1d_cur->prob;
-                }
-                else
-                {
-                    break;  //match
-                }
-                dict1d_cur = dict1d_cur->next;
-                
-            }
+  {
+  if(sele > dict1d_cur->prob10)
+  {
+  sele -= dict1d_cur->prob10;
+  dict1d_cur = dict1d_cur->next10;
+  dict1d_cur = dict1d_cur->next;
+
+  }else{
+  if (sele > dict1d_cur->prob)
+  {
+  sele -= dict1d_cur->prob;
+  }
+  else
+  {
+  break; //match
+  }
+  dict1d_cur = dict1d_cur->next;
+  }
+  
+  }
+
             if(dict1d_cur)
             {
                 switch (dict1d_cur->type)
@@ -13295,18 +13326,27 @@ case 17:{  //distill   part
 
             dict1d_cur = dict2d_cur->subdata;
             while(dict1d_cur)
-            {
-                if (sele > dict1d_cur->prob)
-                {
-                    sele -= dict1d_cur->prob;
-                }
-                else
-                {
-                    break;  //match
-                }
-                dict1d_cur = dict1d_cur->next;
-                
-            }
+  {
+  if(sele > dict1d_cur->prob10)
+  {
+  sele -= dict1d_cur->prob10;
+  dict1d_cur = dict1d_cur->next10;
+  dict1d_cur = dict1d_cur->next;
+
+  }else{
+  if (sele > dict1d_cur->prob)
+  {
+  sele -= dict1d_cur->prob;
+  }
+  else
+  {
+  break; //match
+  }
+  dict1d_cur = dict1d_cur->next;
+  }
+  
+  }
+
             if(dict1d_cur)
             {
                 switch (dict1d_cur->type)
@@ -13432,18 +13472,27 @@ case 17:{  //distill   part
 
             dict1d_cur = dict2d_cur->subdata;
             while(dict1d_cur)
-            {
-                if (sele > dict1d_cur->prob)
-                {
-                    sele -= dict1d_cur->prob;
-                }
-                else
-                {
-                    break;  //match
-                }
-                dict1d_cur = dict1d_cur->next;
-                
-            }
+  {
+  if(sele > dict1d_cur->prob10)
+  {
+  sele -= dict1d_cur->prob10;
+  dict1d_cur = dict1d_cur->next10;
+  dict1d_cur = dict1d_cur->next;
+
+  }else{
+  if (sele > dict1d_cur->prob)
+  {
+  sele -= dict1d_cur->prob;
+  }
+  else
+  {
+  break; //match
+  }
+  dict1d_cur = dict1d_cur->next;
+  }
+  
+  }
+
             if(dict1d_cur)
             {
                 switch (dict1d_cur->type)
@@ -15824,9 +15873,7 @@ static u8 core_fuzzing(char** argv) {
     stage_name = "deter_pcsg";
     stage_short = "DET_PCSG";
     int uselen = select_bytelen();
-    u32 seed[2];
-    ck_read(dev_urandom_fd, &seed, sizeof(seed), "/dev/urandom");
-    srandom(seed[0]);
+    
     u64 select_location, tmpjj;
     int select_bool = 0;
     u32 tmpindata;
@@ -16155,9 +16202,7 @@ static u8 core_fuzzing(char** argv) {
     stage_name = "deter_pcsg2";
     stage_short = "DET_PCSG2";
     int uselen = select_bytelen();
-    u32 seed[2];
-    ck_read(dev_urandom_fd, &seed, sizeof(seed), "/dev/urandom");
-    srandom(seed[0]);
+    
     u64 select_location, tmpjj;
     int select_bool = 0;
     u32 tmpindata;
@@ -17828,18 +17873,27 @@ case 16:{  //herehere
 
             dict1d_cur = dict2d_cur->subdata;
             while(dict1d_cur)
-            {
-                if (sele > dict1d_cur->prob)
-                {
-                    sele -= dict1d_cur->prob;
-                }
-                else
-                {
-                    break;  //match
-                }
-                dict1d_cur = dict1d_cur->next;
-                
-            }
+  {
+  if(sele > dict1d_cur->prob10)
+  {
+  sele -= dict1d_cur->prob10;
+  dict1d_cur = dict1d_cur->next10;
+  dict1d_cur = dict1d_cur->next;
+
+  }else{
+  if (sele > dict1d_cur->prob)
+  {
+  sele -= dict1d_cur->prob;
+  }
+  else
+  {
+  break; //match
+  }
+  dict1d_cur = dict1d_cur->next;
+  }
+  
+  }
+
             if(dict1d_cur)
             {
                 switch (dict1d_cur->type)
@@ -17965,18 +18019,27 @@ case 16:{  //herehere
 
             dict1d_cur = dict2d_cur->subdata;
             while(dict1d_cur)
-            {
-                if (sele > dict1d_cur->prob)
-                {
-                    sele -= dict1d_cur->prob;
-                }
-                else
-                {
-                    break;  //match
-                }
-                dict1d_cur = dict1d_cur->next;
-                
-            }
+  {
+  if(sele > dict1d_cur->prob10)
+  {
+  sele -= dict1d_cur->prob10;
+  dict1d_cur = dict1d_cur->next10;
+  dict1d_cur = dict1d_cur->next;
+
+  }else{
+  if (sele > dict1d_cur->prob)
+  {
+  sele -= dict1d_cur->prob;
+  }
+  else
+  {
+  break; //match
+  }
+  dict1d_cur = dict1d_cur->next;
+  }
+  
+  }
+
             if(dict1d_cur)
             {
                 switch (dict1d_cur->type)
@@ -18102,18 +18165,27 @@ case 16:{  //herehere
 
             dict1d_cur = dict2d_cur->subdata;
             while(dict1d_cur)
-            {
-                if (sele > dict1d_cur->prob)
-                {
-                    sele -= dict1d_cur->prob;
-                }
-                else
-                {
-                    break;  //match
-                }
-                dict1d_cur = dict1d_cur->next;
-                
-            }
+  {
+  if(sele > dict1d_cur->prob10)
+  {
+  sele -= dict1d_cur->prob10;
+  dict1d_cur = dict1d_cur->next10;
+  dict1d_cur = dict1d_cur->next;
+
+  }else{
+  if (sele > dict1d_cur->prob)
+  {
+  sele -= dict1d_cur->prob;
+  }
+  else
+  {
+  break; //match
+  }
+  dict1d_cur = dict1d_cur->next;
+  }
+  
+  }
+
             if(dict1d_cur)
             {
                 switch (dict1d_cur->type)
@@ -18241,9 +18313,7 @@ case 17:{ //herehere
     if(temp_len <= 4)
         break;
 
-        u32 seed[2];
-        ck_read(dev_urandom_fd, &seed, sizeof(seed), "/dev/urandom");
-        srandom(seed[0]);
+        
         u32 tmpindata;
         int select_bool = 0;
         int uselen = select_bytelen();
@@ -18268,18 +18338,27 @@ case 17:{ //herehere
 
             dict1d_cur = dict2d_cur->subdata;
             while(dict1d_cur)
-            {
-                if (sele > dict1d_cur->prob)
-                {
-                    sele -= dict1d_cur->prob;
-                }
-                else
-                {
-                    break;  //match
-                }
-                dict1d_cur = dict1d_cur->next;
-                
-            }
+  {
+  if(sele > dict1d_cur->prob10)
+  {
+  sele -= dict1d_cur->prob10;
+  dict1d_cur = dict1d_cur->next10;
+  dict1d_cur = dict1d_cur->next;
+
+  }else{
+  if (sele > dict1d_cur->prob)
+  {
+  sele -= dict1d_cur->prob;
+  }
+  else
+  {
+  break; //match
+  }
+  dict1d_cur = dict1d_cur->next;
+  }
+  
+  }
+
             if(dict1d_cur)
             {
                 switch (dict1d_cur->type)
@@ -18404,18 +18483,27 @@ case 17:{ //herehere
 
             dict1d_cur = dict2d_cur->subdata;
             while(dict1d_cur)
-            {
-                if (sele > dict1d_cur->prob)
-                {
-                    sele -= dict1d_cur->prob;
-                }
-                else
-                {
-                    break;  //match
-                }
-                dict1d_cur = dict1d_cur->next;
-                
-            }
+  {
+  if(sele > dict1d_cur->prob10)
+  {
+  sele -= dict1d_cur->prob10;
+  dict1d_cur = dict1d_cur->next10;
+  dict1d_cur = dict1d_cur->next;
+
+  }else{
+  if (sele > dict1d_cur->prob)
+  {
+  sele -= dict1d_cur->prob;
+  }
+  else
+  {
+  break; //match
+  }
+  dict1d_cur = dict1d_cur->next;
+  }
+  
+  }
+
             if(dict1d_cur)
             {
                 switch (dict1d_cur->type)
@@ -18541,18 +18629,27 @@ case 17:{ //herehere
 
             dict1d_cur = dict2d_cur->subdata;
             while(dict1d_cur)
-            {
-                if (sele > dict1d_cur->prob)
-                {
-                    sele -= dict1d_cur->prob;
-                }
-                else
-                {
-                    break;  //match
-                }
-                dict1d_cur = dict1d_cur->next;
-                
-            }
+  {
+  if(sele > dict1d_cur->prob10)
+  {
+  sele -= dict1d_cur->prob10;
+  dict1d_cur = dict1d_cur->next10;
+  dict1d_cur = dict1d_cur->next;
+
+  }else{
+  if (sele > dict1d_cur->prob)
+  {
+  sele -= dict1d_cur->prob;
+  }
+  else
+  {
+  break; //match
+  }
+  dict1d_cur = dict1d_cur->next;
+  }
+  
+  }
+
             if(dict1d_cur)
             {
                 switch (dict1d_cur->type)
@@ -20636,6 +20733,10 @@ int main(int argc, char** argv) {
       SAYF("default limit_time_puppet %llu\n",limit_time_puppet);
   }
 
+  u32 seed[2];
+  ck_read(dev_urandom_fd, &seed, sizeof(seed), "/dev/urandom");
+  srandom(seed[0]);
+
 
   while ((opt = getopt(argc, argv, "+i:o:f:m:t:G:V:T:L:dnCB:S:M:x:Q")) > 0)
 
@@ -20917,6 +21018,8 @@ int main(int argc, char** argv) {
                     dict1d_cur->type = tmptype;
                     dict1d_cur->countnum = tmpcountnum;
                     dict1d_cur->prob = tmpprob;
+                    dict1d_cur->prob10 = 0.0;
+                    dict1d_cur->next10 = NULL;
                     dict1d_cur->next = NULL;
                     dict2d_cur->subdata = dict1d_cur;
 
@@ -20937,6 +21040,8 @@ int main(int argc, char** argv) {
                         dict1d_cur->type = tmptype;
                         dict1d_cur->countnum = tmpcountnum;
                         dict1d_cur->prob = tmpprob;
+                        dict1d_cur->prob10 = 0.0;
+                        dict1d_cur->next10 = NULL;
                         dict1d_cur->next = NULL;
                         dict1d->next = dict1d_cur;
                     }
@@ -21313,6 +21418,7 @@ stop_fuzzing:
       dict2d_cur = distill_hash[storeiii];
       while (dict2d_cur)
       {
+        if(dict2d_cur->usenum > 0){
         fprintf(fpRead,"%u\n",dict2d_cur->indata);
         fprintf(fpRead,"%d\n",dict2d_cur->bytelen);
         //fprintf(ems,"%d\n",dict2d_cur->type);
@@ -21320,18 +21426,21 @@ stop_fuzzing:
         fprintf(fpRead,"%llu\n",dict2d_cur->subdata_count);
         fprintf(fpRead,"startbyte\n");
         dict1d = dict2d_cur->subdata;
-        while (dict1d)
+
+        u64 tmptmpcount1 = 0;
+        while (tmptmpcount1++ < dict2d_cur->usenum)
         {
           fprintf(fpRead,"%u\n",dict1d->outdata);
           fprintf(fpRead,"%d\n",dict1d->type);
           fprintf(fpRead,"%llu\n",dict1d->countnum);
           fprintf(fpRead,"%lf\n",dict1d->prob);
-          if(dict1d->next != NULL)
+          if(tmptmpcount1 != dict2d_cur->usenum)
             fprintf(fpRead,"samebyte\n");
           else
             fprintf(fpRead,"changebyte\n");
           dict1d = dict1d->next;
         }
+       }
         dict2d_cur = dict2d_cur->next;
       }
       
