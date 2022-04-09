@@ -20984,8 +20984,8 @@ int main(int argc, char** argv) {
                     if (feoffp == -1)
                         break;
                     tmpfeoffp = fscanf(fp,"%d",&tmpbytelen);    //bytelen
-                    tmpfeoffp = fscanf(fp,"%llu",&tmptotalcount);    //totalcount
                     tmpfeoffp = fscanf(fp,"%llu",&tmpsubdata_count);    //subdata_count
+                    tmpfeoffp = fscanf(fp,"%llu",&tmptotalcount);    //totalcount
                     
                         if(dict2d_hash[tmpindata % hashtablelen])
                         {
