@@ -12739,11 +12739,15 @@ case 16:{  //herehere
 
 while(dict1d_cur)
 {
-  if(sele > dict1d_cur->prob10)
+  if(sele > dict1d_cur->prob10 && dict1d_cur->prob10 < 1.0 )
   {
     sele -= dict1d_cur->prob10;
     dict1d_cur = dict1d_cur->next10;
-    dict1d_cur = dict1d_cur->next;
+    if(dict1d_cur->next == NULL)
+      break;
+    else{
+      dict1d_cur = dict1d_cur->next;
+    }
   }
   else{
     if(sele > dict1d_cur->prob)
@@ -12883,11 +12887,15 @@ while(dict1d_cur)
             dict1d_cur = dict2d_cur->subdata;
 while(dict1d_cur)
 {
-  if(sele > dict1d_cur->prob10)
+  if(sele > dict1d_cur->prob10 && dict1d_cur->prob10 < 1.0 )
   {
     sele -= dict1d_cur->prob10;
     dict1d_cur = dict1d_cur->next10;
-    dict1d_cur = dict1d_cur->next;
+    if(dict1d_cur->next == NULL)
+      break;
+    else{
+      dict1d_cur = dict1d_cur->next;
+    }
   }
   else{
     if(sele > dict1d_cur->prob)
@@ -13027,11 +13035,15 @@ while(dict1d_cur)
             dict1d_cur = dict2d_cur->subdata;
 while(dict1d_cur)
 {
-  if(sele > dict1d_cur->prob10)
+  if(sele > dict1d_cur->prob10 && dict1d_cur->prob10 < 1.0 )
   {
     sele -= dict1d_cur->prob10;
     dict1d_cur = dict1d_cur->next10;
-    dict1d_cur = dict1d_cur->next;
+    if(dict1d_cur->next == NULL)
+      break;
+    else{
+      dict1d_cur = dict1d_cur->next;
+    }
   }
   else{
     if(sele > dict1d_cur->prob)
@@ -13200,11 +13212,15 @@ case 17:{  //distill   part
             dict1d_cur = dict2d_cur->subdata;
 while(dict1d_cur)
 {
-  if(sele > dict1d_cur->prob10)
+  if(sele > dict1d_cur->prob10 && dict1d_cur->prob10 < 1.0 )
   {
     sele -= dict1d_cur->prob10;
     dict1d_cur = dict1d_cur->next10;
-    dict1d_cur = dict1d_cur->next;
+    if(dict1d_cur->next == NULL)
+      break;
+    else{
+      dict1d_cur = dict1d_cur->next;
+    }
   }
   else{
     if(sele > dict1d_cur->prob)
@@ -13344,11 +13360,15 @@ while(dict1d_cur)
             dict1d_cur = dict2d_cur->subdata;
 while(dict1d_cur)
 {
-  if(sele > dict1d_cur->prob10)
+  if(sele > dict1d_cur->prob10 && dict1d_cur->prob10 < 1.0 )
   {
     sele -= dict1d_cur->prob10;
     dict1d_cur = dict1d_cur->next10;
-    dict1d_cur = dict1d_cur->next;
+    if(dict1d_cur->next == NULL)
+      break;
+    else{
+      dict1d_cur = dict1d_cur->next;
+    }
   }
   else{
     if(sele > dict1d_cur->prob)
@@ -13487,11 +13507,15 @@ while(dict1d_cur)
             dict1d_cur = dict2d_cur->subdata;
 while(dict1d_cur)
 {
-  if(sele > dict1d_cur->prob10)
+  if(sele > dict1d_cur->prob10 && dict1d_cur->prob10 < 1.0 )
   {
     sele -= dict1d_cur->prob10;
     dict1d_cur = dict1d_cur->next10;
-    dict1d_cur = dict1d_cur->next;
+    if(dict1d_cur->next == NULL)
+      break;
+    else{
+      dict1d_cur = dict1d_cur->next;
+    }
   }
   else{
     if(sele > dict1d_cur->prob)
@@ -17885,11 +17909,15 @@ case 16:{  //herehere
             dict1d_cur = dict2d_cur->subdata;
 while(dict1d_cur)
 {
-  if(sele > dict1d_cur->prob10)
+  if(sele > dict1d_cur->prob10 && dict1d_cur->prob10 < 1.0 )
   {
     sele -= dict1d_cur->prob10;
     dict1d_cur = dict1d_cur->next10;
-    dict1d_cur = dict1d_cur->next;
+    if(dict1d_cur->next == NULL)
+      break;
+    else{
+      dict1d_cur = dict1d_cur->next;
+    }
   }
   else{
     if(sele > dict1d_cur->prob)
@@ -18028,11 +18056,15 @@ while(dict1d_cur)
             dict1d_cur = dict2d_cur->subdata;
 while(dict1d_cur)
 {
-  if(sele > dict1d_cur->prob10)
+  if(sele > dict1d_cur->prob10 && dict1d_cur->prob10 < 1.0 )
   {
     sele -= dict1d_cur->prob10;
     dict1d_cur = dict1d_cur->next10;
-    dict1d_cur = dict1d_cur->next;
+    if(dict1d_cur->next == NULL)
+      break;
+    else{
+      dict1d_cur = dict1d_cur->next;
+    }
   }
   else{
     if(sele > dict1d_cur->prob)
@@ -18171,11 +18203,15 @@ while(dict1d_cur)
             dict1d_cur = dict2d_cur->subdata;
 while(dict1d_cur)
 {
-  if(sele > dict1d_cur->prob10)
+  if(sele > dict1d_cur->prob10 && dict1d_cur->prob10 < 1.0 )
   {
     sele -= dict1d_cur->prob10;
     dict1d_cur = dict1d_cur->next10;
-    dict1d_cur = dict1d_cur->next;
+    if(dict1d_cur->next == NULL)
+      break;
+    else{
+      dict1d_cur = dict1d_cur->next;
+    }
   }
   else{
     if(sele > dict1d_cur->prob)
@@ -18341,11 +18377,15 @@ case 17:{ //herehere
             dict1d_cur = dict2d_cur->subdata;
 while(dict1d_cur)
 {
-  if(sele > dict1d_cur->prob10)
+  if(sele > dict1d_cur->prob10 && dict1d_cur->prob10 < 1.0 )
   {
     sele -= dict1d_cur->prob10;
     dict1d_cur = dict1d_cur->next10;
-    dict1d_cur = dict1d_cur->next;
+    if(dict1d_cur->next == NULL)
+      break;
+    else{
+      dict1d_cur = dict1d_cur->next;
+    }
   }
   else{
     if(sele > dict1d_cur->prob)
@@ -18483,11 +18523,15 @@ while(dict1d_cur)
             dict1d_cur = dict2d_cur->subdata;
 while(dict1d_cur)
 {
-  if(sele > dict1d_cur->prob10)
+  if(sele > dict1d_cur->prob10 && dict1d_cur->prob10 < 1.0 )
   {
     sele -= dict1d_cur->prob10;
     dict1d_cur = dict1d_cur->next10;
-    dict1d_cur = dict1d_cur->next;
+    if(dict1d_cur->next == NULL)
+      break;
+    else{
+      dict1d_cur = dict1d_cur->next;
+    }
   }
   else{
     if(sele > dict1d_cur->prob)
@@ -18626,11 +18670,15 @@ while(dict1d_cur)
             dict1d_cur = dict2d_cur->subdata;
 while(dict1d_cur)
 {
-  if(sele > dict1d_cur->prob10)
+  if(sele > dict1d_cur->prob10 && dict1d_cur->prob10 < 1.0 )
   {
     sele -= dict1d_cur->prob10;
     dict1d_cur = dict1d_cur->next10;
-    dict1d_cur = dict1d_cur->next;
+    if(dict1d_cur->next == NULL)
+      break;
+    else{
+      dict1d_cur = dict1d_cur->next;
+    }
   }
   else{
     if(sele > dict1d_cur->prob)
