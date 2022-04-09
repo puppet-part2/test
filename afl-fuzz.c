@@ -297,7 +297,7 @@ void dict2dhash_dictcount(void)
         {
           FATAL("error after delete sparse cases in dict2d_hash. %u   %u  %u  %u  %u  %u", dict2d_cur->totalcount, tmptotalcount, dict2d_cur->subdata_count, tmpsubdata_count, tmpusenum, dict2d_cur->usenum);
         }
-        if (tmpprob10 != 1.0)
+        if (tmpprob10 > 1.00001 || tmpprob10  < 0.99999)
           PFATAL(" dict2dhash  error tmpprob10: %f  tmpprob10prev: %f", tmpprob10, tmpprob10prev);
       }
       dict2d_prev = dict2d_cur;
