@@ -21413,8 +21413,8 @@ stop_fuzzing:
         fprintf(fpRead,"%u\n",dict2d_cur->indata);
         fprintf(fpRead,"%d\n",dict2d_cur->bytelen);
         //fprintf(ems,"%d\n",dict2d_cur->type);
-        fprintf(fpRead,"%llu\n",dict2d_cur->totalcount);
-        fprintf(fpRead,"%llu\n",dict2d_cur->subdata_count);
+        fprintf(fpRead,"%llu\n",dict2d_cur->usenum);
+        fprintf(fpRead,"%llu\n",dict2d_cur->usetotalcount);
         fprintf(fpRead,"startbyte\n");
         dict1d = dict2d_cur->subdata;
 
