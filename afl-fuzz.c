@@ -298,7 +298,7 @@ void dict2dhash_dictcount(void)
           FATAL("error after delete sparse cases in dict2d_hash");
         }
         if (tmpprob10 != 1.0)
-          PFATAL("error tmpprob10: %f  tmpprob10prev: %f", tmpprob10, tmpprob10prev);
+          PFATAL(" dict2dhash  error tmpprob10: %f  tmpprob10prev: %f", tmpprob10, tmpprob10prev);
       }
       dict2d_prev = dict2d_cur;
       dict2d_cur = dict2d_cur->next;
@@ -548,8 +548,8 @@ void selection_update_distill(void){
                 }
                 if(tmpusenum != dict2d_cur->usenum) 
                   PFATAL("error dict2d_cur->usenum");
-                if(tmpprob10 > 1.0) 
-                  PFATAL("error tmpprob10: %f  tmpprob10prev: %f", tmpprob10, tmpprob10prev);
+                if(tmpprob10 > 1.00001) 
+                  PFATAL("distill error tmpprob10: %f  tmpprob10prev: %f", tmpprob10, tmpprob10prev);
                 dict2d_cur->change_list = 0;
             }
             dict2d_cur = dict2d_cur->next;
