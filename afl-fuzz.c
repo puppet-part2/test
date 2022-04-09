@@ -217,6 +217,7 @@ void dict2dhash_dictcount(void)
     while(dict2d_cur != NULL)
     {
       dict2d_cur->usenum = 0;
+      dict2d_cur->usetotalcount = 0;
       dict1d_cur = dict2d_cur->subdata;
       dict1d = dict2d_cur->subdata;
       while(dict1d_cur!=NULL)
@@ -243,6 +244,7 @@ void dict2dhash_dictcount(void)
           }
         }
         dict2d_cur->usenum++;  // doct1d_cur->countnum >= dictcount
+        dict2d_cur->usetotalcount += dict1d_cur->countnum;
         dict1d = dict1d_cur;
         dict1d_cur = dict1d_cur->next;
       }
@@ -269,7 +271,7 @@ void dict2dhash_dictcount(void)
         u64 tmpsubdata_count = 0;
         u64 tmpusenum = 0;
         struct change_byte *tmpdict1d_10;
-        tmpdict1d_10 = dict1d_cur;
+        tmpdict1d_10 = dict2d_cur->subdata;
         double tmpprob10 = 0.0;
         double tmpprob10prev = 0.0;
         while (dict1d_cur != NULL)
@@ -280,8 +282,10 @@ void dict2dhash_dictcount(void)
             dict1d_cur->prob = 1.0;
           }
           else{
-            dict1d_cur->prob = ((double)(dict2d_cur->totalcount - dict1d_cur->countnum))/((double)((dict2d_cur->subdata_count - 1) * dict2d_cur->totalcount));
+            dict1d_cur->prob = ((double)(dict2d_cur->usetotalcount - dict1d_cur->countnum))/((double)((dict2d_cur->subdata_count - 1) * dict2d_cur->usetotalcount));
           }
+          dict1d_cur->prob10 = 2.0;
+          dict1d_cur->next10 = NULL;
           tmpprob10 += dict1d_cur->prob;
           if(tmpusenum % 10 == 9)
           {
@@ -293,9 +297,9 @@ void dict2dhash_dictcount(void)
           tmpusenum++;
           dict1d_cur = dict1d_cur->next;
         }
-        if(dict2d_cur->totalcount != tmptotalcount || dict2d_cur->subdata_count != tmpsubdata_count || tmpusenum != dict2d_cur->usenum|| tmptotalcount == 0)
+        if(dict2d_cur->usetotalcount != tmptotalcount || dict2d_cur->subdata_count != tmpsubdata_count || tmpusenum != dict2d_cur->usenum|| tmptotalcount == 0)
         {
-          FATAL("error after delete sparse cases in dict2d_hash. %u   %u  %u  %u  %u  %u", dict2d_cur->totalcount, tmptotalcount, dict2d_cur->subdata_count, tmpsubdata_count, tmpusenum, dict2d_cur->usenum);
+          FATAL("error after delete sparse cases in dict2d_hash. %u   %u  %u  %u  %u  %u", dict2d_cur->usetotalcount, tmptotalcount, dict2d_cur->subdata_count, tmpsubdata_count, tmpusenum, dict2d_cur->usenum);
         }
         if (tmpprob10 > 1.00001 || tmpprob10  < 0.99999)
           PFATAL(" dict2dhash  error tmpprob10: %f  tmpprob10prev: %f", tmpprob10, tmpprob10prev);
@@ -526,7 +530,7 @@ void selection_update_distill(void){
               u64 tmpusenum = 0;
                 dict1d = dict2d_cur->subdata;
                 struct change_byte *tmpdict1d_10;
-                tmpdict1d_10 = dict1d;
+                tmpdict1d_10 = dict2d_cur->subdata;
                 double tmpprob10 = 0.0;
                 double tmpprob10prev = 0.0;
                 while (tmpusenum < dict2d_cur->usenum)
@@ -12739,15 +12743,11 @@ case 16:{  //herehere
 
 while(dict1d_cur)
 {
-  if(sele > dict1d_cur->prob10 && dict1d_cur->prob10 < 1.0 )
+  if(sele > dict1d_cur->prob10 && dict1d_cur->next10 != NULL )
   {
     sele -= dict1d_cur->prob10;
     dict1d_cur = dict1d_cur->next10;
-    if(dict1d_cur->next == NULL)
-      break;
-    else{
       dict1d_cur = dict1d_cur->next;
-    }
   }
   else{
     if(sele > dict1d_cur->prob)
@@ -12887,15 +12887,11 @@ while(dict1d_cur)
             dict1d_cur = dict2d_cur->subdata;
 while(dict1d_cur)
 {
-  if(sele > dict1d_cur->prob10 && dict1d_cur->prob10 < 1.0 )
+  if(sele > dict1d_cur->prob10 && dict1d_cur->next10 != NULL )
   {
     sele -= dict1d_cur->prob10;
     dict1d_cur = dict1d_cur->next10;
-    if(dict1d_cur->next == NULL)
-      break;
-    else{
       dict1d_cur = dict1d_cur->next;
-    }
   }
   else{
     if(sele > dict1d_cur->prob)
@@ -13035,15 +13031,11 @@ while(dict1d_cur)
             dict1d_cur = dict2d_cur->subdata;
 while(dict1d_cur)
 {
-  if(sele > dict1d_cur->prob10 && dict1d_cur->prob10 < 1.0 )
+  if(sele > dict1d_cur->prob10 && dict1d_cur->next10 != NULL )
   {
     sele -= dict1d_cur->prob10;
     dict1d_cur = dict1d_cur->next10;
-    if(dict1d_cur->next == NULL)
-      break;
-    else{
       dict1d_cur = dict1d_cur->next;
-    }
   }
   else{
     if(sele > dict1d_cur->prob)
@@ -13212,15 +13204,11 @@ case 17:{  //distill   part
             dict1d_cur = dict2d_cur->subdata;
 while(dict1d_cur)
 {
-  if(sele > dict1d_cur->prob10 && dict1d_cur->prob10 < 1.0 )
+  if(sele > dict1d_cur->prob10 && dict1d_cur->next10 != NULL )
   {
     sele -= dict1d_cur->prob10;
     dict1d_cur = dict1d_cur->next10;
-    if(dict1d_cur->next == NULL)
-      break;
-    else{
       dict1d_cur = dict1d_cur->next;
-    }
   }
   else{
     if(sele > dict1d_cur->prob)
@@ -13233,7 +13221,6 @@ while(dict1d_cur)
     dict1d_cur = dict1d_cur->next;
   }
 }
-
 
             if(dict1d_cur)
             {
@@ -13360,15 +13347,11 @@ while(dict1d_cur)
             dict1d_cur = dict2d_cur->subdata;
 while(dict1d_cur)
 {
-  if(sele > dict1d_cur->prob10 && dict1d_cur->prob10 < 1.0 )
+  if(sele > dict1d_cur->prob10 && dict1d_cur->next10 != NULL )
   {
     sele -= dict1d_cur->prob10;
     dict1d_cur = dict1d_cur->next10;
-    if(dict1d_cur->next == NULL)
-      break;
-    else{
       dict1d_cur = dict1d_cur->next;
-    }
   }
   else{
     if(sele > dict1d_cur->prob)
@@ -13507,15 +13490,11 @@ while(dict1d_cur)
             dict1d_cur = dict2d_cur->subdata;
 while(dict1d_cur)
 {
-  if(sele > dict1d_cur->prob10 && dict1d_cur->prob10 < 1.0 )
+  if(sele > dict1d_cur->prob10 && dict1d_cur->next10 != NULL )
   {
     sele -= dict1d_cur->prob10;
     dict1d_cur = dict1d_cur->next10;
-    if(dict1d_cur->next == NULL)
-      break;
-    else{
       dict1d_cur = dict1d_cur->next;
-    }
   }
   else{
     if(sele > dict1d_cur->prob)
@@ -17909,15 +17888,11 @@ case 16:{  //herehere
             dict1d_cur = dict2d_cur->subdata;
 while(dict1d_cur)
 {
-  if(sele > dict1d_cur->prob10 && dict1d_cur->prob10 < 1.0 )
+  if(sele > dict1d_cur->prob10 && dict1d_cur->next10 != NULL )
   {
     sele -= dict1d_cur->prob10;
     dict1d_cur = dict1d_cur->next10;
-    if(dict1d_cur->next == NULL)
-      break;
-    else{
       dict1d_cur = dict1d_cur->next;
-    }
   }
   else{
     if(sele > dict1d_cur->prob)
@@ -18056,15 +18031,11 @@ while(dict1d_cur)
             dict1d_cur = dict2d_cur->subdata;
 while(dict1d_cur)
 {
-  if(sele > dict1d_cur->prob10 && dict1d_cur->prob10 < 1.0 )
+  if(sele > dict1d_cur->prob10 && dict1d_cur->next10 != NULL )
   {
     sele -= dict1d_cur->prob10;
     dict1d_cur = dict1d_cur->next10;
-    if(dict1d_cur->next == NULL)
-      break;
-    else{
       dict1d_cur = dict1d_cur->next;
-    }
   }
   else{
     if(sele > dict1d_cur->prob)
@@ -18203,15 +18174,11 @@ while(dict1d_cur)
             dict1d_cur = dict2d_cur->subdata;
 while(dict1d_cur)
 {
-  if(sele > dict1d_cur->prob10 && dict1d_cur->prob10 < 1.0 )
+  if(sele > dict1d_cur->prob10 && dict1d_cur->next10 != NULL )
   {
     sele -= dict1d_cur->prob10;
     dict1d_cur = dict1d_cur->next10;
-    if(dict1d_cur->next == NULL)
-      break;
-    else{
       dict1d_cur = dict1d_cur->next;
-    }
   }
   else{
     if(sele > dict1d_cur->prob)
@@ -18377,15 +18344,11 @@ case 17:{ //herehere
             dict1d_cur = dict2d_cur->subdata;
 while(dict1d_cur)
 {
-  if(sele > dict1d_cur->prob10 && dict1d_cur->prob10 < 1.0 )
+  if(sele > dict1d_cur->prob10 && dict1d_cur->next10 != NULL )
   {
     sele -= dict1d_cur->prob10;
     dict1d_cur = dict1d_cur->next10;
-    if(dict1d_cur->next == NULL)
-      break;
-    else{
       dict1d_cur = dict1d_cur->next;
-    }
   }
   else{
     if(sele > dict1d_cur->prob)
@@ -18523,15 +18486,11 @@ while(dict1d_cur)
             dict1d_cur = dict2d_cur->subdata;
 while(dict1d_cur)
 {
-  if(sele > dict1d_cur->prob10 && dict1d_cur->prob10 < 1.0 )
+  if(sele > dict1d_cur->prob10 && dict1d_cur->next10 != NULL )
   {
     sele -= dict1d_cur->prob10;
     dict1d_cur = dict1d_cur->next10;
-    if(dict1d_cur->next == NULL)
-      break;
-    else{
       dict1d_cur = dict1d_cur->next;
-    }
   }
   else{
     if(sele > dict1d_cur->prob)
@@ -18670,15 +18629,11 @@ while(dict1d_cur)
             dict1d_cur = dict2d_cur->subdata;
 while(dict1d_cur)
 {
-  if(sele > dict1d_cur->prob10 && dict1d_cur->prob10 < 1.0 )
+  if(sele > dict1d_cur->prob10 && dict1d_cur->next10 != NULL )
   {
     sele -= dict1d_cur->prob10;
     dict1d_cur = dict1d_cur->next10;
-    if(dict1d_cur->next == NULL)
-      break;
-    else{
       dict1d_cur = dict1d_cur->next;
-    }
   }
   else{
     if(sele > dict1d_cur->prob)
