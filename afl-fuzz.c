@@ -3120,6 +3120,7 @@ static void write_to_testcase(void* mem, u32 len) {
     unlink(out_file); /* Ignore errors. */
 
     fd = open(out_file, O_WRONLY | O_CREAT | O_EXCL, 0600);
+    ACTF("where out_file '%s'...", out_file);
 
     if (fd < 0) PFATAL("Unable to create '%s'", out_file);
 
