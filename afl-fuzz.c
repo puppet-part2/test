@@ -3120,7 +3120,7 @@ static void write_to_testcase(void* mem, u32 len) {
     unlink(out_file); /* Ignore errors. */
 
     fd = open(out_file, O_WRONLY | O_CREAT | O_EXCL, 0600);
-    ACTF("where out_file '%s'...", out_file);
+    //ACTF("where out_file '%s'...", out_file);
 
     if (fd < 0) PFATAL("Unable to create '%s'", out_file);
 
@@ -5395,7 +5395,8 @@ if (tmploghead != NULL)
         memcpy(new_buf_lyu, out_buf, len );
         new_buf_lyu[locatetmp] = (u8)(tmptmplognow->indata);
         write_to_testcase(new_buf_lyu, len);
-        u8 fault = run_target(argv, exec_tmout);
+        u8 fault2 = run_target(argv, exec_tmout);
+        save_if_interesting(argv, new_buf_lyu, len, fault2);
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
         if (newcksum == originalcksum)
           whether_nouse = 1;
@@ -5415,7 +5416,8 @@ if (tmploghead != NULL)
         if (len >  locatetmp)
           memcpy(new_buf_lyu + locatetmp + 1, out_buf + locatetmp,  (len - locatetmp));
         write_to_testcase(new_buf_lyu, templen_l);
-        u8 fault = run_target(argv, exec_tmout);
+        u8 fault2 = run_target(argv, exec_tmout);
+        save_if_interesting(argv, new_buf_lyu, templen_l, fault2);
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
         if (newcksum == originalcksum)
             whether_nouse = 1;
@@ -5432,7 +5434,8 @@ if (tmploghead != NULL)
         if(templen_l  > locatetmp)
           memcpy(new_buf_lyu + locatetmp, out_buf + locatetmp + 1, (templen_l - locatetmp) );
         write_to_testcase(new_buf_lyu, templen_l);
-        u8 fault = run_target(argv, exec_tmout);
+        u8 fault2 = run_target(argv, exec_tmout);
+        save_if_interesting(argv, new_buf_lyu, templen_l, fault2);
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
         if (newcksum == originalcksum)
             whether_nouse = 1;
@@ -5457,7 +5460,8 @@ if (tmploghead != NULL)
         memcpy(new_buf_lyu, out_buf, len);
         *(u16*)(new_buf_lyu + locatetmp) = (u16)(tmptmplognow->indata);  
         write_to_testcase(new_buf_lyu, len);
-        u8 fault = run_target(argv, exec_tmout);
+        u8 fault2 = run_target(argv, exec_tmout);
+        save_if_interesting(argv, new_buf_lyu, len, fault2);
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
         if (newcksum == originalcksum)
           whether_nouse = 1;
@@ -5477,7 +5481,8 @@ if (tmploghead != NULL)
         if(len  > locatetmp)
           memcpy(new_buf_lyu + locatetmp + 2, out_buf + locatetmp,  (len - locatetmp) );
         write_to_testcase(new_buf_lyu, templen_l);
-        u8 fault = run_target(argv, exec_tmout);
+        u8 fault2 = run_target(argv, exec_tmout);
+        save_if_interesting(argv, new_buf_lyu, templen_l, fault2);
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
         if (newcksum == originalcksum)
             whether_nouse = 1;
@@ -5494,7 +5499,8 @@ if (tmploghead != NULL)
         if(templen_l  > locatetmp)
           memcpy(new_buf_lyu + locatetmp, out_buf + locatetmp + 2, (templen_l - locatetmp) );
         write_to_testcase(new_buf_lyu, templen_l);
-        u8 fault = run_target(argv, exec_tmout);
+        u8 fault2 = run_target(argv, exec_tmout);
+        save_if_interesting(argv, new_buf_lyu, templen_l, fault2);
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
         if (newcksum == originalcksum)
             whether_nouse = 1;
@@ -5519,7 +5525,8 @@ if (tmploghead != NULL)
         memcpy(new_buf_lyu, out_buf, len  );
         *(u32*)(new_buf_lyu + locatetmp) = (u32)(tmptmplognow->indata);  
         write_to_testcase(new_buf_lyu,  len);
-        u8 fault = run_target(argv, exec_tmout);
+        u8 fault2 = run_target(argv, exec_tmout);
+        save_if_interesting(argv, new_buf_lyu, len, fault2);
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
         if (newcksum == originalcksum)
           whether_nouse = 1;
@@ -5539,7 +5546,8 @@ if (tmploghead != NULL)
         if(len  > locatetmp)
           memcpy(new_buf_lyu + locatetmp + 4, out_buf + locatetmp,  (len - locatetmp));
         write_to_testcase(new_buf_lyu,  templen_l);
-        u8 fault = run_target(argv, exec_tmout);
+        u8 fault2 = run_target(argv, exec_tmout);
+        save_if_interesting(argv, new_buf_lyu, templen_l, fault2);
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
         if (newcksum == originalcksum)
             whether_nouse = 1;
@@ -5556,7 +5564,8 @@ if (tmploghead != NULL)
         if(templen_l  >  locatetmp)
           memcpy(new_buf_lyu + locatetmp, out_buf + locatetmp + 4, (templen_l - locatetmp) );
         write_to_testcase(new_buf_lyu,  templen_l);
-        u8 fault = run_target(argv, exec_tmout);
+        u8 fault2 = run_target(argv, exec_tmout);
+        save_if_interesting(argv, new_buf_lyu, templen_l, fault2);
         u32 newcksum = hash32(trace_bits, afl_map_size, HASH_CONST);
         if (newcksum == originalcksum)
             whether_nouse = 1;
