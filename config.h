@@ -76,8 +76,13 @@
 
 /* Baseline number of random tweaks during a single 'havoc' stage: */
 
-#define HAVOC_CYCLES        256
-#define HAVOC_CYCLES_INIT   1024
+// for normal task
+//#define HAVOC_CYCLES        256
+//#define HAVOC_CYCLES_INIT   1024
+
+// for fuzzbench
+#define HAVOC_CYCLES        24
+#define HAVOC_CYCLES_INIT   64
 
 /* Maximum multiplier for the above (should be a power of two, beware
    of 32-bit int overflows): */
