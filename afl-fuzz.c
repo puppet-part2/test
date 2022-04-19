@@ -284,6 +284,10 @@ void dict2dhash_dictcount(void)
           }
           dict1d_cur->prob10 = 2.0;
           dict1d_cur->next10 = NULL;
+          //if (dict1d_cur->next == NULL)
+          //{
+          //  dict1d_cur->prob += 0.00001;
+          //}
           tmpprob10 += dict1d_cur->prob;
           if (tmpusenum % 10 == 9)
           {
@@ -293,11 +297,12 @@ void dict2dhash_dictcount(void)
             tmpdict1d_10 = dict1d_cur;
           }
           tmpusenum++;
+          
           dict1d_cur = dict1d_cur->next;
         }
-        if (dict2d_cur->usetotalcount != tmptotalcount || dict2d_cur->subdata_count != tmpsubdata_count || tmpusenum != dict2d_cur->usenum || tmptotalcount == 0)
+        if (dict2d_cur->usetotalcount != tmptotalcount || dict2d_cur->usetotalcount != dict2d_cur->totalcount  || dict2d_cur->subdata_count != tmpsubdata_count || tmpusenum != dict2d_cur->usenum || tmptotalcount == 0)
         {
-          FATAL("error after delete sparse cases in dict2d_hash. %u   %u  %u  %u  %u  %u", dict2d_cur->usetotalcount, tmptotalcount, dict2d_cur->subdata_count, tmpsubdata_count, tmpusenum, dict2d_cur->usenum);
+          FATAL("error after delete sparse cases in dict2d_hash. %u   %u  %u  %u  %u  %u  %u", dict2d_cur->usetotalcount, tmptotalcount, dict2d_cur->totalcount, dict2d_cur->subdata_count, tmpsubdata_count, tmpusenum, dict2d_cur->usenum);
         }
         if (tmpprob10 > 1.00001 || tmpprob10 < 0.99999)
           PFATAL(" dict2dhash  error tmpprob10: %f  tmpprob10prev: %f", tmpprob10, tmpprob10prev);
