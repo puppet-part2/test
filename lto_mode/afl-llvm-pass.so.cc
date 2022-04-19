@@ -306,9 +306,6 @@ bool AFLCoverage::runOnModule(Module &M) {
 
         }
 
-        // if (Successors.size() != TI->getNumSuccessors())
-        //  FATAL("Different successor numbers %lu <-> %u\n", Successors.size(),
-        //        TI->getNumSuccessors());
 
         for (uint32_t j = 0; j < countto; j++) {
 
