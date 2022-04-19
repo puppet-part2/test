@@ -248,7 +248,7 @@ __attribute__((constructor(CONST_PRIO))) void __afl_auto_init(void) {
 
   if((map_size_ptr = getenv("AFL_LLVM_DOCUMENT_IDS")) != NULL){
     FILE *fpRead=fopen(map_size_ptr,"r");
-    fscanf(fpRead,"%d ",&afl_map_size);
+    fscanf(fpRead,"%u",&afl_map_size);
     fclose(fpRead);
   }else{
     afl_map_size = MAP_SIZE;
