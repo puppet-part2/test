@@ -313,6 +313,7 @@ void dict2dhash_dictcount(void)
   }
 }
 
+
 void dict_incremental(void)
 {
   if (loghead == NULL)

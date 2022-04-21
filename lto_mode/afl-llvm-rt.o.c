@@ -280,11 +280,14 @@ __attribute__((constructor(CONST_PRIO))) void __afl_auto_init(void)
    ID of 0 as a special value to indicate non-instrumented bits. That may
    still touch the bitmap, but in a fairly harmless way. */
 
+
 void __sanitizer_cov_trace_pc_guard_init(uint32_t *start, uint32_t *stop)
 {
 
   u32 inst_ratio = 100;
   u8 *x;
+  u8 *y;
+  u32 afl_map_size = MAP_SIZE;
 
   if (start == stop || *start)
     return;
@@ -299,17 +302,21 @@ void __sanitizer_cov_trace_pc_guard_init(uint32_t *start, uint32_t *stop)
     abort();
   }
 
+  y = getenv("AFL_LLVM_DOCUMENT_IDS");
+  if (y)
+    afl_map_size = atoi(y);
+
   /* Make sure that the first element in the range is always set - we use that
      to avoid duplicate calls (which can happen as an artifact of the underlying
      implementation in LLVM). */
 
-  *(start++) = R(MAP_SIZE - 1) + 1;
+  *(start++) = R(afl_map_size - 1) + 1;
 
   while (start < stop)
   {
 
     if (R(100) < inst_ratio)
-      *start = R(MAP_SIZE - 1) + 1;
+      *start = R(afl_map_size - 1) + 1;
     else
       *start = 0;
 
