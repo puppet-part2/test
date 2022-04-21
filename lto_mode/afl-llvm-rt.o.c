@@ -345,6 +345,8 @@ void __sanitizer_cov_trace_pc_guard_init(uint32_t *start, uint32_t *stop)
     fclose(fpRead);  
   }
 
+  afl_map_size = 65960;
+
   if (!__afl_area_initial)
   {
     __afl_area_initial = (u8 *)malloc(afl_map_size * sizeof(u8));
