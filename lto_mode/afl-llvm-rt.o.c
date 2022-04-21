@@ -345,7 +345,6 @@ void __sanitizer_cov_trace_pc_guard_init(uint32_t *start, uint32_t *stop)
     fclose(fpRead);  
   }
 
-  afl_map_size = 65960;
 
   if (!__afl_area_initial)
   {
@@ -369,6 +368,5 @@ void __sanitizer_cov_trace_pc_guard_init(uint32_t *start, uint32_t *stop)
 
     start++;
   }
-  __afl_unmap_shm();
-  __afl_map_shm();
+
 }
