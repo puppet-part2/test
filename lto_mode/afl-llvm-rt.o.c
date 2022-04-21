@@ -279,6 +279,37 @@ __attribute__((constructor(CONST_PRIO))) void __afl_auto_init(void)
 
 
 
+
+
+
+
+static void __afl_unmap_shm(void) {
+
+
+  char *id_str = getenv(SHM_ENV_VAR);
+
+  if (id_str) {
+
+#ifdef USEMMAP
+
+    munmap((void *)__afl_area_ptr, afl_map_size);
+
+#else
+
+    shmdt((void *)__afl_area_ptr);
+
+#endif
+
+  } 
+
+  __afl_area_ptr = NULL;
+
+}
+
+
+
+
+
 void __sanitizer_cov_trace_pc_guard(uint32_t* guard) {
   __afl_area_ptr[*guard] =
       __afl_area_ptr[*guard] + 1 + (__afl_area_ptr[*guard] == 255 ? 1 : 0);
@@ -290,8 +321,7 @@ void __sanitizer_cov_trace_pc_guard_init(uint32_t *start, uint32_t *stop)
 
   u32 inst_ratio = 100;
   u8 *x;
-  u8 *y;
-  u32 afl_map_size = MAP_SIZE;
+  afl_map_size = MAP_SIZE;
 
   if (start == stop || *start)
     return;
@@ -337,4 +367,6 @@ void __sanitizer_cov_trace_pc_guard_init(uint32_t *start, uint32_t *stop)
 
     start++;
   }
+  __afl_unmap_shm();
+  __afl_map_shm();
 }
