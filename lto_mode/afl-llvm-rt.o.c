@@ -301,10 +301,15 @@ void __sanitizer_cov_trace_pc_guard_init(uint32_t *start, uint32_t *stop)
     fprintf(stderr, "[-] ERROR: Invalid AFL_INST_RATIO (must be 1-100).\n");
     abort();
   }
+  
+  char *map_size_ptr = 0;
 
-  y = getenv("AFL_LLVM_DOCUMENT_IDS");
-  if (y)
-    afl_map_size = atoi(y);
+  if ((map_size_ptr = getenv("AFL_LLVM_DOCUMENT_IDS")) != NULL)
+  {
+    FILE *fpRead = fopen(map_size_ptr, "r");
+    fscanf(fpRead, "%u", &afl_map_size);
+    fclose(fpRead);
+  }
 
   /* Make sure that the first element in the range is always set - we use that
      to avoid duplicate calls (which can happen as an artifact of the underlying
