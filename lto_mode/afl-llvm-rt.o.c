@@ -321,10 +321,10 @@ void __sanitizer_cov_trace_pc_guard_init(uint32_t *start, uint32_t *stop)
   {
     FILE *fpRead = fopen(map_size_ptr, "r");
     fscanf(fpRead, "%u", &afl_map_size);
-    fclose(fpRead);
-    __afl_area_initial = (u8 *)malloc(afl_map_size * sizeof(u8));
-    __afl_area_ptr = __afl_area_initial;
+    fclose(fpRead);  
   }
+  __afl_area_initial = (u8 *)malloc(afl_map_size * sizeof(u8));
+  __afl_area_ptr = __afl_area_initial;
 
   /* Make sure that the first element in the range is always set - we use that
      to avoid duplicate calls (which can happen as an artifact of the underlying
