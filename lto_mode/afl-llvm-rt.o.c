@@ -277,21 +277,12 @@ __attribute__((constructor(CONST_PRIO))) void __afl_auto_init(void)
 }
 
 
-/* The following stuff deals with supporting -fsanitize-coverage=trace-pc-guard.
-   It remains non-operational in the traditional, plugin-backed LLVM mode.
-   For more info about 'trace-pc-guard', see README.llvm.
 
-   The first function (__sanitizer_cov_trace_pc_guard) is called back on every
-   edge (as opposed to every basic block). */
 
 void __sanitizer_cov_trace_pc_guard(uint32_t* guard) {
-  __afl_area_ptr[*guard]++;
+  __afl_area_ptr[*guard] =
+      __afl_area_ptr[*guard] + 1 + (__afl_area_ptr[*guard] == 255 ? 1 : 0);
 }
-
-
-/* Init callback. Populates instrumentation IDs. Note that we're using
-   ID of 0 as a special value to indicate non-instrumented bits. That may
-   still touch the bitmap, but in a fairly harmless way. */
 
 
 void __sanitizer_cov_trace_pc_guard_init(uint32_t *start, uint32_t *stop)
@@ -323,8 +314,12 @@ void __sanitizer_cov_trace_pc_guard_init(uint32_t *start, uint32_t *stop)
     fscanf(fpRead, "%u", &afl_map_size);
     fclose(fpRead);  
   }
-  __afl_area_initial = (u8 *)malloc(afl_map_size * sizeof(u8));
-  __afl_area_ptr = __afl_area_initial;
+
+  if (!__afl_area_initial)
+  {
+    __afl_area_initial = (u8 *)malloc(afl_map_size * sizeof(u8));
+    __afl_area_ptr = __afl_area_initial;
+  }
 
   /* Make sure that the first element in the range is always set - we use that
      to avoid duplicate calls (which can happen as an artifact of the underlying
